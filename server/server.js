@@ -72,6 +72,33 @@ app.get('/', (req, res) => {
 	`);
 });
 
+app.get('/api/test', (req, res) => {
+	res.json(
+		{
+			message: 'successful test',
+			time:    new Date().toDateString(),
+		}
+	)
+});
+
+app.get('/api/user/:id', (req, res) => {
+	let id = req.params.id;
+	res.send(`user id: ${ id }`);
+});
+
+app.get('/api/user/all', (req, res) => {
+	res.send(`all users`);
+});
+
+app.get('/api/event/:id', (req, res) => {
+	let id = req.params.id;
+	res.send(`event id: ${ id }`);
+});
+
+app.get('/api/event/all', (req, res) => {
+	res.send(`all events`);
+});
+
 app.listen(PORT, () => {
 	console.log(`Server running: http://localhost:${PORT}/`);
 });
