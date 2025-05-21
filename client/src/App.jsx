@@ -1,10 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import Layout from './components/Layout';
-import Home from './pages/Home';
-
+import Login from './pages/Login/Login.jsx';
+import Register from './pages/Register/Register.jsx';
+import Dashboard from './pages/Dashboard/Dashboard.jsx';
+import Layout from './components/Layout.jsx';
+import Home from './pages/Home/Home.jsx';
+import NotFound from './pages/NotFound/NotFound.jsx';
 
 import './App.css'
 
@@ -18,6 +18,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );
