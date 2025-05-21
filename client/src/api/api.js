@@ -8,7 +8,7 @@ export const searchEvents = async (keyword = "") => {
     params: {
       apikey: TICKETMASTER_API_KEY,
       keyword,
-      size: 10,
+      size: 9,
       countryCode: "IE",
     },
   });
@@ -19,6 +19,8 @@ export const searchEvents = async (keyword = "") => {
     name: event.name,
     date: event.dates?.start?.localDate,
     venue: event._embedded?.venues?.[0]?.name,
+    description: event.info || "No description available",
+    image: event.images?.[0]?.url || "", // first image
     url: event.url,
   }));
 };
