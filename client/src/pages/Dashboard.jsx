@@ -10,8 +10,8 @@ export default function Dashboard() {
             {/* <EventForm />
             <EventList /> 
             <hr />
-            <ExternalEventList />
             */}
+            <ExternalEventList />
         </div>
     );
 }
