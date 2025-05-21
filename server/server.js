@@ -1,18 +1,20 @@
+//constants
 const path = require("path");
 const express = require("express");
 const sqlite3 = require("sqlite3").verbose();
 
 const app = express();
 const PORT = 3000;
+const DBFILE = path.join(__dirname, 'data', 'data.db')
 
+//middleware
 app.use(express.static('static'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
-const DBFILE = path.join(__dirname, 'data', 'data.db')
-
+//DB setup
 const db = new sqlite3.Database(DBFILE, err => {
 	if (err) {
 		console.error("Failed to open database:", err);
@@ -59,6 +61,8 @@ const db = new sqlite3.Database(DBFILE, err => {
 	);
 });
 
+//ROUTES
+//basic routes
 app.get('/', (req, res) => {
 	res.send(`
 		<html>
@@ -81,22 +85,37 @@ app.get('/api/test', (req, res) => {
 	)
 });
 
+//user routes
 app.get('/api/user/:id', (req, res) => {
 	let id = req.params.id;
 	res.send(`user id: ${ id }`);
 });
 
-app.get('/api/user/all', (req, res) => {
+app.get('/api/users/all', (req, res) => {
 	res.send(`all users`);
 });
 
+app.post('/api/users/register', (req, res) => {
+	res.send(`user registration`);
+});
+
+//event routes
 app.get('/api/event/:id', (req, res) => {
 	let id = req.params.id;
 	res.send(`event id: ${ id }`);
 });
 
-app.get('/api/event/all', (req, res) => {
+app.get('/api/events/all', (req, res) => {
 	res.send(`all events`);
+});
+
+app.get('/api/events/search', (req, res) => {
+	console.log(req.query);
+	res.json(req.query);
+});
+
+app.post('/api/events/create', (req, res) => {
+	res.send(`event creation`);
 });
 
 app.listen(PORT, () => {
