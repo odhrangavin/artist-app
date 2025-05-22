@@ -4,22 +4,30 @@ import API from '../../api/api';
 
 export default function RegisterForm() {
 	const [form, setForm] = useState(
-		{ email: '', username: '', password: '', confirm: '' }
+		{ email: '', username: '', password: '', confirm: '', role: '' }
 	);
 	const navigate = useNavigate();
 
+	// Get value from button
+	const selectedRole = (e) => {
+		setForm({ ...form, role: e.target.value });
+	};
+
+	
 	const register = async (e) => {
 		
+		e.preventDefault();
+
 		// Validate password match
 		if (form.password !== form.confirm) {
 			alert('Passwords do not match');
 			return;
 		}
 		
-		e.preventDefault();
 		// Register user, log in, and redirect to the dashboard
+		const { confirm, ...dataToSend } = form;
 		try {
-			const res = await API.post('/auth/register', form);
+			const res = await API.post('/auth/register', dataToSend);
 			localStorage.setItem('token', res.data.token);
 			navigate('/dashboard');
 		} catch (err) {
@@ -65,6 +73,14 @@ export default function RegisterForm() {
 				onChange={e => setForm({ ...form, confirm: e.target.value })} 
 				required
 			/>
+			<br />
+			<h4>How would you like to use ArtistsApp?</h4>
+			<button type="button" name="role" value="artist" onClick={selectedRole}>
+				I'm an Artist
+			</button>
+			<button type="button" name="role" value="audience" onClick={selectedRole}>
+				I'm part of the Audience
+			</button>
 			<br />
 			<button type="submit">Register</button>
 		</form>
