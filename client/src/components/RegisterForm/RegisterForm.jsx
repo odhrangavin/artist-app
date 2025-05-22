@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API from '../../api/api';
 
 export default function RegisterForm() {
 	const [form, setForm] = useState(
@@ -7,18 +8,31 @@ export default function RegisterForm() {
 	);
 	const navigate = useNavigate();
 
-	const handleSubmit = async (e) => {
+	const register = async (e) => {
+		
+		// Validate password match
+		if (form.password !== form.confirm) {
+			alert('Passwords do not match');
+			return;
+		}
+		
 		e.preventDefault();
-		// Replace with real API call later
-		localStorage.setItem('token', 'mock-token');
-		navigate('/dashboard');
+		// Register user, log in, and redirect to the dashboard
+		try {
+			const res = await API.post('/auth/register', form);
+			localStorage.setItem('token', res.data.token);
+			navigate('/dashboard');
+		} catch (err) {
+			alert('Sign-up error');
+		}
 	};
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<form onSubmit={register}>
 			<label>Email Address</label>
 			<input 
 				type="email"
+				value={form.email}
 				placeholder="abc@example.com" 
 				onChange={e => setForm({ ...form, email: e.target.value })}
 				required 
@@ -27,6 +41,7 @@ export default function RegisterForm() {
 			<label>Username</label>
 			<input 
 				type="text"
+				value={form.username}
 				max="20"
 				placeholder="Username" 
 				onChange={e => setForm({ ...form, username: e.target.value })} 
@@ -36,6 +51,7 @@ export default function RegisterForm() {
 			<label>Password</label>
 			<input 
 				type="password" 
+				value={form.password}
 				placeholder="Create a password" 
 				onChange={e => setForm({ ...form, password: e.target.value })} 
 				required
@@ -44,6 +60,7 @@ export default function RegisterForm() {
 			<label>Confirm Password</label>
 			<input 
 				type="password" 
+				value={form.confirm}
 				placeholder="Repeat the password" 
 				onChange={e => setForm({ ...form, confirm: e.target.value })} 
 				required
