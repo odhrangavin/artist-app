@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { searchEvents } from '../api/api';
+import { searchEvents } from '../../api/api';
+import './ExternalEventList.css';
 
 export default function ExternalEventList() {
     const [events, setEvents] = useState([]);
@@ -35,12 +36,15 @@ export default function ExternalEventList() {
             {loading ? (
                 <p>Loading...</p>
             ) : (
-                <ul>
+                <ul className="event-grid">
                     {events.map(e => (
-                        <li key={e.id}>
-                            <a href={e.url} target="_blank" rel="noopener noreferrer">
-                                {e.name} – {e.date} @ {e.venue}
-                            </a>
+                        <li key={e.id} className="event-card">
+                            <img src={e.image} alt={e.name} className="event-image" />
+                            <h4>{e.name}</h4>
+                            <p><strong>Date:</strong> {e.date}</p>
+                            <p><strong>Venue:</strong> {e.venue}</p>
+                            <p>{e.description}</p>
+                            <a href={e.url} target="_blank" rel="noopener noreferrer">View Event</a>
                         </li>
                     ))}
                 </ul>

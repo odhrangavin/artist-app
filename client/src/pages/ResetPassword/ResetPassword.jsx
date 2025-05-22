@@ -1,5 +1,5 @@
 // Recover Password page
-import ResetPasswordForm from '../components/ResetPasswordForm';
+import ResetPasswordForm from '../../components/ResetPasswordForm/ResetPasswordForm';
 
 export default function Reset() {
   return (
