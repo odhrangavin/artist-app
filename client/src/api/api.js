@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const TICKETMASTER_API_KEY = "YOUR_API_KEY"; // Replace with your real key
+const TICKETMASTER_API_KEY = "bOtQy0uSgOsaeJPANusiQDmGAYYDhLBu";
 
 export const searchEvents = async (keyword = "") => {
   const url = `https://app.ticketmaster.com/discovery/v2/events.json`;
@@ -8,8 +8,8 @@ export const searchEvents = async (keyword = "") => {
     params: {
       apikey: TICKETMASTER_API_KEY,
       keyword,
-      size: 10,
-      countryCode: "US",
+      size: 9,
+      countryCode: "IE",
     },
   });
 
@@ -19,6 +19,8 @@ export const searchEvents = async (keyword = "") => {
     name: event.name,
     date: event.dates?.start?.localDate,
     venue: event._embedded?.venues?.[0]?.name,
+    description: event.info || "No description available",
+    image: event.images?.[0]?.url || "", // first image
     url: event.url,
   }));
 };
