@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="A retro 90s-style personal website for Jane Doe.">
+	<title>Concerts</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+	<header role="banner">
+		<h1>Testing</h1>
+	</header>
+	<main>
+		<section id="eventSubmit">
+			<h2>Event</h2>
+			<form action="http://localhost:3000/api/events/create" method="post">
+				<label for="title">Title:</label>
+				<input type="text" name="title" required>
+				<label for="body">Body:</label>
+				<input type="text" name="body" required>
+				<label for="image_url">Image URL:</label>
+				<input type="text" name="image_url" required>
+				<label for="event_time">Event Time:</label>
+				<input type="text" name="event_time" required>
+				<label for="location">Location:</label>
+				<input type="text" name="location" required>
+				<label for="user_id">User ID:</label>
+				<input type="text" name="user_id" required>
+				<button type="submit">Submit</button>
+			</form>
+		</section>
+		<section id="userSubmit">
+			<h2>User</h2>
+			<form action="http://localhost:3000/api/users/register" method="post">
+				<label for="username">Username:</label>
+				<input type="text" name="username" required>
+				<label for="role">Role:</label>
+				<input type="text" name="role" required>
+				<button type="submit">Submit</button>
+			</form>
+		</section>
+		<section id="searchSubmit">
+			<h2>Event Search</h2>
+			<form action="http://localhost:3000/api/events/search" method="get">
+				<label for="title">Title:</label>
+				<input type="text" name="title">
+				<label for="event_time">Event Time:</label>
+				<input type="text" name="event_time">
+				<label for="location">Location:</label>
+				<input type="text" name="location">
+				<button type="submit">Submit</button>
+			</form>
+		</section>
+	</main>
+</body>
+</html>
+
