@@ -10,12 +10,14 @@ const PORT = 3000;
 //project includes
 const { register, login } = require('./controllers/authController')
 const db = require('./db');
+const router = require('./routes');
 
 //middleware
 app.use(express.static('static'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use('/api/testing', router);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
