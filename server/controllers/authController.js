@@ -10,7 +10,7 @@ const register = async (req, res) => {
 	}
 
 	const hashedPassword = await bcrypt.hash(password, 10);
-	const sql = 'INSERT INTO users (email, username, password) VALUES (?, ?, ?)';
+	const sql = 'INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)';
 
 	db.run(sql, [email, username, hashedPassword], function (err) {
 		if (err){
