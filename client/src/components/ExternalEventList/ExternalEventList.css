@@ -1,7 +1,7 @@
 .external-event-search {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 0.5rem;
   margin-top: 1rem;
 }
 
@@ -13,7 +13,7 @@
 }
 
 .event-card {
-  background: #482525;
+  background: #1a1a1a;
   color: #ccc;
   padding: 1rem;
   border-radius: 0.5rem;
@@ -28,7 +28,6 @@
 .event-card a {
   display: inline-block;
   margin-top: 0.5rem;
-  color: #007bff;
   text-decoration: underline;
 }
 .event-card .event-image {
@@ -47,5 +46,13 @@
 @media screen and (max-width: 768px) {
   .event-grid {
     grid-template-columns: 1fr; /* Single column on smaller screens */
+  }
+  .external-event-search {
+    grid-template-columns: auto auto;
+  }
+}
+@media screen and (max-width: 480px) {
+  .external-event-search {
+    grid-template-columns: 1fr;
   }
 }

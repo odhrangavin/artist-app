@@ -1,4 +1,6 @@
-import { useState, useMemo } from "react";
+import './ExternalEventList.css';
+
+import { useState } from "react";
 import AutocompleteInput from "./AutocompleteInput";
 
 // today-YYYY-MM-DD
@@ -9,9 +11,9 @@ function getTodayISO() {
 
 export default function ExternalEventSearchForm({
     onSearch,
-    citySuggestions,
-    venueSuggestions,
-    genreSuggestions,
+    cityOptions,
+    venueOptions,
+    genreOptions,
     loading,
 }) {
     const [keyword, setKeyword] = useState("");
@@ -21,7 +23,7 @@ export default function ExternalEventSearchForm({
     const [venue, setVenue] = useState("");
     const [genre, setGenre] = useState("");
 
-    // Clear all fields
+
     function handleClear() {
         setKeyword("");
         setDateFrom(getTodayISO());
@@ -51,23 +53,24 @@ export default function ExternalEventSearchForm({
         });
     }
 
+    // Venue options only for selected city, otherwise empty list
+    const venues = city && venueOptions[city] ? venueOptions[city] : [];
+    // Genre options only for selected city & venue, otherwise empty list
+    const genres =
+        city && venue && genreOptions[`${city}|||${venue}`]
+            ? genreOptions[`${city}|||${venue}`]
+            : [];
+
     return (
         <form
             className="external-event-search"
             onSubmit={handleSubmit}
-            style={{
-                display: "flex",
-                gap: "1rem",
-                marginBottom: "1rem",
-                flexWrap: "wrap",
-                alignItems: "flex-end",
-            }}
         >
             <input
                 type="text"
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
-                placeholder="Keyword"
+                placeholder="Artist or Event name"
             />
             <input
                 type="date"
@@ -83,26 +86,44 @@ export default function ExternalEventSearchForm({
                 onChange={(e) => setDateTo(e.target.value)}
                 placeholder="To"
             />
+
             <AutocompleteInput
                 value={city}
-                onChange={setCity}
-                suggestions={citySuggestions}
+                onChange={v => {
+                    setCity(v);
+                    setVenue("");
+                    setGenre("");
+                }}
+                suggestions={cityOptions}
                 placeholder="City"
-                onClear={() => setCity("")}
+                onClear={() => {
+                    setCity("");
+                    setVenue("");
+                    setGenre("");
+                }}
+                disabled={loading}
             />
             <AutocompleteInput
                 value={venue}
-                onChange={setVenue}
-                suggestions={venueSuggestions}
+                onChange={v => {
+                    setVenue(v);
+                    setGenre("");
+                }}
+                suggestions={venues}
                 placeholder="Venue"
-                onClear={() => setVenue("")}
+                onClear={() => {
+                    setVenue("");
+                    setGenre("");
+                }}
+                disabled={loading}
             />
             <AutocompleteInput
                 value={genre}
                 onChange={setGenre}
-                suggestions={genreSuggestions}
+                suggestions={genres}
                 placeholder="Genre"
                 onClear={() => setGenre("")}
+                disabled={loading}
             />
             <button type="submit" disabled={loading}>
                 Search

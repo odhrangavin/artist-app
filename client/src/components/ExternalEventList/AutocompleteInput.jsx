@@ -1,18 +1,28 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
-// suggestions: array of strings
 export default function AutocompleteInput({
     value,
     onChange,
     suggestions,
     placeholder,
     onClear,
+    disabled,
 }) {
     const [showDropdown, setShowDropdown] = useState(false);
     const [filtered, setFiltered] = useState(suggestions);
     const ref = useRef(null);
 
-    // Update filtered suggestions when value changes
+    // Filter options on value or suggestions change
+    useEffect(() => {
+        setFiltered(
+            value
+                ? suggestions.filter((s) =>
+                    s.toLowerCase().includes(value.toLowerCase())
+                )
+                : suggestions
+        );
+    }, [value, suggestions]);
+
     function handleInput(e) {
         const val = e.target.value;
         onChange(val);
@@ -24,15 +34,12 @@ export default function AutocompleteInput({
         setShowDropdown(true);
     }
 
-    // Show all options on focus
     function handleFocus() {
         setFiltered(suggestions);
         setShowDropdown(true);
     }
 
-    // Hide dropdown when clicking away
-    function handleBlur(e) {
-        // Delay so click on menu can register first
+    function handleBlur() {
         setTimeout(() => setShowDropdown(false), 100);
     }
 
@@ -45,7 +52,8 @@ export default function AutocompleteInput({
         e.stopPropagation();
         onChange("");
         if (onClear) onClear();
-        setShowDropdown(false);
+        setFiltered(suggestions);
+        setShowDropdown(true);
         ref.current.focus();
     }
 
@@ -66,6 +74,7 @@ export default function AutocompleteInput({
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 placeholder={placeholder}
+                disabled={disabled}
                 autoComplete="off"
                 style={{ width: "100%" }}
             />
@@ -96,7 +105,6 @@ export default function AutocompleteInput({
                         left: 0,
                         zIndex: 10,
                         background: "#242424",
-                        // border: "1px solid #ccc",
                         boxShadow: "0 2px 8px rgba(0,0,0,0.07)",
                         borderRadius: 5,
                         width: "100%",

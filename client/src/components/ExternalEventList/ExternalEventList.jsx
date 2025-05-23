@@ -1,74 +1,47 @@
 import { useState, useEffect } from "react";
-import { searchEvents, getEventSuggestions } from "../../api/api";
+import { searchEvents, extractOptions } from "../../api/api";
 import ExternalEventSearchForm from "./ExternalEventSearchForm";
 import "./ExternalEventList.css";
 
-function getTodayISO() {
-    const today = new Date();
-    return today.toISOString().split("T")[0];
-}
-
 export default function ExternalEventList() {
     const [events, setEvents] = useState([]);
-    const [suggestions, setSuggestions] = useState({
+    const [options, setOptions] = useState({
         cities: [],
-        venues: [],
-        genres: [],
+        venuesByCity: {},
+        genresByCityVenue: {},
     });
     const [loading, setLoading] = useState(false);
 
-    // Default search
+    // Initial load: fetch all events for options
     useEffect(() => {
-        handleSearch({
-            keyword: "",
-            dateFrom: getTodayISO(),
-            dateTo: "",
-            city: "",
-            venue: "",
-            genre: "",
-        });
-        // eslint-disable-next-line
+        loadOptionsAndEvents({});
     }, []);
 
-    async function handleSearch({
-        keyword,
+    async function loadOptionsAndEvents({ keyword,
         dateFrom,
-        dateTo,
-        city,
-        venue,
-        genre,
-    }) {
+        dateTo, city, venue, genre }) {
         setLoading(true);
-        const startDateTime =
-            dateFrom && dateFrom >= getTodayISO() ? `${dateFrom}T00:00:00Z` : "";
-        const endDateTime =
-            dateTo && dateTo >= dateFrom ? `${dateTo}T23:59:59Z` : "";
-        try {
-            const results = await searchEvents({
-                keyword,
-                city,
-                venueName: venue,
-                classificationName: genre,
-                startDateTime,
-                endDateTime,
-                size: 30,
-            });
-            setEvents(results);
-            setSuggestions(getEventSuggestions(results));
-        } catch (e) {
-            setEvents([]);
-            setSuggestions({ cities: [], venues: [], genres: [] });
-        }
+        const events = await searchEvents({
+            keyword,
+            dateFrom,
+            dateTo, city, venue, genre
+        });
+        setEvents(events);
+        setOptions(extractOptions(events));
         setLoading(false);
+    }
+
+    function handleSearch(params) {
+        loadOptionsAndEvents(params);
     }
 
     return (
         <div>
             <ExternalEventSearchForm
                 onSearch={handleSearch}
-                citySuggestions={suggestions.cities}
-                venueSuggestions={suggestions.venues}
-                genreSuggestions={suggestions.genres}
+                cityOptions={options.cities}
+                venueOptions={options.venuesByCity}
+                genreOptions={options.genresByCityVenue}
                 loading={loading}
             />
             {loading ? (
@@ -80,22 +53,22 @@ export default function ExternalEventList() {
                     ) : (
                         events.map((e) => (
                             <li key={e.id} className="event-card">
-                                <img src={e.image} alt={e.name} className="event-image" />
+                                <img src={e.images?.[0]?.url} alt={e.name} className="event-image" />
                                 <h4>{e.name}</h4>
                                 <p>
-                                    <strong>Date:</strong> {e.date}{" "}
-                                    {e.time ? <span>{e.time}</span> : null}
+                                    <strong>Date:</strong> {e.dates?.start?.localDate}
+                                    {e.dates?.start?.localTime ? <span> {e.dates.start.localTime}</span> : null}
                                 </p>
                                 <p>
-                                    <strong>City:</strong> {e.city}
+                                    <strong>City:</strong> {e._embedded?.venues?.[0]?.city?.name}
                                 </p>
                                 <p>
-                                    <strong>Venue:</strong> {e.venue}
+                                    <strong>Venue:</strong> {e._embedded?.venues?.[0]?.name}
                                 </p>
                                 <p>
-                                    <strong>Genre:</strong> {e.genre}
+                                    <strong>Genre:</strong> {e.classifications?.[0]?.genre?.name}
                                 </p>
-                                <p>{e.description}</p>
+                                <p>{e.info || "No description available"}</p>
                                 <a
                                     href={e.url}
                                     target="_blank"
