@@ -1,65 +1,23 @@
 //constants
+const env = require('dotenv').config();
 const path = require('path');
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
+const cors = require('cors');
 
 const app = express();
 const PORT = 3000;
-const DBFILE = path.join(__dirname, 'data', 'data.db')
+
+//project includes
+const { register, login } = require('./controllers/authController')
+const db = require('./db');
 
 //middleware
 app.use(express.static('static'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
-
-//DB setup
-const db = new sqlite3.Database(DBFILE, err => {
-	if (err) {
-		console.error('Failed to open database:', err);
-		process.exit(1);
-	}
-
-	//create users table
-	db.run(
-		`CREATE TABLE IF NOT EXISTS users (
-		id         INTEGER PRIMARY KEY,
-		username   TEXT,
-		role       TEXT,
-		created_at TEXT
-	 )`,
-		err => { 
-			if (err){
-				console.error('users table error:', err);
-			}else{
-				console.log('users table functional');
-			} 	
-		}
-	);
-
-	//create events table
-	db.run(
-		`CREATE TABLE IF NOT EXISTS events (
-		id         INTEGER PRIMARY KEY,
-		title      TEXT,
-		body       TEXT,
-		image_url  TEXT,
-		event_time TEXT,
-		location   TEXT,
-		user_id    INTEGER,
-		created_at TEXT,
-		FOREIGN KEY(user_id) REFERENCES users(id)
-	 )`,
-		err => { 
-			if (err){
-				console.error('events table error:', err);
-			}else{
-				console.log('events table functional')
-			}
-		}
-	);
-});
 
 //ROUTES
 //basic routes
@@ -180,6 +138,10 @@ app.post('/api/events/create', (req, res) => {
 		}
 	);
 });
+
+//login & registration
+app.post('/register', register);
+app.post('/login', login);
 
 app.listen(PORT, () => {
 	console.log(`Server running: http://localhost:${PORT}/`);

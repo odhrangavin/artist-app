@@ -23,5 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-# Data
+#data
 data/*
+
+.env
