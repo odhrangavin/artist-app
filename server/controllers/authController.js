@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const db = require('../db');
 
 const register = async (req, res) => {
-	const { email, username, password, confirm } = req.body;
+	const { email, username, password, confirm, role } = req.body;
 	if (password !== confirm) {
 		return res.status(400).json({ message: 'Passwords do not match' });
 	}
@@ -12,7 +12,7 @@ const register = async (req, res) => {
 	const hashedPassword = await bcrypt.hash(password, 10);
 	const sql = 'INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)';
 
-	db.run(sql, [email, username, hashedPassword], function (err) {
+	db.run(sql, [email, username, hashedPassword, role], function (err) {
 		if (err){
 			return res.status(500).json({ message: 'User already exists' });
 		}
