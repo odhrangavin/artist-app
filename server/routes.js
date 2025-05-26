@@ -5,37 +5,6 @@ const { getEvents, createEvent } = require('./controllers/eventController')
 
 const router = express.Router();
 
-//basic routes
-router.get('/', (req, res) => {
-	res.send(`
-		<html>
-			<head>
-				<title>Server</title>
-			</head>
-			<body>
-				<p>Server running at ${ new Date().toDateString() }.</p>
-			</body>
-		</html>
-	`);
-});
-
-router.get('/api/test', (req, res) => {
-	res.json(
-		{
-			message: 'successful test',
-			time:    new Date().toDateString(),
-		}
-	)
-});
-
-router.get('/api-tests', (req, res) => {
-	res.sendFile(__dirname + '/api-tests.html');
-})
-
-router.get('/login-tests', (req, res) => {
-	res.sendFile(__dirname + '/login-tests.html');
-})
-
 //login & registration
 router.post('/login', login);
 
