@@ -18,7 +18,7 @@ const register = async (req, res) => {
 		}
 
 		const token = jwt.sign({ id: this.lastID }, process.env.JWT_SECRET, { expiresIn: '1d' });
-		res.status(201).json({ user_id: this.lastID, token: token });
+		res.status(201).json({ token: token });
 	});
 };
 
@@ -37,8 +37,24 @@ const login = (req, res) => {
 		}
 
 		const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-		res.json({ user_id: user.id, token: token });
+		res.json({ token: token });
 	});
 };
 
-module.exports = { register, login };
+const authenticateToken = (req, res, next) => {
+	const authHeader = req.headers['authorization'];
+	const token = authHeader && authHeader.split(' ')[1];
+	if (!token){
+		return res.sendStatus(401);
+	}
+
+	jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+		if (err){
+			return res.sendStatus(403);
+		}
+		req.user = user;  // decoded token payload here
+		next();
+	});
+}
+
+module.exports = { register, login, authenticateToken };
