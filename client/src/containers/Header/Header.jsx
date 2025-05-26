@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import LoginMenu from "../../components/Auth/LoginMenu";
+import "./Header.css";
 
 export default function Header() {
 	return (

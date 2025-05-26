@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../../api/api';
+import { useAuth } from '../../context/AuthContext'
 
 export default function RegisterForm() {
 	const [form, setForm] = useState(
 		{ email: '', username: '', password: '', confirm: '', role: '' }
 	);
-	const navigate = useNavigate();
+	const { login } = useAuth();
 
 	// Get value from the role button
 	const selectedRole = (e) => {
 		setForm({ ...form, role: e.target.value });
 	};
 
-	const register = async (e) => {
-		
+	const register = async (e) => {	
 		e.preventDefault();
 		
 		// Check role's value is artist or audience
@@ -28,11 +28,15 @@ export default function RegisterForm() {
 			return;
 		}
 		
-		// Register user, log in, and redirect to the dashboard
+		// Complete registration
 		try {
-			const res = await API.post('/users', form);
-			localStorage.setItem('token', res.data.token);
-			navigate('/dashboard');
+			// Register
+			await API.post('/users', form);
+			
+			// Log in and redirect to dashboard
+			const { username, password } = form;
+			login({ username, password });
+
 		} catch (err) {
 			alert('Sign-up error');
 		}
