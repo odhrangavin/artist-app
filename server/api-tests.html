@@ -15,7 +15,7 @@
 	<main>
 		<section id="eventSubmit">
 			<h2>Event</h2>
-			<form action="http://localhost:3000/api/testing/events" method="post">
+			<form action="http://localhost:3000/api/events" method="post">
 				<label for="title">Title:</label>
 				<input type="text" name="title" required>
 				<label for="body">Body:</label>
@@ -33,7 +33,7 @@
 		</section>
 		<section id="userSubmit">
 			<h2>User</h2>
-			<form action="http://localhost:3000/api/users/register" method="post">
+			<form action="http://localhost:3000/api/users" method="post">
 				<label for="username">Username:</label>
 				<input type="text" name="username" required>
 				<label for="role">Role:</label>
@@ -43,7 +43,7 @@
 		</section>
 		<section id="searchSubmit">
 			<h2>Event Search</h2>
-			<form action="http://localhost:3000/api/testing/events" method="get">
+			<form action="http://localhost:3000/api/events" method="get">
 				<label for="title">Title:</label>
 				<input type="text" name="title">
 				<label for="event_time">Event Time:</label>
