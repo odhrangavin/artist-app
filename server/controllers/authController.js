@@ -41,6 +41,43 @@ const login = (req, res) => {
 	});
 };
 
+const requestReset = (req, res) => {
+	const { email } = req.body;
+	const sql = 'SELECT * FROM users WHERE email =  ?';
+	db.get(sql, [email], async (err, user) => {
+		if (!user) {
+			return res.status(404).json({ message: 'User not found' });
+		}
+		const resetToken = jwt.sign(
+			{ userId: user.id },
+			process.env.JWT_SECRET,
+			{ expiresIn: '15m' }
+		);
+		console.log(`Password reset token for ${email}: ${resetToken}`);
+		res.json( resetToken );
+	});
+};
+
+const passwordReset = async (req, res) => {
+	const { token, newPassword } = req.body;
+	const sql = 'SELECT * FROM users WHERE id =  ?';
+	const payload = jwt.verify(token, process.env.JWT_SECRET);
+	const id = payload.userId;
+	db.get(sql, [id], async (err, user) => {
+		if (!user) {
+			return res.status(404).json({ message: 'User not found' });
+		}
+		const hashedPassword = await bcrypt.hash(newPassword, 10);
+		const sql = 'UPDATE users set password = ? WHERE id = ?'
+		db.run(sql, [hashedPassword, id], function (err) {
+			if (err){
+				return res.status(500).json({ message: 'Invalid' });
+			}
+			res.json({ message: 'Password has been reset successfully' });
+		});
+	});
+};
+
 const authenticateToken = (req, res, next) => {
 	const authHeader = req.headers['authorization'];
 	const token = authHeader && authHeader.split(' ')[1];
@@ -57,4 +94,4 @@ const authenticateToken = (req, res, next) => {
 	});
 }
 
-module.exports = { register, login, authenticateToken };
+module.exports = { register, login, requestReset, passwordReset, authenticateToken };

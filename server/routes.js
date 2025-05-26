@@ -1,12 +1,14 @@
 //routes are going here eventually
 const express = require('express');
 const db = require('./db');
-const { register, login, authenticateToken } = require('./controllers/authController')
+const { register, login, requestReset, passwordReset, authenticateToken } = require('./controllers/authController')
 const { getEvents, createEvent } = require('./controllers/eventController')
 
 const router = express.Router();
 
 router.post('/login', login);
+router.post('/users/request-reset', requestReset);
+router.post('/users/password-reset', passwordReset);
 
 router.route('/events')
 	.post(createEvent)
