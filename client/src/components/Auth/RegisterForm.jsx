@@ -8,19 +8,18 @@ export default function RegisterForm() {
 	);
 	const navigate = useNavigate();
 
-	// Get value from button
+	// Get value from the role button
 	const selectedRole = (e) => {
 		setForm({ ...form, role: e.target.value });
 	};
 
-	
 	const register = async (e) => {
 		
 		e.preventDefault();
 		
 		// Check role's value is artist or audience
 		if (form.role != 'artist' && form.role != 'audience') {
-			alert('Passwords do not match');
+			alert('Please, tell us if you are an artist or part of the Audience');
 			return;
 		}
 		// Validate password match
@@ -31,7 +30,7 @@ export default function RegisterForm() {
 		
 		// Register user, log in, and redirect to the dashboard
 		try {
-			const res = await API.post('/register', form);
+			const res = await API.post('/users', form);
 			localStorage.setItem('token', res.data.token);
 			navigate('/dashboard');
 		} catch (err) {
@@ -40,7 +39,7 @@ export default function RegisterForm() {
 	};
 
 	const handleChange = (e) => {
-		// Put data on the form and the input field after the user types
+		// Update form's and input field's data
 		
 		const { name, value } = e.target;
 		setForm(prevForm => ({ ...prevForm, [name]: value }));

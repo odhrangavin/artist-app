@@ -9,33 +9,33 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
+  // Get user data to continue session and export to other components
   useEffect(() => {
-    // Search user data and put it in a variable
     const fetchUser = async () => {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const res = await API.get('/api/users/me'); // TODO check path. ID is handled by the token and JWT
+          const res = await API.get('/users/me');
           setUser(res.data.user); 
         } catch (err) {
-          // If token is invalid or expired, delete token and user context data
+          // If token is invalid or expired, delete it with the user data
           localStorage.removeItem('token');
           setUser(null);
         }
       }
     };
-    fetchUser(); // Execute function
+    fetchUser();
   }, []); // [] means the function is executed once unless the component is restarted.
 
   // login function
   const login = async (credentials) => {
-    // Request token and save token
     try {
-      const res = await API.post('/api/login', credentials);
+      // Request token and save it
+      const res = await API.post('/login', credentials);
       localStorage.setItem('token', res.data.token);
       
-      // Fetch user
-      const userRes = await API.get('/api/users/me'); // TODO check path. ID is handled by the token and JWT
+      // Fetch user data after login
+      const userRes = await API.get('/users/me');
       setUser(userRes.data.user);
     } catch (err) {
       alert('Login error');
@@ -52,7 +52,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('token');
     setUser(null);
     
-    //  Redirect to login
+    // Redirect to login
     navigate('/login');
   };
 

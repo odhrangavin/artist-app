@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import API from '../../api/api';
 import { useAuth } from '../../context/AuthContext'; 
 
 export default function LoginForm() {
@@ -11,13 +9,12 @@ export default function LoginForm() {
 		// Send data to the server to login
 		
 		e.preventDefault();
-		// Call authentication API
 		login(form);
 
 	};
 
 	const handleChange = (e) => {
-		// Put data on the form and the input field after the user types
+		// Update form's and input field's data
 
 		const { name, value } = e.target;
 		setForm(prevForm => ({ ...prevForm, [name]: value }));

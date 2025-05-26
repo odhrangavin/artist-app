@@ -28,7 +28,7 @@ export const searchEvents = async (keyword = "") => {
 
 // Personal APIs
 const API = axios.create({
-  baseURL: 'http://localhost:3000/',
+  baseURL: 'http://localhost:3000/api',
 }); // base url for API.get() and API.post() methods.
 
 // Check if there is a token and include it in the headers before sending the HTTP request
