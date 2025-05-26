@@ -1,15 +1,47 @@
 //routes are going here eventually
 const express = require('express');
+const { register, login } = require('./controllers/authController')
+const { getEvents, createEvent } = require('./controllers/eventController')
 
 const router = express.Router();
 
+//basic routes
+router.get('/', (req, res) => {
+	res.send(`
+		<html>
+			<head>
+				<title>Server</title>
+			</head>
+			<body>
+				<p>Server running at ${ new Date().toDateString() }.</p>
+			</body>
+		</html>
+	`);
+});
+
+router.get('/api/test', (req, res) => {
+	res.json(
+		{
+			message: 'successful test',
+			time:    new Date().toDateString(),
+		}
+	)
+});
+
+router.get('/api-tests', (req, res) => {
+	res.sendFile(__dirname + '/api-tests.html');
+})
+
+router.get('/login-tests', (req, res) => {
+	res.sendFile(__dirname + '/login-tests.html');
+})
+
+//login & registration
+router.post('/login', login);
+
 router.route('/events')
-	.post((req, res, next) =>{
-		next(new Error('/events post not implemented'))
-	})
-	.get((req, res, next) =>{
-		next(new Error('/events get not implemented'))
-	})
+	.post(createEvent)
+	.get(getEvents)
 	.put((req, res, next) =>{
 		next(new Error('NOT VALID'))
 	})
@@ -23,7 +55,10 @@ router.route('/events/:id')
 	})
 	.get((req, res, next) =>{
 		let id = req.params.id;
-		next(new Error('/events/:id get not implemented'))
+		db.get(`SELECT * FROM events WHERE id = ${ id }`,
+		function (err, row) {
+			res.json({event: row});
+		});
 	})
 	.put((req, res, next) =>{
 		let id = req.params.id;
@@ -35,11 +70,12 @@ router.route('/events/:id')
 	});
 
 router.route('/users')
-	.post((req, res, next) =>{
-		next(new Error('/users post not implemented'))
-	})
+	.post(register)
 	.get((req, res, next) =>{
-		next(new Error('/users get not implemented'))
+		db.all(`SELECT * FROM users`,
+		function (err, rows) {
+			res.json({users: rows});
+		});
 	})
 	.put((req, res, next) =>{
 		next(new Error('NOT VALID'))
@@ -54,7 +90,10 @@ router.route('/users/:id')
 	})
 	.get((req, res, next) =>{
 		let id = req.params.id;
-		next(new Error('/users/:id get not implemented'))
+		db.get(`SELECT * FROM users WHERE id = ${ id }`,
+			function (err, row) {
+				res.json({user: row});
+			});
 	})
 	.put((req, res, next) =>{
 		let id = req.params.id;
