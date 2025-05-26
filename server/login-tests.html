@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="A retro 90s-style personal website for Jane Doe.">
+	<title>Logins</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+	<header role="banner">
+		<h1>Testing</h1>
+	</header>
+	<main>
+		<section id="eventSubmit">
+			<h2>Register</h2>
+			<form action="http://localhost:3000/api/users" method="post">
+				<label for="username">Username:</label>
+				<input type="text" name="username" required>
+				<label for="email">Email:</label>
+				<input type="text" name="email" required>
+				<label for="password">Password:</label>
+				<input type="text" name="password" required>
+				<label for="confirm">Confirm:</label>
+				<input type="text" name="confirm" required>
+				<button type="submit">Submit</button>
+			</form>
+		</section>
+		<section id="userSubmit">
+			<h2>Login</h2>
+			<form action="http://localhost:3000/api/login" method="post">
+				<label for="username">Username:</label>
+				<input type="text" name="username" required>
+				<label for="password">Password:</label>
+				<input type="text" name="password" required>
+				<button type="submit">Submit</button>
+			</form>
+		</section>
+		<section id="requestReset">
+			<h2>Request Reset</h2>
+			<form action="http://localhost:3000/api/users/request-reset" method="post">
+				<label for="email">Email:</label>
+				<input type="text" name="email" required>
+				<button type="submit">Submit</button>
+			</form>
+		</section>
+		<section id="passwordReset">
+			<h2>Password Reset</h2>
+			<form action="http://localhost:3000/api/users/password-reset" method="post">
+				<label for="token">Token:</label>
+				<input type="text" name="token" required>
+				<label for="newPassword">New Password:</label>
+				<input type="text" name="newPassword" required>
+				<button type="submit">Submit</button>
+			</form>
+		</section>
+	</main>
+</body>
+</html>
+

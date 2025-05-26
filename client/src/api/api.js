@@ -124,3 +124,20 @@ export function extractOptions(events) {
     ),
   };
 }
+
+// Personal APIs
+const API = axios.create({
+  baseURL: 'http://localhost:3000/api',
+}); // base url for API.get() and API.post() methods.
+
+// Check if there is a token and include it in the headers before sending the HTTP request
+API.interceptors.request.use((req) => {
+  const token = localStorage.getItem('token');
+  
+  if(token) req.headers.Authorization = `Bearer ${token}`; // Bearer is required by JWT
+
+  return req;
+
+})
+
+export default API;
