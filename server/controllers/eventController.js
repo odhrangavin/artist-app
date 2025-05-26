@@ -1,7 +1,6 @@
 const db = require('../db');
 
 const getEvents = (req, res) => {
-	console.log("from controller")
 	// Define valid searchable columns
 	const validColumns = ['title', 'event_time', 'location'];
 	const conditions = [];
@@ -30,7 +29,6 @@ const getEvents = (req, res) => {
 };
 
 const createEvent = (req, res) => {
-	console.log("from controller")
 	const { title, body, image_url, event_time, location, user_id } = req.body;
 	const created_at = new Date().toISOString();
 	db.run(`INSERT INTO events (title, body, image_url, event_time, location, user_id, created_at)
