@@ -56,9 +56,11 @@ export default function ExternalEventSearchForm({
     // Venue options only for selected city, otherwise empty list
     const venues = city && venueOptions[city] ? venueOptions[city] : [];
     // Genre options only for selected city & venue, otherwise empty list
+    const selectedVenueObj = venues.find((v) => v.id === venue);
+    const selectedVenue = selectedVenueObj ? selectedVenueObj.name : "";
     const genres =
-        city && venue && genreOptions[`${city}|||${venue}`]
-            ? genreOptions[`${city}|||${venue}`]
+        city && selectedVenue && genreOptions[`${city}|||${selectedVenue}`]
+            ? genreOptions[`${city}|||${selectedVenue}`]
             : [];
 
     return (
@@ -106,12 +108,13 @@ export default function ExternalEventSearchForm({
 
             />
             <AutocompleteInput
-                value={venue}
+                value={selectedVenueObj ? selectedVenueObj.name : ""}
                 onChange={v => {
-                    setVenue(v);
+                    const obj = venues.find((venueOption) => venueOption.name === v);
+                    setVenue(obj ? obj.id : "");
                     setGenre("");
                 }}
-                suggestions={venues}
+                suggestions={venues.map((v) => v.name)}
                 placeholder="Venue"
                 onClear={() => {
                     setVenue("");
