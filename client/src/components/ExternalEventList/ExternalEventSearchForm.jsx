@@ -75,7 +75,7 @@ export default function ExternalEventSearchForm({
             <input
                 type="date"
                 value={dateFrom}
-                min={getTodayISO()}
+                min={dateFrom || getTodayISO()}
                 onChange={(e) => setDateFrom(e.target.value)}
                 placeholder="From"
             />
@@ -88,6 +88,7 @@ export default function ExternalEventSearchForm({
             />
 
             <AutocompleteInput
+
                 value={city}
                 onChange={v => {
                     setCity(v);
@@ -102,6 +103,7 @@ export default function ExternalEventSearchForm({
                     setGenre("");
                 }}
                 disabled={loading}
+
             />
             <AutocompleteInput
                 value={venue}
