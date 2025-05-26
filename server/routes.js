@@ -2,13 +2,15 @@
 const express = require('express');
 const db = require('./db');
 const { register, login, requestReset, passwordReset, authenticateToken } = require('./controllers/authController')
-const { getEvents, createEvent } = require('./controllers/eventController')
+const { getEvents, createEvent } = require('./controllers/eventController');
+const { scrapeTicketmaster } = require('./controllers/scrapeController')
 
 const router = express.Router();
 
 router.post('/login', login);
 router.post('/users/request-reset', requestReset);
 router.post('/users/password-reset', passwordReset);
+router.get('/test/ticketmaster', scrapeTicketmaster)
 
 router.route('/events')
 	.post(createEvent)
