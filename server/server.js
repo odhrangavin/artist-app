@@ -9,6 +9,7 @@ const PORT = 3000;
 
 //project includes
 const router = require('./routes');
+const { login } = require('./controllers/authController')
 
 //middleware
 app.use(express.static('static'));

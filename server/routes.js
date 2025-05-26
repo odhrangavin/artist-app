@@ -1,11 +1,11 @@
 //routes are going here eventually
 const express = require('express');
-const { register, login } = require('./controllers/authController')
+const db = require('./db');
+const { register, login, authenticateToken } = require('./controllers/authController')
 const { getEvents, createEvent } = require('./controllers/eventController')
 
 const router = express.Router();
 
-//login & registration
 router.post('/login', login);
 
 router.route('/events')
@@ -59,6 +59,26 @@ router.route('/users/:id')
 	})
 	.get((req, res, next) =>{
 		let id = req.params.id;
+		db.get(`SELECT * FROM users WHERE id = ${ id }`,
+			function (err, row) {
+				res.json({user: row});
+			});
+	})
+	.put((req, res, next) =>{
+		let id = req.params.id;
+		next(new Error('/users/:id put not implemented'))
+	})
+	.delete((req, res, next) =>{
+		let id = req.params.id;
+		next(new Error('/users/:id delete not implemented'))
+	});
+
+router.route('/users/me')
+	.post((req, res, next) =>{
+		next(new Error('NOT VALID'))
+	})
+	.get(authenticateToken, (req, res, next) =>{
+		let id = req.user.id;
 		db.get(`SELECT * FROM users WHERE id = ${ id }`,
 			function (err, row) {
 				res.json({user: row});
