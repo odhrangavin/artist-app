@@ -53,12 +53,12 @@ router.route('/users')
 		next(new Error('NOT VALID'))
 	});
 
-router.route('/users/:id')
+router.route('/users/me')
 	.post((req, res, next) =>{
 		next(new Error('NOT VALID'))
 	})
-	.get((req, res, next) =>{
-		let id = req.params.id;
+	.get(authenticateToken, (req, res, next) =>{
+		let id = req.user.id;
 		db.get(`SELECT * FROM users WHERE id = ${ id }`,
 			function (err, row) {
 				res.json({user: row});
@@ -73,12 +73,12 @@ router.route('/users/:id')
 		next(new Error('/users/:id delete not implemented'))
 	});
 
-router.route('/users/me')
+router.route('/users/:id')
 	.post((req, res, next) =>{
 		next(new Error('NOT VALID'))
 	})
-	.get(authenticateToken, (req, res, next) =>{
-		let id = req.user.id;
+	.get((req, res, next) =>{
+		let id = req.params.id;
 		db.get(`SELECT * FROM users WHERE id = ${ id }`,
 			function (err, row) {
 				res.json({user: row});

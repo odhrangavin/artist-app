@@ -35,7 +35,7 @@ const API = axios.create({
 API.interceptors.request.use((req) => {
   const token = localStorage.getItem('token');
   
-  if(token) req.headers.Authorization = 'Bearer ${token}'; // Bearer is required by JWT
+  if(token) req.headers.Authorization = `Bearer ${token}`; // Bearer is required by JWT
 
   return req;
 

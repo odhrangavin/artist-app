@@ -15,7 +15,7 @@ export function AuthProvider({ children }) {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const res = await API.get('/api/user'); // TODO check path. ID is handled by the token and JWT
+          const res = await API.get('/api/users/me'); // TODO check path. ID is handled by the token and JWT
           setUser(res.data.user); 
         } catch (err) {
           // If token is invalid or expired, delete token and user context data
@@ -31,11 +31,11 @@ export function AuthProvider({ children }) {
   const login = async (credentials) => {
     // Request token and save token
     try {
-      const res = await API.post('/login', credentials);
+      const res = await API.post('/api/login', credentials);
       localStorage.setItem('token', res.data.token);
       
       // Fetch user
-      const userRes = await API.get('/api/user'); // TODO check path. ID is handled by the token and JWT
+      const userRes = await API.get('/api/users/me'); // TODO check path. ID is handled by the token and JWT
       setUser(userRes.data.user);
     } catch (err) {
       alert('Login error');
