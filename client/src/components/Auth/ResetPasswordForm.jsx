@@ -16,7 +16,8 @@ export default function ForgotPasswordForm() {
 		<form onSubmit={handleSubmit}>
 				<input 
 					placeholder="Email" 
-					onChange={e => setForm({ ...form, email: e.target.value })} 
+					onChange={e => setForm({ ...form, email: e.target.value })}
+					required
 				/>
 				<br />
 				<button type="submit">Reset</button>

@@ -17,7 +17,12 @@ export default function RegisterForm() {
 	const register = async (e) => {
 		
 		e.preventDefault();
-
+		
+		// Check role's value is artist or audience
+		if (form.role != 'artist' && form.role != 'audience') {
+			alert('Passwords do not match');
+			return;
+		}
 		// Validate password match
 		if (form.password !== form.confirm) {
 			alert('Passwords do not match');
@@ -25,9 +30,8 @@ export default function RegisterForm() {
 		}
 		
 		// Register user, log in, and redirect to the dashboard
-		const { confirm, ...dataToSend } = form;
 		try {
-			const res = await API.post('/auth/register', dataToSend);
+			const res = await API.post('/register', form);
 			localStorage.setItem('token', res.data.token);
 			navigate('/dashboard');
 		} catch (err) {
@@ -35,42 +39,53 @@ export default function RegisterForm() {
 		}
 	};
 
+	const handleChange = (e) => {
+		// Put data on the form and the input field after the user types
+		
+		const { name, value } = e.target;
+		setForm(prevForm => ({ ...prevForm, [name]: value }));
+	}
+
 	return (
 		<form onSubmit={register}>
 			<label>Email Address</label>
 			<input 
+				name="email"
 				type="email"
 				value={form.email}
 				placeholder="abc@example.com" 
-				onChange={e => setForm({ ...form, email: e.target.value })}
+				onChange={handleChange}
 				required 
 			/>
 			<br />
 			<label>Username</label>
 			<input 
+				name="username"
 				type="text"
 				value={form.username}
 				max="20"
 				placeholder="Username" 
-				onChange={e => setForm({ ...form, username: e.target.value })} 
+				onChange={handleChange} 
 				required
 			/>
 			<br />
 			<label>Password</label>
 			<input 
+				name="password"
 				type="password" 
 				value={form.password}
 				placeholder="Create a password" 
-				onChange={e => setForm({ ...form, password: e.target.value })} 
+				onChange={handleChange} 
 				required
 			/>
 			<br />
 			<label>Confirm Password</label>
 			<input 
+				name="confirm"
 				type="password" 
 				value={form.confirm}
 				placeholder="Repeat the password" 
-				onChange={e => setForm({ ...form, confirm: e.target.value })} 
+				onChange={handleChange} 
 				required
 			/>
 			<br />

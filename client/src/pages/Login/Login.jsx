@@ -1,6 +1,6 @@
 // login page
 import { Link } from 'react-router-dom';
-import LoginForm from '../../components/LoginForm/LoginForm';
+import LoginForm from '../../components/Auth/LoginForm';
 
 export default function Login() {
     return (

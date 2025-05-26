@@ -7,7 +7,7 @@ import Home from './pages/Home/Home.jsx';
 import NotFound from './pages/NotFound/NotFound.jsx';
 import Reset from './pages/ResetPassword/ResetPassword.jsx';
 // It will be used in the future for pages that require to be logged in
-import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.jsx'; 
+import ProtectedRoute from './components/Auth/ProtectedRoute.jsx'; 
 
 import './App.css'
 
