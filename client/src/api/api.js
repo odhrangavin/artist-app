@@ -24,7 +24,7 @@ export const searchEvents = async ({
   if (startDateTime) params.startDateTime = startDateTime;
   if (endDateTime) params.endDateTime = endDateTime;
   if (city) params.city = city;
-  if (venue) params.venueName = venue;
+  if (venue) params.venueId = venue;
   if (genre) params.classificationName = genre;
 
   const response = await axios.get(BASE_URL, { params });
@@ -42,9 +42,50 @@ export function extractOptions(events) {
   // City+Venue -> Set of genres
   const cityVenueGenreMap = {};
 
+  // events.forEach((e) => {
+  //   const city = e._embedded?.venues?.[0]?.city?.name || "";
+  //   const venue = e._embedded?.venues?.[0]?.name || "";
+  //   const genres = [];
+  //   if (e.classifications && e.classifications[0]) {
+  //     if (e.classifications[0].genre?.name)
+  //       genres.push(e.classifications[0].genre.name);
+  //     if (e.classifications[0].segment?.name)
+  //       genres.push(e.classifications[0].segment.name);
+  //   }
+  //   if (!city) return;
+
+  //   citySet.add(city);
+
+  //   if (venue) {
+  //     cityVenueMap[city] = cityVenueMap[city] || new Set();
+  //     cityVenueMap[city].add(venue);
+
+  //     const key = `${city}|||${venue}`;
+  //     cityVenueGenreMap[key] = cityVenueGenreMap[key] || new Set();
+  //     genres.forEach((g) => cityVenueGenreMap[key].add(g));
+  //   }
+  // });
+
+  // return {
+  //   cities: Array.from(citySet).sort(),
+  //   venuesByCity: Object.fromEntries(
+  //     Object.entries(cityVenueMap).map(([c, venues]) => [
+  //       c,
+  //       Array.from(venues).sort(),
+  //     ])
+  //   ),
+  //   genresByCityVenue: Object.fromEntries(
+  //     Object.entries(cityVenueGenreMap).map(([k, genres]) => [
+  //       k,
+  //       Array.from(genres).sort(),
+  //     ])
+  //   ),
+  // };
   events.forEach((e) => {
     const city = e._embedded?.venues?.[0]?.city?.name || "";
-    const venue = e._embedded?.venues?.[0]?.name || "";
+    const venueObj = e._embedded?.venues?.[0];
+    const venueName = venueObj?.name || "";
+    const venueId = venueObj?.id || "";
     const genres = [];
     if (e.classifications && e.classifications[0]) {
       if (e.classifications[0].genre?.name)
@@ -56,11 +97,12 @@ export function extractOptions(events) {
 
     citySet.add(city);
 
-    if (venue) {
-      cityVenueMap[city] = cityVenueMap[city] || new Set();
-      cityVenueMap[city].add(venue);
+    if (venueName && venueId) {
+      cityVenueMap[city] = cityVenueMap[city] || [];
+      if (!cityVenueMap[city].some((v) => v.id === venueId))
+        cityVenueMap[city].push({ name: venueName, id: venueId });
 
-      const key = `${city}|||${venue}`;
+      const key = `${city}|||${venueId}`;
       cityVenueGenreMap[key] = cityVenueGenreMap[key] || new Set();
       genres.forEach((g) => cityVenueGenreMap[key].add(g));
     }
@@ -71,7 +113,7 @@ export function extractOptions(events) {
     venuesByCity: Object.fromEntries(
       Object.entries(cityVenueMap).map(([c, venues]) => [
         c,
-        Array.from(venues).sort(),
+        venues.sort((a, b) => a.name.localeCompare(b.name)),
       ])
     ),
     genresByCityVenue: Object.fromEntries(
@@ -83,7 +125,7 @@ export function extractOptions(events) {
   };
 }
 
-// Personal APIs
+// ==Personal APIs==
 const API = axios.create({
   baseURL: 'http://localhost:3000/api',
 }); // base url for API.get() and API.post() methods.

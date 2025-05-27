@@ -29,11 +29,11 @@ const getEvents = (req, res) => {
 };
 
 const createEvent = (req, res) => {
-	const { title, body, image_url, event_time, location, user_id } = req.body;
+	const { title, description, image_url, event_time, location, user_id } = req.body;
 	const created_at = new Date().toISOString();
-	db.run(`INSERT INTO events (title, body, image_url, event_time, location, user_id, created_at)
+	db.run(`INSERT INTO events (title, description, image_url, event_time, location, user_id, created_at)
 	 	VALUES (?, ?, ?, ?, ?, ?, ?)`,
-		[title, body, image_url, event_time, location, user_id, created_at],
+		[title, description, image_url, event_time, location, user_id, created_at],
 		function (err) {
 			if (err) {
 				console.error(err.message);
