@@ -32,13 +32,16 @@ const db = new sqlite3.Database(DBFILE, err => {
 	db.run(
 		`CREATE TABLE IF NOT EXISTS events (
 			id          INTEGER PRIMARY KEY,
+			external_id TEXT UNIQUE,
+			genre       TEXT,
 			title       TEXT NOT NULL,
 			description TEXT,
 			image_url   TEXT,
+			event_date  TEXT,
 			event_time  TEXT,
 			location    TEXT,
 			user_id     INTEGER NOT NULL,
-			created_at  TEXT,
+			created_at  TEXT,	
 			FOREIGN KEY(user_id) REFERENCES users(id)
 		)`,
 		err => { 
