@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import API from '../../api/api';
 
-import './Dashboard.css';
+import './Dashboard.scss';
 
-
+// Component to preview the event before submitting
 function EventPreview({ event }) {
     if (!event.title && !event.description) return null;
     return (
@@ -16,6 +17,53 @@ function EventPreview({ event }) {
             <p>{event.description}</p>
             <p><strong>Date/Time:</strong> {event.event_time}</p>
             <p><strong>Location:</strong> {event.location}</p>
+        </div>
+    );
+}
+
+// Component to show the current user's events
+function UserEventsList({ userId }) {
+    const [events, setEvents] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [err, setErr] = useState('');
+
+    useEffect(() => {
+        async function fetchEvents() {
+            setLoading(true);
+            setErr('');
+            try {
+                // Prefer dedicated route, fallback to all events filtered client-side if not available
+                const res = await API.get(`/events/user/${userId}`);
+                setEvents(res.data.events);
+            } catch (e) {
+                setErr('Failed to load your events.');
+                setEvents([]);
+            }
+            setLoading(false);
+        }
+        if (userId) fetchEvents();
+    }, [userId]);
+
+    if (loading) return <div>Loading your events...</div>;
+    if (err) return <div className="error">{err}</div>;
+    if (!events.length) return <div>No events posted yet.</div>;
+
+    return (
+        <div className="user-events-list">
+            <h3>Your Events</h3>
+            <ul>
+                {events.map(ev => (
+                    <li key={ev.id} className="event-card">
+                        <h4>{ev.title}</h4>
+                        {ev.image_url && (
+                            <img src={ev.image_url} alt={ev.title} style={{ maxWidth: 220, maxHeight: 130 }} />
+                        )}
+                        <p>{ev.description}</p>
+                        <p><strong>Date/Time:</strong> {ev.event_time}</p>
+                        <p><strong>Location:</strong> {ev.location}</p>
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 }
@@ -33,6 +81,9 @@ export default function Dashboard() {
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
 
+    // To refresh event list after creating a new event
+    const [refreshKey, setRefreshKey] = useState(0);
+
     const handleChange = e => {
         const { name, value } = e.target;
         setForm(prev => ({ ...prev, [name]: value }));
@@ -43,18 +94,19 @@ export default function Dashboard() {
         setSubmitting(true);
         setError('');
         setSuccess('');
-        // try {
-        //     const res = await API.post('/events/create', {
-        //         ...form,
-        //         user_id: user?.id
-        //     });
-        //     setSuccess('Event created!');
-        //     setForm({ title: '', description: '', image_url: '', event_time: '', location: '' });
-        // } catch (err) {
-        //     setError('Failed to create event.');
-        // } finally {
-        //     setSubmitting(false);
-        // }
+        try {
+            await API.post('/events', {
+                ...form,
+                user_id: user?.id
+            });
+            setSuccess('Event created!');
+            setForm({ title: '', description: '', image_url: '', event_time: '', location: '' });
+            setRefreshKey(k => k + 1); // trigger event list reload
+        } catch (err) {
+            setError('Failed to create event.');
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
@@ -67,7 +119,6 @@ export default function Dashboard() {
                 <label>Image URL
                     <input name="image_url" value={form.image_url} onChange={handleChange} />
                 </label>
-
                 <label>Date & Time
                     <input name="event_time" type="datetime-local" value={form.event_time} onChange={handleChange} required />
                 </label>
