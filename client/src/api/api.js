@@ -125,7 +125,7 @@ export function extractOptions(events) {
   };
 }
 
-// Personal APIs
+// ==Personal APIs==
 const API = axios.create({
   baseURL: 'http://localhost:3000/api',
 }); // base url for API.get() and API.post() methods.
