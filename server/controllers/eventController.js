@@ -33,7 +33,7 @@ const createEvent = (req, res) => {
 	const created_at = new Date().toISOString();
 	db.run(`INSERT INTO events (title, description, image_url, event_time, location, user_id, created_at)
 	 	VALUES (?, ?, ?, ?, ?, ?, ?)`,
-		[title, body, image_url, event_time, location, user_id, created_at],
+		[title, description, image_url, event_time, location, user_id, created_at],
 		function (err) {
 			if (err) {
 				console.error(err.message);
