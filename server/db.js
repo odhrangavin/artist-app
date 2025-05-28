@@ -35,7 +35,7 @@ const db = new sqlite3.Database(DBFILE, err => {
 			external_id TEXT UNIQUE,
 			genre       TEXT,
 			title       TEXT,
-			body        TEXT,
+			description TEXT,
 			image_url   TEXT,
 			event_date  TEXT,
 			event_time  TEXT,
@@ -55,6 +55,7 @@ const db = new sqlite3.Database(DBFILE, err => {
 
 	//create user #1 as system write user if not there
 	//password hash is nonsense, this user cannot log in
+	//not creating on initial boot
 	let created = new Date().toISOString();
 	db.run(
 		`INSERT OR IGNORE INTO users 
