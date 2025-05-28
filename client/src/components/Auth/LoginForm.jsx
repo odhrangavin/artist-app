@@ -39,7 +39,7 @@ export default function LoginForm() {
 					required
 				/>
 				<br />
-				<button type="submit">Login</button>
+				<button type="submit">Log in</button>
 		</form>
 	);
 }
