@@ -1,5 +1,5 @@
 import ExternalEventList from '../../components/ExternalEventList/ExternalEventList';
-import UserEventsList from '../../components/userEventsList/userEventsList.jsx';
+import UserEventsList from '../../components/UserEventsList/UserEventsList.jsx';
 import './Home.css';
 
 

@@ -79,9 +79,9 @@ export default function ExternalEventList() {
                             displayedEvents.map((e) => (
                                 <li key={e.id} className="event-card">
                                     <img src={e.images?.[0]?.url} alt={e.name} className="event-image" />
-                                    <h4>{e.name}</h4>
+                                    <h3>{e.name}</h3>
                                     <p>
-                                        <strong>Date:</strong> {e.dates?.start?.localDate}
+                                        <strong>Date/Time:</strong> {e.dates?.start?.localDate}
                                         {e.dates?.start?.localTime ? <span> {e.dates.start.localTime}</span> : null}
                                     </p>
                                     <p>

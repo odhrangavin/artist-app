@@ -8,8 +8,9 @@ import Register from './pages/Auth/Register.jsx';
 import ForgotPassword from './pages/Auth/ForgotPassword.jsx';
 import ResetPassword from './pages/Auth/ResetPassword.jsx';
 import NotFound from './pages/NotFound/NotFound.jsx';
+import UserEventDetail from './components/UserEventsList/UserEventDetail.jsx';
 // It will be used in the future for pages that require to be logged in
-import ProtectedRoute from './components/Auth/ProtectedRoute.jsx'; 
+import ProtectedRoute from './components/Auth/ProtectedRoute.jsx';
 import './App.css'
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/events/:id" element={<UserEventDetail />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
