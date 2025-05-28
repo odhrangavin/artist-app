@@ -31,45 +31,19 @@ const db = new sqlite3.Database(DBFILE, err => {
 	//create events table
 	db.run(
 		`CREATE TABLE IF NOT EXISTS events (
-<<<<<<< HEAD
 			id          INTEGER PRIMARY KEY,
 			external_id TEXT UNIQUE,
 			genre       TEXT,
-<<<<<<< HEAD
 			title       TEXT NOT NULL,
-=======
-			title       TEXT,
->>>>>>> 902a75354f7a3634be4ad1a93d13625c979afaf7
 			description TEXT,
 			image_url   TEXT,
 			event_date  TEXT,
 			event_time  TEXT,
 			location    TEXT,
-<<<<<<< HEAD
 			user_id     INTEGER NOT NULL,
 			created_at  TEXT,	
-=======
-			user_id     INTEGER,
-			created_at  TEXT,		
->>>>>>> 902a75354f7a3634be4ad1a93d13625c979afaf7
 			FOREIGN KEY(user_id) REFERENCES users(id)
 		)`,
-=======
-		id          INTEGER PRIMARY KEY,
-		external_id TEXT UNIQUE,
-		genre       TEXT,
-		title       TEXT,
-		body        TEXT,
-		image_url   TEXT,
-		event_date  TEXT,
-		event_time  TEXT,
-		location    TEXT,
-		user_id     INTEGER,
-		created_at  TEXT,
-		
-		FOREIGN KEY(user_id) REFERENCES users(id)
-	 )`,
->>>>>>> 8025354 (ticketmaster scarpe & write)
 		err => { 
 			if (err){
 				console.error('events table error:', err);
