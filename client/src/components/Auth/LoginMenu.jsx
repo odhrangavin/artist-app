@@ -17,7 +17,7 @@ export default function LoginMenu() {
 		} else {		
 			return (
 				<>
-					<li><Link to="/login">Login</Link></li>
+					<li><Link to="/login">Log In</Link></li>
 					<li><Link to="/register">Register</Link></li>
 				</>
 			);
