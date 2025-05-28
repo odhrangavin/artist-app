@@ -3,8 +3,8 @@
     "concurrently": "^9.1.2"
   },
   "scripts": {
-  "start": "concurrently \"npm run server\" \"npm run client\"",
-  "server": "cd server && node --watch server.js",
-  "client": "cd client && npm run dev"  
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && node --watch server.js",
+    "client": "cd client && npm run dev"
   }
 }
