@@ -24,12 +24,13 @@ const scrapeTicketmaster = async (req, res) => {
 		eventItem.dates.start.localTime,
 		eventItem.classifications?.[0].genre.name ?? '',
 		eventItem._embedded.venues[0]?.name || '',
-		created_at
+		created_at,
+		1
 	])
 
 	const stmt = db.prepare(`INSERT OR IGNORE INTO events
-							 (external_id, title, image_url, event_date, event_time, genre, location, created_at) 
-							 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
+							 (external_id, title, image_url, event_date, event_time, genre, location, created_at, user_id) 
+							 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
 	db.serialize(() => {
 		db.run('BEGIN TRANSACTION');
 		let insertedRows = 0;
@@ -48,7 +49,7 @@ const scrapeTicketmaster = async (req, res) => {
 				console.error('Commit error:', err.message);
 				return res.status(500).json({ error: 'Failed to commit transaction' });
 			}
-			res.json({ message: `Inserted ${insertedRows} rows successfully`, data: fullData });
+			res.json({ message: `Inserted ${insertedRows} rows successfully`, data: fullData, map: fullDataMap });
 		});
 	});
 }
@@ -73,12 +74,13 @@ const scrapeFailte = async(req, res) => {
 		eventItem.additionalType[0],
 		eventItem.location.name,
 		eventItem.description,
-		created_at
+		created_at,
+		1
 	])
 
 	const stmt = db.prepare(`INSERT OR IGNORE INTO events
-							 (external_id, title, image_url, event_date, event_time, genre, location, description, created_at) 
-							 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+							 (external_id, title, image_url, event_date, event_time, genre, location, description, created_at, user_id) 
+							 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
 	db.serialize(() => {
 		db.run('BEGIN TRANSACTION');
 		let insertedRows = 0;
