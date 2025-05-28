@@ -1,7 +1,6 @@
 import ExternalEventList from '../../components/ExternalEventList/ExternalEventList';
 import UserEventsList from '../../components/userEventsList/userEventsList.jsx';
 import './Home.css';
-import './Home.css';
 
 export default function Home() {
     return (
