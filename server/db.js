@@ -72,6 +72,7 @@ const db = new sqlite3.Database(DBFILE, err => {
 
 	//create user #1 as system write user if not there
 	//password hash is nonsense, this user cannot log in
+	//not creating on initial boot
 	let created = new Date().toISOString();
 	db.run(
 		`INSERT OR IGNORE INTO users 
