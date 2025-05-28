@@ -34,14 +34,14 @@ const db = new sqlite3.Database(DBFILE, err => {
 			id          INTEGER PRIMARY KEY,
 			external_id TEXT UNIQUE,
 			genre       TEXT,
-			title       TEXT NOT NULL,
-			description TEXT,
+			title       TEXT,
+			body        TEXT,
 			image_url   TEXT,
 			event_date  TEXT,
 			event_time  TEXT,
 			location    TEXT,
-			user_id     INTEGER NOT NULL,
-			created_at  TEXT,	
+			user_id     INTEGER,
+			created_at  TEXT,		
 			FOREIGN KEY(user_id) REFERENCES users(id)
 		)`,
 		err => { 
