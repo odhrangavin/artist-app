@@ -1,4 +1,6 @@
 import ExternalEventList from '../../components/ExternalEventList/ExternalEventList';
+import UserEventsList from '../../components/userEventsList/userEventsList.jsx';
+import './Home.css';
 import './Home.css';
 
 export default function Home() {
@@ -8,6 +10,7 @@ export default function Home() {
             <p>Search and save your favorite events. Login or Register to get started.</p>
 
             <ExternalEventList />
+            <UserEventsList />
         </div>
     );
 }

@@ -49,7 +49,7 @@ function UserEventsList({ userId }) {
     if (!events.length) return <div>No events posted yet.</div>;
 
     return (
-        <div className="user-events-list">
+        <section className="user-events-list">
             <h3>Your Events</h3>
             <ul>
                 {events.map(ev => (
@@ -64,7 +64,7 @@ function UserEventsList({ userId }) {
                     </li>
                 ))}
             </ul>
-        </div>
+        </section>
     );
 }
 
@@ -75,7 +75,9 @@ export default function Dashboard() {
         description: '',
         image_url: '',
         event_time: '',
-        location: ''
+        location: '',
+        venue: '',
+        genre: '',
     });
     const [submitting, setSubmitting] = useState(false);
     const [success, setSuccess] = useState('');
@@ -100,7 +102,7 @@ export default function Dashboard() {
                 user_id: user?.id
             });
             setSuccess('Event created!');
-            setForm({ title: '', description: '', image_url: '', event_time: '', location: '' });
+            setForm({ title: '', description: '', image_url: '', event_time: '', location: '', venue: '', genre: '' });
             setRefreshKey(k => k + 1); // trigger event list reload
         } catch (err) {
             setError('Failed to create event.');
@@ -124,6 +126,12 @@ export default function Dashboard() {
                 </label>
                 <label>Location
                     <input name="location" value={form.location} onChange={handleChange} required />
+                </label>
+                <label>Venue
+                    <input name="venue" value={form.venue} onChange={handleChange} required />
+                </label>
+                <label>Genre
+                    <input name="genre" value={form.genre} onChange={handleChange} required />
                 </label>
                 <label>Description</label>
                 <textarea name="description" value={form.description} onChange={handleChange} required rows="4" cols="50" />
