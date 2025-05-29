@@ -1,25 +1,15 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
-const DBFILE = path.join(__dirname, 'data', 'data.db')
-let db;
+const DBFILE = process.env.NODE_ENV == 'test' ? ':memory:' : path.join(__dirname, 'data', 'data.db')
 
-if(process.env.NODE_ENV == 'test'){
-	console.log("in test")
-	db = new sqlite3.Database(':memory:', err => {
-		if (err) {
-			console.error('Failed to open database:', err);
-			process.exit(1);
-		}
-	});
-}else{
-	db = new sqlite3.Database(DBFILE, err => {
-		if (err) {
-			console.error('Failed to open database:', err);
-			process.exit(1);
-		}
-	});
-}
+const db = new sqlite3.Database(DBFILE, err => {
+	if (err) {
+		console.error('Failed to open database:', err);
+		process.exit(1);
+	}
+});
+
 
 //create users table
 db.run(
