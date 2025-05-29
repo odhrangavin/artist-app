@@ -2,6 +2,8 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
+import { vi } from 'vitest';
+import mockAxios from './axios';
 
 import { AuthProvider } from '../context/AuthContext.jsx';
 import renderWithRouter from './testUtils.jsx';
@@ -9,11 +11,21 @@ import App from '../App';
 
 /*  == DRY FUNCTIONS == */
 
+/*  == SET UP MOCKS == */
+// Replaces Axios by a mock
+vi.mock('axios', () => ({
+  default: {
+    create: () => mockAxios,
+    ...mockAxios,
+  }
+})); 
+
+
 /* == TESTS == */
 
 // Test App.jsx renders correctly
 describe('App screen', () => {
-  it('should render index at /', () => {
+  it('should render index at /', async () => {
     render(
     <BrowserRouter>
       <AuthProvider>
@@ -21,7 +33,7 @@ describe('App screen', () => {
       </AuthProvider>
     </BrowserRouter>
     );
-    expect(screen.getByText('Welcome to Event App')).toBeInTheDocument()
+    expect(await screen.findByText('Welcome to Event App')).toBeInTheDocument()
   });
 });
 
