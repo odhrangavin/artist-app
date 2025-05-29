@@ -9,7 +9,7 @@ export default function Home() {
             <h2>Welcome to Event App</h2>
             <p>Search and save your favorite events. Login or Register to get started.</p>
 
-            <ExternalEventList />
+            {/* <ExternalEventList /> */}
             <UserEventsList />
         </div>
     );

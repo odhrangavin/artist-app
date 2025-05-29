@@ -37,6 +37,7 @@ export default function UserEventDetail() {
             <p><strong>City:</strong> {event.location}</p>
             <p><strong>Venue:</strong> {event.venue}</p>
             <p><strong>Genre:</strong> {event.genre}</p>
+            <p><strong>Author:</strong> {event.author}</p>
         </div>
     );
 }

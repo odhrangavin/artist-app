@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { searchEvents, extractOptions } from "../../api/api";
-import ExternalEventSearchForm from "./ExternalEventSearchForm";
+// import { searchEvents, extractOptions } from "../../api/api";
+// import ExternalEventSearchForm from "./ExternalEventSearchForm";
 import "./ExternalEventList.css";
 
-const EVENTS_PER_PAGE = 12;
+const EVENTS_PER_PAGE = 6;
 
 export default function ExternalEventList() {
     const [events, setEvents] = useState([]);
@@ -106,7 +106,7 @@ export default function ExternalEventList() {
                         )}
                     </ul>
                     {/* Pagination controls */}
-                    {totalPages > 1 && (
+                    {/* {totalPages > 1 && (
                         <div className="pagination">
                             {Array.from({ length: totalPages }, (_, i) => (
                                 <button
@@ -128,7 +128,7 @@ export default function ExternalEventList() {
                                 </button>
                             ))}
                         </div>
-                    )}
+                    )} */}
                 </>
             )}
         </div>
