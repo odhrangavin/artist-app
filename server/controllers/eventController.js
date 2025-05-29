@@ -16,7 +16,7 @@ const getEvents = (req, res) => {
 
 	// If no valid query parameters, return all rows
 	const sql = conditions.length > 0 
-		? `SELECT * FROM events WHERE ${conditions.join(' OR ')}`
+		? `SELECT * FROM events WHERE ${conditions.join(' AND ')}`
 		: `SELECT * FROM events`;
 
 	db.all(sql, params, (err, rows) => {
