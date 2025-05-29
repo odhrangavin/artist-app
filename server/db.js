@@ -40,6 +40,7 @@ const db = new sqlite3.Database(DBFILE, err => {
 			event_date  TEXT,
 			event_time  TEXT,
 			location    TEXT,
+			venue       TEXT,
 			user_id     INTEGER NOT NULL,
 			created_at  TEXT,	
 			FOREIGN KEY(user_id) REFERENCES users(id)
@@ -49,28 +50,28 @@ const db = new sqlite3.Database(DBFILE, err => {
 				console.error('events table error:', err);
 			}else{
 				console.log('events table functional')
+				let created = new Date().toISOString();
+				//create user #1 as system write user if not there
+				//password hash is nonsense, this user cannot log in
+				db.run(
+					`INSERT OR IGNORE INTO users 
+							(id, email, username, password, role, created_at)
+							VALUES (1, 'system-user@system.system', 'system-user', 'F1uIWVbof/AwWFi3Y8EivDa31qxs2Pu.$2b$10$jI5yLWbWDre78stUQHxbC', 'system-user', '${ created }')`,
+					function (err) { 
+						if (err){
+							console.error('user creation error', err);
+						}else if(this.changes > 0){
+							console.log('root user created');
+						}else{
+							console.log('root user exists');
+						}
+					}
+				)
 			}
 		}
 	);
 
-	//create user #1 as system write user if not there
-	//password hash is nonsense, this user cannot log in
-	//not creating on initial boot
-	let created = new Date().toISOString();
-	db.run(
-		`INSERT OR IGNORE INTO users 
-				(id, email, username, password, role, created_at)
-				VALUES (1, 'system-user@system.system', 'system-user', 'F1uIWVbof/AwWFi3Y8EivDa31qxs2Pu.$2b$10$jI5yLWbWDre78stUQHxbC', 'system-user', '${ created }')`,
-		function (err) { 
-			if (err){
-				console.error('user creation error', err);
-			}else if(this.changes > 0){
-				console.log('root user created');
-			}else{
-				console.log('root user exists');
-			}
-		}
-	)
+	//not creating on initial boot - move to user table creation success
 });
 
 module.exports = db;

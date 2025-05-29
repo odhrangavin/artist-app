@@ -23,14 +23,15 @@ const scrapeTicketmaster = async (req, res) => {
 		eventItem.dates.start.localDate,
 		eventItem.dates.start.localTime,
 		eventItem.classifications?.[0].genre.name ?? '',
+		eventItem._embedded.venues[0]?.city.name || '',
 		eventItem._embedded.venues[0]?.name || '',
 		created_at,
 		1
 	])
 
 	const stmt = db.prepare(`INSERT OR IGNORE INTO events
-							 (external_id, title, image_url, event_date, event_time, genre, location, created_at, user_id) 
-							 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+							 (external_id, title, image_url, event_date, event_time, genre, location, venue, created_at, user_id) 
+							 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
 	db.serialize(() => {
 		db.run('BEGIN TRANSACTION');
 		let insertedRows = 0;
@@ -72,6 +73,7 @@ const scrapeFailte = async(req, res) => {
 		eventItem.eventSchedule[0]?.startDate ?? '',
 		eventItem.eventSchedule[0]?.startTime ?? '',
 		eventItem.additionalType[0],
+		eventItem.location.address.addressRegion,
 		eventItem.location.name,
 		eventItem.description,
 		created_at,
@@ -79,8 +81,8 @@ const scrapeFailte = async(req, res) => {
 	])
 
 	const stmt = db.prepare(`INSERT OR IGNORE INTO events
-							 (external_id, title, image_url, event_date, event_time, genre, location, description, created_at, user_id) 
-							 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+							 (external_id, title, image_url, event_date, event_time, genre, location, venue, description, created_at, user_id) 
+							 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
 	db.serialize(() => {
 		db.run('BEGIN TRANSACTION');
 		let insertedRows = 0;
