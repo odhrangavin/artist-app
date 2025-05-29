@@ -29,11 +29,14 @@ const getEvents = (req, res) => {
 };
 
 const createEvent = (req, res) => {
-	const { title, description, image_url, event_time, location, user_id } = req.body;
+	const { title, description, image_url, event_time, location, venue, genre, user_id } = req.body;
+	console.log(event_time)
+	const [ event_date, event_ntime ] = event_time.split("T");
+	console.log(event_date, event_ntime)
 	const created_at = new Date().toISOString();
-	db.run(`INSERT INTO events (title, description, image_url, event_time, location, user_id, created_at)
-	 	VALUES (?, ?, ?, ?, ?, ?, ?)`,
-		[title, description, image_url, event_time, location, user_id, created_at],
+	db.run(`INSERT INTO events (title, description, image_url, event_date, event_time, location, venue, genre, user_id, created_at)
+	 	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		[title, description, image_url, event_date, event_ntime, location, venue, genre, user_id, created_at],
 		function (err) {
 			if (err) {
 				console.error(err.message);
