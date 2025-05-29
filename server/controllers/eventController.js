@@ -2,7 +2,7 @@ const db = require('../db');
 
 const getEvents = (req, res) => {
 	// Define valid searchable columns
-	const validColumns = ['title', 'event_time', 'location'];
+	const validColumns = ['title', 'event_date', 'event_time', 'location', 'venue', 'genre'];
 	const conditions = [];
 	const params = [];
 
