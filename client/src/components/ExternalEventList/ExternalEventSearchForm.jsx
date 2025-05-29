@@ -1,7 +1,7 @@
 import './ExternalEventList.css';
 
 import { useState } from "react";
-import AutocompleteInput from "./AutocompleteInput";
+// import AutocompleteInput from "./AutocompleteInput";
 
 // today-YYYY-MM-DD
 function getTodayISO() {
