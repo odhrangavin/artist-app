@@ -70,8 +70,8 @@ const scrapeFailte = async(req, res) => {
 		eventItem.id,
 		eventItem.name,
 		'', //failte doesn't seem to have images
-		eventItem.eventSchedule[0]?.startDate ?? '',
-		eventItem.eventSchedule[0]?.startTime ?? '',
+		eventItem.eventSchedule[0]?.startDate.split("T")[0] ?? '',
+		eventItem.eventSchedule[0]?.startTime ?? '00:00:00',
 		eventItem.additionalType[0],
 		eventItem.location.address.addressRegion,
 		eventItem.location.name,
