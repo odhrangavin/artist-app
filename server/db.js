@@ -73,4 +73,22 @@ db.run(
 	}
 );
 
+db.run(
+	`CREATE TABLE IF NOT EXISTS faves (
+		id         INTEGER PRIMARY KEY,
+		event      INTEGER NOT NULL,
+		user_id    INTEGER NOT NULL,
+		created_at TEXT
+		FOREIGN KEY(event) REFERENCES events(id)
+		FOREIGN KEY(user_id) REFERENCES users(id)
+	)`,
+	err => { 
+		if (err){
+			console.error('users table error:', err);
+		}else{
+			console.log('users table functional');
+		} 	
+	}
+);
+
 module.exports = db;
