@@ -1,5 +1,5 @@
 import { useAuth } from '../../context/AuthContext';
-import LogoutButton from './LogoutButton';
+import LogoutButton from '../../components/Auth/LogoutButton';
 import { Link } from "react-router-dom";
 
 export default function LoginMenu() {
