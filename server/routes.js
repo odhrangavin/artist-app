@@ -112,7 +112,7 @@ router.route('/users/me/faves/:id')
 		let id = req.params.id;
 		next(new Error('NOT VALID'))
 	})
-	.delete(deleteFave);
+	.delete(authenticateToken, deleteFave);
 
 router.route('/users/:id')
 	.post((req, res, next) =>{
