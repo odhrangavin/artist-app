@@ -1,7 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
-const DBFILE = path.join(__dirname, 'data', 'data.db')
+const DBFILE = process.env.NODE_ENV == 'test' ? ':memory:' : path.join(__dirname, 'data', 'data.db')
 
 const db = new sqlite3.Database(DBFILE, err => {
 	if (err) {
@@ -9,6 +9,7 @@ const db = new sqlite3.Database(DBFILE, err => {
 		process.exit(1);
 	}
 });
+
 
 //create users table
 db.run(
