@@ -4,7 +4,7 @@ const db = require('./db');
 const { register, login, requestReset, passwordReset, authenticateToken } = require('./controllers/authController')
 const { getEvents, createEvent } = require('./controllers/eventController');
 const { scrapeTicketmaster, scrapeFailte } = require('./controllers/scrapeController')
-const { addFave, deleteFave } = require('./controllers/faveController')
+const { addFave, deleteFave } = require('./controllers/favesController')
 
 const router = express.Router();
 
