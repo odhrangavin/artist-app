@@ -7,7 +7,7 @@ import app from './server.js'
 // import db from './db.js'
 
 // Add secret key
-// process.env.JWT_SECRET = 'testSecretKey123'
+process.env.JWT_SECRET = 'testSecretKey123'
 
 // // Initialize variables
 // let testDB;
