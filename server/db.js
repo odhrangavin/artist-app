@@ -78,8 +78,8 @@ db.run(
 		id         INTEGER PRIMARY KEY,
 		event      INTEGER NOT NULL,
 		user_id    INTEGER NOT NULL,
-		created_at TEXT
-		FOREIGN KEY(event) REFERENCES events(id)
+		created_at TEXT,
+		FOREIGN KEY(event) REFERENCES events(id),
 		FOREIGN KEY(user_id) REFERENCES users(id)
 	)`,
 	err => { 
