@@ -2,9 +2,9 @@
 const express = require('express');
 const db = require('./db');
 const { register, login, requestReset, passwordReset, authenticateToken } = require('./controllers/authController')
-const { getEvents, createEvent } = require('./controllers/eventController');
+const { getEvents, createEvent, editEvent, deleteEvent } = require('./controllers/eventController');
 const { scrapeTicketmaster, scrapeFailte } = require('./controllers/scrapeController')
-const { addFave, deleteFave } = require('./controllers/favesController')
+const { addFave, deleteFave } = require('./controllers/faveController')
 
 const router = express.Router();
 
@@ -14,8 +14,9 @@ router.post('/users/password-reset', passwordReset);
 router.get('/test/ticketmaster', scrapeTicketmaster);
 router.get('/test/failte', scrapeFailte);
 
+//authentication?
 router.route('/events')
-	.post(createEvent)
+	.post(authenticateToken, createEvent)
 	.get(getEvents)
 	.put((req, res, next) =>{
 		next(new Error('NOT VALID'))
@@ -35,14 +36,8 @@ router.route('/events/:id')
 			res.json({event: row});
 		});
 	})
-	.put((req, res, next) =>{
-		let id = req.params.id;
-		next(new Error('/events/:id put not implemented'))
-	})
-	.delete((req, res, next) =>{
-		let id = req.params.id;
-		next(new Error('/events/:id delete not implemented'))
-	});
+	.put(authenticateToken, editEvent)
+	.delete(authenticateToken, deleteEvent);
 
 router.route('/users')
 	.post(register)
@@ -147,11 +142,11 @@ router.route('/users/:id')
 	})
 	.put((req, res, next) =>{
 		let id = req.params.id;
-		next(new Error('/users/:id put not implemented'))
+		next(new Error('NOT VALID'))
 	})
 	.delete((req, res, next) =>{
 		let id = req.params.id;
-		next(new Error('/users/:id delete not implemented'))
+		next(new Error('NOT VALID'))
 	});
 
 module.exports = router;
