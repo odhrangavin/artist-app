@@ -84,9 +84,9 @@ db.run(
 	)`,
 	err => { 
 		if (err){
-			console.error('users table error:', err);
+			console.error('faves table error:', err);
 		}else{
-			console.log('users table functional');
+			console.log('faves table functional');
 		} 	
 	}
 );
