@@ -24,9 +24,7 @@ db.run(
 	err => { 
 		if (err){
 			console.error('users table error:', err);
-		}else{
-			console.log('users table functional');
-		} 	
+		}	
 	}
 );
 
@@ -51,7 +49,6 @@ db.run(
 		if (err){
 			console.error('events table error:', err);
 		}else{
-			console.log('events table functional')
 			let created = new Date().toISOString();
 			//create user #1 as system write user if not there
 			//password hash is nonsense, this user cannot log in
@@ -62,14 +59,26 @@ db.run(
 				function (err) { 
 					if (err){
 						console.error('user creation error', err);
-					}else if(this.changes > 0){
-						console.log('root user created');
-					}else{
-						console.log('root user exists');
 					}
 				}
 			)
 		}
+	}
+);
+
+db.run(
+	`CREATE TABLE IF NOT EXISTS faves (
+		id         INTEGER PRIMARY KEY,
+		event      INTEGER NOT NULL,
+		user_id    INTEGER NOT NULL,
+		created_at TEXT,
+		FOREIGN KEY(event) REFERENCES events(id),
+		FOREIGN KEY(user_id) REFERENCES users(id)
+	)`,
+	err => { 
+		if (err){
+			console.error('faves table error:', err);
+		}	
 	}
 );
 

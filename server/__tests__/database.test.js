@@ -4,26 +4,55 @@ import request from 'supertest';
 // import { getTestDB } from './dbSetup.js';
 // import { createApp } from '../createApp.js';
 import app from './server.js'
-// import db from './db.js'
+import db from './db.js'
 
 // Add secret key
 process.env.JWT_SECRET = 'testSecretKey123'
 
-// // Initialize variables
-// let testDB;
-// let app;
+const checkTableExists = (db, tableName) => {
+  return new Promise((resolve, reject) => {
+    db.get(`SELECT name FROM sqlite_master WHERE type='table' AND name=?`, [tableName], (err, row) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(!!row); // Returns true if table exists, false otherwise
+        }
+      }
+    );
+  });
+};
 
-// Execute before each test
-// beforeEach(async () => {
-//   // Start a clean DB
-//   db = db; 
-//   // app = createApp(testDB);
-// });
+describe('Table checks', () =>{
+  it('should have a users table', async () => {
+    const res = await checkTableExists(db, 'users');
+    expect(res).toBe(true);
+  });
+
+  it('should have an events table', async () => {
+    const res = await checkTableExists(db, 'events');
+    expect(res).toBe(true);
+  });
+
+  it('should have a faves table', async () => {
+    const res = await checkTableExists(db, 'faves');
+    expect(res).toBe(true);
+  });
+
+  it('should not have a balderdash table', async () => {
+    const res = await checkTableExists(db, 'balderdash');
+    expect(res).toBe(false);
+  });
+
+  it('should have a system-user user', async () => {
+    const res = await request(app).get('/api/users/1')
+    expect(res.body.user.username).toBe('system-user');
+  });
+});
+
 
 describe('User API', () => {
   it('should create a new user (post method)', async () => {
-    const res = await request(app)
-      .post('/api/users')
+    const res = await request(app).post('/api/users')
       .send({ username: 'testuser', 
         email: 'test@example.com', 
         password: 'test1234' ,
