@@ -1,52 +1,49 @@
 import { useState, useRef, useEffect } from "react";
 import API from "../../api/api";
 import UserEventSearchForm from "./UserEventSearchForm";
+import "./UserEventsList.css";
 
-const EVENTS_PER_PAGE = 6;
-
-// Helper to extract options for filtering/search form
+// Helper to extract dropdown options from all events (not filtered!)
 function extractOptions(events) {
     const cities = [];
     const venuesByCity = {};
-    const genresByCityVenue = {};
+    const allGenresSet = new Set();
 
     events.forEach((e) => {
+        // Cities
         if (e.location && !cities.includes(e.location)) {
             cities.push(e.location);
             venuesByCity[e.location] = [];
-            genresByCityVenue[e.location] = {};
         }
+        // Venues by city
         if (e.location && e.venue && !venuesByCity[e.location].includes(e.venue)) {
             venuesByCity[e.location].push(e.venue);
-            genresByCityVenue[e.location][e.venue] = [];
         }
-        if (
-            e.location &&
-            e.venue &&
-            e.genre &&
-            !genresByCityVenue[e.location][e.venue].includes(e.genre)
-        ) {
-            genresByCityVenue[e.location][e.venue].push(e.genre);
+        // Genres (flat, global)
+        if (e.genre) {
+            allGenresSet.add(e.genre);
         }
     });
 
-    return { cities, venuesByCity, genresByCityVenue };
+    return {
+        cities,
+        venuesByCity,
+        allGenres: Array.from(allGenresSet).sort(),
+    };
 }
 
-// Helper to filter events by date range (frontend only)
+// Date filter helper
 function filterEventsByDate(events, { dateFrom, dateTo }) {
-    // All dates are in YYYY-MM-DD format
     const today = new Date().toISOString().slice(0, 10);
     return events.filter((ev) => {
-        // Exclude if event_date is missing or before today
         if (!ev.event_date || ev.event_date < today) return false;
-        // If a from-date is set, only include events on/after it
         if (dateFrom && ev.event_date < dateFrom) return false;
-        // If a to-date is set, only include events on/before it
         if (dateTo && ev.event_date > dateTo) return false;
         return true;
     });
 }
+
+const EVENTS_PER_PAGE = 6;
 
 export default function UserEventList() {
     const [events, setEvents] = useState([]);
@@ -54,53 +51,68 @@ export default function UserEventList() {
     const [options, setOptions] = useState({
         cities: [],
         venuesByCity: {},
-        genresByCityVenue: {},
+        allGenres: [],
     });
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
-    const [lastSearch, setLastSearch] = useState({});
     const fullCityList = useRef([]);
 
-    // Initial load: fetch all events for options, filter for today+
+    // Initial load: fetch all events, build dropdowns from those
     useEffect(() => {
-        loadOptionsAndEvents({}, true);
+        fetchAllEvents();
     }, []);
 
-    async function loadOptionsAndEvents({ keyword, dateFrom, dateTo, city, venue, genre }, isInitialLoad = false) {
+    async function fetchAllEvents() {
         setLoading(true);
         try {
-            // Fetch all events (optionally filtered by city/venue/genre)
-            const res = await API.get("/events", {
-                params: {
-                    title: keyword || undefined,
-                    location: city || undefined,
-                    venue: venue || undefined,
-                    genre: genre || undefined,
-                },
-            });
-            let events = res.data.results || [];
-            setAllEvents(events);
+            const res = await API.get("/events");
+            let all = res.data.results || [];
 
-            // Always filter out past events and apply frontend date range filter
-            events = filterEventsByDate(events, { dateFrom, dateTo });
+            // Only future events for dropdowns
+            const futureEvents = all.filter(ev => ev.event_date && ev.event_date >= new Date().toISOString().slice(0, 10));
 
-            // Update options for selects
-            const opts = extractOptions(events);
-            setEvents(events);
-            setOptions(opts);
+            setAllEvents(futureEvents);
+            setOptions(extractOptions(futureEvents));
+            setEvents(futureEvents); // Show all by default
             setPage(1);
-            setLastSearch({ keyword, dateFrom, dateTo, city, venue, genre });
-            if (isInitialLoad) {
-                fullCityList.current = opts.cities;
-            }
+            fullCityList.current = extractOptions(futureEvents).cities;
         } catch (e) {
             setEvents([]);
+            setAllEvents([]);
+            setOptions({ cities: [], venuesByCity: {}, allGenres: [] });
         }
         setLoading(false);
     }
 
-    function handleSearch(params) {
-        loadOptionsAndEvents(params);
+    function handleSearch({ keyword, dateFrom, dateTo, city, venue, genre }) {
+        // Always filter from allEvents (future events), not last filtered
+        let filtered = allEvents;
+
+        if (keyword) {
+            filtered = filtered.filter(e =>
+                e.title && e.title.toLowerCase().includes(keyword.toLowerCase())
+            );
+        }
+        if (city) {
+            filtered = filtered.filter(e =>
+                e.location && e.location === city
+            );
+        }
+        if (venue) {
+            filtered = filtered.filter(e =>
+                e.venue && e.venue === venue
+            );
+        }
+        if (genre) {
+            filtered = filtered.filter(e =>
+                e.genre && e.genre === genre
+            );
+        }
+        filtered = filterEventsByDate(filtered, { dateFrom, dateTo });
+
+        setEvents(filtered);
+        setPage(1);
+        // options stay the same (from allEvents)
     }
 
     // Pagination logic
@@ -121,7 +133,7 @@ export default function UserEventList() {
                 onSearch={handleSearch}
                 cityOptions={fullCityList.current.length > 0 ? fullCityList.current : options.cities}
                 venueOptions={options.venuesByCity}
-                genreOptions={options.genresByCityVenue}
+                genreOptions={options.allGenres}
                 loading={loading}
             />
             {loading ? (
@@ -151,7 +163,6 @@ export default function UserEventList() {
                                     <p>{e.description || "No description available"}</p>
                                     <a
                                         href={`/events/${e.id}`}
-                                        target="_blank"
                                         rel="noopener noreferrer"
                                     >
                                         View Event

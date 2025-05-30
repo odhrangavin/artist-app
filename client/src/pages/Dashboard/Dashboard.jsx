@@ -54,10 +54,10 @@ function UserEventsList({ userId }) {
             <ul>
                 {events.map(ev => (
                     <li key={ev.id} className="event-card">
-                        <h4>{ev.title}</h4>
                         {ev.image_url && (
                             <img src={ev.image_url} alt={ev.title} style={{ maxWidth: 220, maxHeight: 130 }} />
                         )}
+                        <h4>{ev.title}</h4>
                         <p>{ev.description}</p>
                         <p><strong>Date/Time:</strong> {ev.event_time}</p>
                         <p><strong>Location:</strong> {ev.location}</p>
@@ -112,34 +112,37 @@ export default function Dashboard() {
     };
 
     return (
-        <div className="dashboard">
+        <section className="dashboard">
             <h2>Welcome to your Dashboard</h2>
-            <form className="event-form" onSubmit={handleSubmit}>
-                <label>Title
-                    <input name="title" value={form.title} onChange={handleChange} required />
-                </label>
-                <label>Image URL
-                    <input name="image_url" value={form.image_url} onChange={handleChange} />
-                </label>
-                <label>Date & Time
-                    <input name="event_time" type="datetime-local" value={form.event_time} onChange={handleChange} required />
-                </label>
-                <label>Location
-                    <input name="location" value={form.location} onChange={handleChange} required />
-                </label>
-                <label>Venue
-                    <input name="venue" value={form.venue} onChange={handleChange} required />
-                </label>
-                <label>Genre
-                    <input name="genre" value={form.genre} onChange={handleChange} required />
-                </label>
-                <label>Description</label>
-                <textarea name="description" value={form.description} onChange={handleChange} required rows="4" cols="50" />
-                <button type="submit" disabled={submitting}>Create Event</button>
-            </form>
-            {error && <div className="error">{error}</div>}
-            {success && <div className="success">{success}</div>}
-            <EventPreview event={form} />
-        </div>
+            <div className="dashboard-container">
+                <form className="event-form" onSubmit={handleSubmit}>
+                    <h3>Create Your Event</h3>
+                    <label>Title
+                        <input name="title" value={form.title} onChange={handleChange} required />
+                    </label>
+                    <label>Image URL
+                        <input name="image_url" value={form.image_url} onChange={handleChange} />
+                    </label>
+                    <label>Date & Time
+                        <input name="event_time" type="datetime-local" value={form.event_time} onChange={handleChange} required />
+                    </label>
+                    <label>Location
+                        <input name="location" value={form.location} onChange={handleChange} required />
+                    </label>
+                    <label>Venue
+                        <input name="venue" value={form.venue} onChange={handleChange} required />
+                    </label>
+                    <label>Genre
+                        <input name="genre" value={form.genre} onChange={handleChange} required />
+                    </label>
+                    <label>Description</label>
+                    <textarea name="description" value={form.description} onChange={handleChange} required rows="4" cols="50" />
+                    <button type="submit" disabled={submitting}>Create Event</button>
+                </form>
+                {error && <div className="error">{error}</div>}
+                {success && <div className="success">{success}</div>}
+                <div><EventPreview event={form} /></div>
+            </div>
+        </section>
     );
 }

@@ -33,7 +33,7 @@ export default function UserEventDetail() {
             <h2>{event.title}</h2>
             {event.image_url && <img className='event-detail-image' src={event.image_url} alt={event.title} />}
             {event.description && <p><strong>Description:</strong> {event.description}</p>}
-            <p><strong>Date/Time:</strong> {event.event_time}</p>
+            <p><strong>Date/Time:</strong> {event.event_date} {event.event_time}</p>
             <p><strong>City:</strong> {event.location}</p>
             <p><strong>Venue:</strong> {event.venue}</p>
             <p><strong>Genre:</strong> {event.genre}</p>
