@@ -56,6 +56,29 @@ describe('App Routing', () => {
 
     expect(screen.getByText('Welcome to your Dashboard')).toBeInTheDocument();
   });
+  it('should render forgot-password page at /forgot-password', () => {
+    renderWithRouter('/forgot-password')
+
+    const button = screen.getByRole('button', { name:/request reset/i });
+    expect(button).toBeInTheDocument();
+  });
+  it('should render reset-password page at /reset-password', () => {
+    renderWithRouter('/reset-password')
+
+    const button = screen.getByRole('button', { name:/confirm reset/i });
+    expect(button).toBeInTheDocument();
+  });
+  it('should render a particular event at /events/:id', async () => {
+    renderWithRouter('/events/1')
+
+    const eventContainer = await screen.findByRole('region', {name:'Event detail'});
+    expect(eventContainer).toBeInTheDocument();
+  });
+  it('should render a 404 not fuond at any wrong page', () => {
+    renderWithRouter('/pagewithtypo')
+
+    expect(screen.getByText('404 - Page Not Found')).toBeInTheDocument();
+  });
 });
 
 // Test navigation in app renders correctly

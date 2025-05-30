@@ -38,10 +38,10 @@ export function AuthProvider({ children }) {
       const userRes = await API.get('/users/me');
       setUser(userRes.data.user);
     } catch (err) {
-      if (err.response.status === 400) {
-        throw Error('Incorrect username or password.');
-      } else {
+      if (!err.response || err.response.status !== 400) {
         throw Error('Oops! There was a problem. Try again shortly.');
+      } else {
+        throw Error('Incorrect username or password.');
       }
     }
     

@@ -16,17 +16,5 @@ const mockAxios = {
   },
 };
 
-jest.mock("axios", () => ({
-  
-  __esModule:true,
-  default: {
-    get: () => ({
-      data: {
-        usename: "hi"
-      }
-    })
-  }
-}));
-
 export default mockAxios;
 

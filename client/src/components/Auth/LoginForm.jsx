@@ -37,7 +37,7 @@ export default function LoginForm() {
 					value={form.username}
 					placeholder="Username" 
 					onChange={handleChange}
-					maxLength="30"
+					maxLength="25"
 					required
 				/>
 				<br />
@@ -50,11 +50,11 @@ export default function LoginForm() {
 					required
 				/>
 				<br />
-				<button type="submit" disabled={!form.username || !form.password }>
+				<button type="submit" disabled={!form.username || !form.password}>
 					Log in
 				</button>
 				<br />
-				<span>{error}</span>
+				<span className='error-message' data-testid='error-message'>{error}</span>
 		</form>
 	);
 }

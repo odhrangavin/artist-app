@@ -6,6 +6,7 @@ export default function RegisterForm() {
 	const [form, setForm] = useState(
 		{ email: '', username: '', password: '', confirm: '', role: '' }
 	);
+	const [error, setError] = useState('');
 	const { login } = useAuth();
 
 	// Get value from the role button
@@ -18,12 +19,12 @@ export default function RegisterForm() {
 		
 		// Check role's value is artist or audience
 		if (form.role != 'artist' && form.role != 'audience') {
-			alert('Please, tell us if you are an artist or part of the Audience');
+			setError('Please, tell us if you are an artist or part of the Audience');
 			return;
 		}
 		// Validate password match
 		if (form.password !== form.confirm) {
-			alert('Passwords do not match');
+			setError('Passwords do not match');
 			return;
 		}
 		
@@ -37,7 +38,7 @@ export default function RegisterForm() {
 			login({ username, password });
 
 		} catch (err) {
-			alert('Sign-up error');
+			setError('Sign-up error');
 		}
 	};
 
@@ -65,7 +66,7 @@ export default function RegisterForm() {
 				name="username"
 				type="text"
 				value={form.username}
-				max="20"
+				maxLength="25"
 				placeholder="Username" 
 				onChange={handleChange} 
 				required
@@ -99,7 +100,13 @@ export default function RegisterForm() {
 				I'm part of the Audience
 			</button>
 			<br />
-			<button type="submit">Register</button>
+			<button type="submit" 
+				disabled={Object.values(form).some(fieldValue => !fieldValue)}
+			>
+				Register
+			</button>
+			<br />
+			<span className='error-message' data-testid='error-message'>{error}</span>
 		</form>
 	);
 }
