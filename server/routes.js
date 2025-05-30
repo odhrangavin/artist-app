@@ -87,7 +87,7 @@ router.route('/users/me/events')
 		let id = req.user.id;
 		db.all(`SELECT * FROM events WHERE user_id = ${ id }`,
 			function (err, row) {
-				res.json({user: row});
+				res.json({events: row});
 			});
 	})
 	.put((req, res, next) =>{
