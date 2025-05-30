@@ -2,11 +2,16 @@
 const express = require('express');
 const db = require('./db');
 const { register, login, requestReset, passwordReset, authenticateToken } = require('./controllers/authController')
+const { editUser, deleteUser } = require('./controllers/userController')
 const { getEvents, createEvent, editEvent, deleteEvent } = require('./controllers/eventController');
 const { scrapeTicketmaster, scrapeFailte } = require('./controllers/scrapeController')
 const { addFave, deleteFave } = require('./controllers/faveController')
 
 const router = express.Router();
+
+const invalidRoute = (req, res, next) =>{
+		next(new Error('Not a valid route'))
+	};
 
 router.post('/login', login);
 router.post('/users/request-reset', requestReset);
@@ -18,17 +23,11 @@ router.get('/test/failte', scrapeFailte);
 router.route('/events')
 	.post(authenticateToken, createEvent)
 	.get(getEvents)
-	.put((req, res, next) =>{
-		next(new Error('NOT VALID'))
-	})
-	.delete((req, res, next) =>{
-		next(new Error('NOT VALID'))
-	});
+	.put(invalidRoute)
+	.delete(invalidRoute);
 
 router.route('/events/:id')
-	.post((req, res, next) =>{
-		next(new Error('NOT VALID'))
-	})
+	.post(invalidRoute)
 	.get((req, res, next) =>{
 		let id = req.params.id;
 		db.get(`SELECT * FROM events WHERE id = ${ id }`,
@@ -47,17 +46,11 @@ router.route('/users')
 			res.json({users: rows});
 		});
 	})
-	.put((req, res, next) =>{
-		next(new Error('NOT VALID'))
-	})
-	.delete((req, res, next) =>{
-		next(new Error('NOT VALID'))
-	});
+	.put(invalidRoute)
+	.delete(invalidRoute);
 
 router.route('/users/me')
-	.post((req, res, next) =>{
-		next(new Error('NOT VALID'))
-	})
+	.post(invalidRoute)
 	.get(authenticateToken, (req, res, next) =>{
 		let id = req.user.id;
 		db.get(`SELECT * FROM users WHERE id = ${ id }`,
@@ -65,19 +58,11 @@ router.route('/users/me')
 				res.json({user: row});
 			});
 	})
-	.put((req, res, next) =>{
-		let id = req.params.id;
-		next(new Error('/users/me put not implemented'))
-	})
-	.delete((req, res, next) =>{
-		let id = req.params.id;
-		next(new Error('/users/me delete not implemented'))
-	});
+	.put(authenticateToken, editUser)
+	.delete(authenticateToken, deleteUser);
 
 router.route('/users/me/events')
-	.post((req, res, next) =>{
-		next(new Error('NOT VALID'))
-	})
+	.post(invalidRoute)
 	.get(authenticateToken, (req, res, next) =>{
 		let id = req.user.id;
 		db.all(`SELECT * FROM events WHERE user_id = ${ id }`,
@@ -85,14 +70,8 @@ router.route('/users/me/events')
 				res.json({user: row});
 			});
 	})
-	.put((req, res, next) =>{
-		let id = req.params.id;
-		next(new Error('NOT VALID'))
-	})
-	.delete((req, res, next) =>{
-		let id = req.params.id;
-		next(new Error('NOT VALID'))
-	});
+	.put(invalidRoute)
+	.delete(invalidRoute);
 
 router.route('/users/me/faves')
 	.post(addFave)
@@ -103,19 +82,11 @@ router.route('/users/me/faves')
 				res.json({user: row});
 			});
 	})
-	.put((req, res, next) =>{
-		let id = req.params.id;
-		next(new Error('NOT VALID'))
-	})
-	.delete((req, res, next) =>{
-		let id = req.params.id;
-		next(new Error('NOT VALID'))
-	});
+	.put(invalidRoute)
+	.delete(invalidRoute);
 
 router.route('/users/me/faves/:id')
-	.post((req, res, next) =>{
-		next(new Error('NOT VALID'))
-	})
+	.post(invalidRoute)
 	.get(authenticateToken, (req, res, next) =>{
 		let id = req.params.id;
 		db.get(`SELECT * FROM faves WHERE id = ${ id }`,
@@ -123,16 +94,11 @@ router.route('/users/me/faves/:id')
 				res.json({user: row});
 			});
 	})
-	.put((req, res, next) =>{
-		let id = req.params.id;
-		next(new Error('NOT VALID'))
-	})
+	.put(invalidRoute)
 	.delete(authenticateToken, deleteFave);
 
 router.route('/users/:id')
-	.post((req, res, next) =>{
-		next(new Error('NOT VALID'))
-	})
+	.post(invalidRoute)
 	.get((req, res, next) =>{
 		let id = req.params.id;
 		db.get(`SELECT * FROM users WHERE id = ${ id }`,
@@ -140,13 +106,7 @@ router.route('/users/:id')
 				res.json({user: row});
 			});
 	})
-	.put((req, res, next) =>{
-		let id = req.params.id;
-		next(new Error('NOT VALID'))
-	})
-	.delete((req, res, next) =>{
-		let id = req.params.id;
-		next(new Error('NOT VALID'))
-	});
+	.put(invalidRoute)
+	.delete(invalidRoute);
 
 module.exports = router;
