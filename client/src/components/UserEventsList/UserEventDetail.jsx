@@ -29,7 +29,7 @@ export default function UserEventDetail() {
     if (!event) return <div>Event not found.</div>;
 
     return (
-        <div className="event-detail">
+        <div className="event-detail" role="region" aria-label="Event detail">
             <h2>{event.title}</h2>
             {event.image_url && <img className='event-detail-image' src={event.image_url} alt={event.title} />}
             {event.description && <p><strong>Description:</strong> {event.description}</p>}

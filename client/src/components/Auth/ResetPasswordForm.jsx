@@ -4,6 +4,7 @@ import API from '../../api/api';
 
 export default function ResetPasswordForm() {
 	const [form, setForm] = useState({ newPassword: '', confirm:'', token:'' });
+	const [ error, setError ] = useState('');
 	const navigate = useNavigate();
 
 	const handleSubmit = async (e) => {
@@ -14,7 +15,7 @@ export default function ResetPasswordForm() {
 
     // Check passwords match
     if(newPassword != confirm || !token) {
-      alert(`Passwords don't match`);
+      setError(`Passwords do not match`);
       return;
     }
 
@@ -22,7 +23,7 @@ export default function ResetPasswordForm() {
 			const res = await API.post('/users/password-reset', { token, newPassword });
 			navigate('/login');
 		} catch (err) {
-			alert(`Couldn't reset the password`);
+			setError(`Couldn't reset the password`);
 		}
 	};
 
@@ -63,7 +64,13 @@ export default function ResetPasswordForm() {
 					required 
 				/> 
 				<br />
-				<button type="submit">Confirm Reset</button>
+				<button type="submit" 
+					disabled={!form.newPassword || !form.confirm || !form.token}
+				>
+					Confirm Reset
+					</button>
+				<br />
+				<span className='error-message' data-testid='error-message'>{error}</span>
 		</form>
 	);
 }

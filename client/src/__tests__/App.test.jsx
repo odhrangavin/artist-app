@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
-import mockAxios from './axios';
+import mockAxios from './__mocks__/axios.js';
 
 import { AuthProvider } from '../context/AuthContext.jsx';
 import renderWithRouter from './testUtils.jsx';
@@ -42,19 +42,42 @@ describe('App Routing', () => {
   it('should render login page at /login', () => {   
     renderWithRouter('/login')
 
-    const button = screen.getByRole('button', { name:/log in/i});
+    const button = screen.getByRole('button', { name:/log in/i });
     expect(button).toBeInTheDocument();
   });
   it('should render register page at /register', () => {
     renderWithRouter('/register')
 
-    const button = screen.getByRole('button', { name:/register/i});
+    const button = screen.getByRole('button', { name:/register/i });
     expect(button).toBeInTheDocument();
   });
   it('should render dashboard page at /dashboard', () => {
     renderWithRouter('/dashboard')
 
     expect(screen.getByText('Welcome to your Dashboard')).toBeInTheDocument();
+  });
+  it('should render forgot-password page at /forgot-password', () => {
+    renderWithRouter('/forgot-password')
+
+    const button = screen.getByRole('button', { name:/request reset/i });
+    expect(button).toBeInTheDocument();
+  });
+  it('should render reset-password page at /reset-password', () => {
+    renderWithRouter('/reset-password')
+
+    const button = screen.getByRole('button', { name:/confirm reset/i });
+    expect(button).toBeInTheDocument();
+  });
+  it('should render a particular event at /events/:id', async () => {
+    renderWithRouter('/events/1')
+
+    const eventContainer = await screen.findByRole('region', {name:'Event detail'});
+    expect(eventContainer).toBeInTheDocument();
+  });
+  it('should render a 404 not fuond at any wrong page', () => {
+    renderWithRouter('/pagewithtypo')
+
+    expect(screen.getByText('404 - Page Not Found')).toBeInTheDocument();
   });
 });
 
@@ -66,7 +89,7 @@ describe('App Navigation', () => {
     const loginLink = screen.getByRole('link', { name: /log in/i });
     await userEvent.click(loginLink);
     
-    const button = await screen.findByRole('button', { name:/log in/i});
+    const button = await screen.findByRole('button', { name:/log in/i });
     expect(button).toBeInTheDocument();
   });
   it('should navigate to Register section and render it', async () => {
@@ -75,7 +98,7 @@ describe('App Navigation', () => {
     const registerLink = screen.getByRole('link', { name: /register/i });
     await userEvent.click(registerLink);
     
-    const button = await screen.findByRole('button', { name:/register/i});
+    const button = await screen.findByRole('button', { name:/register/i });
     expect(button).toBeInTheDocument();
   });
   it('should navigate to Dashboard section and render it', async () => {

@@ -38,8 +38,11 @@ export function AuthProvider({ children }) {
       const userRes = await API.get('/users/me');
       setUser(userRes.data.user);
     } catch (err) {
-      alert('Login error');
-      console.log(err.message);
+      if (!err.response || err.response.status !== 400) {
+        throw Error('Oops! There was a problem. Try again shortly.');
+      } else {
+        throw Error('Incorrect username or password.');
+      }
     }
     
     // Redirect to dashboard

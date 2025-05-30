@@ -4,6 +4,7 @@ import API from '../../api/api';
 
 export default function ForgotPasswordForm() {
 	const [form, setForm] = useState({ email: '' });
+	const [error, setError] = useState('')
 	const navigate = useNavigate();
 
 	const handleSubmit = async (e) => {
@@ -15,7 +16,7 @@ export default function ForgotPasswordForm() {
 			const res = await API.post('/users/request-reset', form);
 			navigate('/reset-password');
 		} catch (err) {
-			alert('Wrong email or server error.')
+			setError('Wrong email or server error.')
 		}
 	};
 
@@ -29,7 +30,9 @@ export default function ForgotPasswordForm() {
 					required
 				/>
 				<br />
-				<button type="submit">Request Reset</button>
+				<button type="submit" disabled={!form.email}>Request Reset</button>
+				<br />
+				<span className='error-message' data-testid='error-message'>{error}</span>
 		</form>
 	);
 }
