@@ -12,6 +12,21 @@
   margin: 0.5rem;
 }
 
+.user-event-search-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.user-event-search-form select, .user-event-search-form input[type=text] {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  width: 140px;
+}
+
 .events-section {
   display: flex;
   flex-direction: column;
@@ -26,6 +41,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   margin-top: 1rem;
+  padding: 0;
 }
 
 .event-card {

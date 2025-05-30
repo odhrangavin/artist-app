@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./UserEventsList.css";
 
 export default function UserEventSearchForm({
     onSearch,
@@ -20,19 +21,27 @@ export default function UserEventSearchForm({
         onSearch({ keyword, dateFrom, dateTo, city, venue, genre });
     }
 
+    function handleClear() {
+        setKeyword("");
+        setDateFrom(today);
+        setDateTo("");
+        setCity("");
+        setVenue("");
+        setGenre("");
+        onSearch({ keyword: "", dateFrom: today, dateTo: "", city: "", venue: "", genre: "" });
+    }
+
     function handleCityChange(e) {
         setCity(e.target.value);
         setVenue("");
-        setGenre("");
     }
 
     function handleVenueChange(e) {
         setVenue(e.target.value);
-        setGenre("");
     }
 
     return (
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+        <form onSubmit={handleSubmit} className="user-event-search-form">
             <input
                 type="text"
                 value={keyword}
@@ -67,15 +76,14 @@ export default function UserEventSearchForm({
                     ))
                     : null}
             </select>
-            <select value={genre} onChange={(e) => setGenre(e.target.value)} disabled={!city || !venue}>
+            <select value={genre} onChange={(e) => setGenre(e.target.value)}>
                 <option value="">All genres</option>
-                {city && venue && genreOptions[city] && genreOptions[city][venue]
-                    ? genreOptions[city][venue].map((g) => (
-                        <option key={g} value={g}>{g}</option>
-                    ))
-                    : null}
+                {genreOptions.map((g) => (
+                    <option key={g} value={g}>{g}</option>
+                ))}
             </select>
             <button type="submit" disabled={loading}>Search</button>
+            <button type="button" onClick={handleClear} disabled={loading}>Clear</button>
         </form>
     );
 }
