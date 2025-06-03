@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import DashboardSidebar from "./DashboardSidebar";
 import DashboardCreateEvent from "./DashboardCreateEvent";
 import DashboardMyEvents from "./DashboardMyEvents";

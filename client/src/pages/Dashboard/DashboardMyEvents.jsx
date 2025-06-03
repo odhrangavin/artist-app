@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import API from "../../api/api";
+import { useNavigate } from "react-router-dom"; // For navigation
 
 // Component to show the current user's events using /users/me/events/
 function DashboardMyEventsList() {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [err, setErr] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function fetchEvents() {
@@ -23,6 +25,14 @@ function DashboardMyEventsList() {
         fetchEvents();
     }, []);
 
+    const handleView = (id) => {
+        navigate(`/events/${id}`);
+    };
+
+    const handleEdit = (id) => {
+        navigate(`/dashboard/events/edit/${id}`);
+    };
+
     if (loading) return <div>Loading your events...</div>;
     if (err) return <div className="error">{err}</div>;
     if (!events.length) return <div>No events posted yet.</div>;
@@ -30,7 +40,7 @@ function DashboardMyEventsList() {
     return (
         <section className="user-events-list">
             <h3>Your Events</h3>
-            <ul>
+            <ul className="event-grid">
                 {events.map(ev => (
                     <li key={ev.id} className="event-card">
                         {ev.image_url && (
@@ -43,6 +53,22 @@ function DashboardMyEventsList() {
                         <p><strong>Location:</strong> {ev.location}</p>
                         <p><strong>Venue:</strong> {ev.venue}</p>
                         <p><strong>Genre:</strong> {ev.genre}</p>
+                        <div className="event-card-actions" style={{ marginTop: "0.7em", display: "flex", gap: "0.7em" }}>
+                            <button
+                                type="button"
+                                className="event-action-btn event-view-btn"
+                                onClick={() => handleView(ev.id)}
+                            >
+                                View Event
+                            </button>
+                            <button
+                                type="button"
+                                className="event-action-btn event-edit-btn"
+                                onClick={() => handleEdit(ev.id)}
+                            >
+                                Edit Event
+                            </button>
+                        </div>
                     </li>
                 ))}
             </ul>
