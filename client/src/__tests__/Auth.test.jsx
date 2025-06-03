@@ -1,9 +1,10 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import axios from 'axios';
 
 import renderWithRouter from './testUtils.jsx';
+import { act } from 'react';
 
 // == Mock ==
 vi.mock("axios", () => {
@@ -145,26 +146,30 @@ describe('Register', () => {
       inputUser, inputPass, inputConfirm];
   }
   
-  it('render register fields and buttons', () => {
+  it('render register fields and buttons', async () => {
     renderWithRouter('/register');
 
     const registerElements = getRegisterElements();
 
-    registerElements.map(regElement => expect(regElement).toBeInTheDocument());
+    await waitFor(() => {
+      registerElements.map(regElement => expect(regElement).toBeInTheDocument());
+    });
 
   })
 
-  it('initial values of register fields should be empty and button disabled', () => {
+  it('initial values of register fields should be empty and button disabled', async () => {
     renderWithRouter('/register');
 
     const [ buttonArtist, buttonAudience, buttonRegister, errorMessage, 
       ...inputElements ] = getRegisterElements();
 
-    inputElements.map(inputElement => expect(inputElement).toHaveValue(''));
-    expect(buttonArtist).toHaveValue('artist');
-    expect(buttonAudience).toHaveValue('audience');
-    expect(errorMessage).toHaveTextContent('');
-    expect(buttonRegister).toBeDisabled();
+    await waitFor(() => {
+      inputElements.map(inputElement => expect(inputElement).toHaveValue(''));
+      expect(buttonArtist).toHaveValue('artist');
+      expect(buttonAudience).toHaveValue('audience');
+      expect(errorMessage).toHaveTextContent('');
+      expect(buttonRegister).toBeDisabled();
+    });
   })
 
   it('write on input fields and success register', async () => {
@@ -264,23 +269,27 @@ describe('Forgot Password', () => {
     return [inputEmail, buttonRequest, errorMessage];
   }
   
-  it('render register fields and buttons', () => {
+  it('render register fields and buttons', async () => {
     renderWithRouter('/forgot-password');
 
     const forgotPassElements = getForgotPassElements();
 
-    forgotPassElements.map(fpElement => expect(fpElement).toBeInTheDocument());
+    await waitFor(() => {
+      forgotPassElements.map(fpElement => expect(fpElement).toBeInTheDocument());
+    });
 
   })
 
-  it('initial values of meail input should be empty and button disabled', () => {
+  it('initial values of email input should be empty and button disabled', async () => {
     renderWithRouter('/forgot-password');
 
     const [ inputEmail, buttonRequest, errorMessage ] = getForgotPassElements();
 
-    expect(inputEmail).toHaveValue('');
-    expect(errorMessage).toHaveTextContent('');
-    expect(buttonRequest).toBeDisabled();
+    await waitFor(() => {
+      expect(inputEmail).toHaveValue('');
+      expect(errorMessage).toHaveTextContent('');
+      expect(buttonRequest).toBeDisabled();
+    });
 
   })
 
@@ -345,25 +354,28 @@ describe('Reset-Password', () => {
     return [inputPass, inputConfirm, inputToken, errorMessage, buttonReset];
   }
   
-  it('render reset-password fields and buttons', () => {
+  it('render reset-password fields and buttons', async () => {
     renderWithRouter('/reset-password');
 
     const resetPassElements = getResetPassElements();
 
-    resetPassElements.map(rpElement => expect(rpElement).toBeInTheDocument());
-
+    await waitFor(() => {
+      resetPassElements.map(rpElement => expect(rpElement).toBeInTheDocument());
+    });
   })
 
-  it('initial values of reset-password fields should be empty and button disabled', () => {
+  it('initial values of reset-password fields should be empty and button disabled', async () => {
     renderWithRouter('/reset-password');
 
-    const [inputPass, inputConfirm, inputToken, errorMessage, buttonReset] = getResetPassElements();
+    await waitFor(() => {
+      const [inputPass, inputConfirm, inputToken, errorMessage, buttonReset] = getResetPassElements();
 
-    expect(inputPass).toHaveValue('');
-    expect(inputConfirm).toHaveValue('');
-    expect(inputToken).toHaveValue('');
-    expect(errorMessage).toHaveTextContent('');
-    expect(buttonReset).toBeDisabled();
+      expect(inputPass).toHaveValue('');
+      expect(inputConfirm).toHaveValue('');
+      expect(inputToken).toHaveValue('');
+      expect(errorMessage).toHaveTextContent('');
+      expect(buttonReset).toBeDisabled();
+    });
   })
 
   it('write on input fields and success reset', async () => {

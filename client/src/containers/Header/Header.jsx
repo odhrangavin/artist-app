@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import LoginMenu from "./LoginMenu";
+import { NavLink } from "react-router-dom";
+import UserMenu from "./UserMenu";
 import "./Header.css";
 
 export default function Header() {
@@ -7,9 +7,8 @@ export default function Header() {
 		<header>
 			<h1>Event App</h1>
 			<ul>
-				<li><Link to="/">Home</Link></li>
-				<li><Link to="/dashboard">Dashboard</Link></li>
-				<LoginMenu />
+				<li><NavLink to="/">Home</NavLink></li>
+				<UserMenu />
 			</ul>
 		</header>
 	);

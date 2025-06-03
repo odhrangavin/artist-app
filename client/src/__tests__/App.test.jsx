@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
+import { describe, it, expect, test } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
@@ -8,6 +8,7 @@ import mockAxios from './__mocks__/axios.js';
 import { AuthProvider } from '../context/AuthContext.jsx';
 import renderWithRouter from './testUtils.jsx';
 import App from '../App';
+import { mockUseAuthLoggedIn, mockUseAuthNotLoggedIn, mockLogout } from './__mocks__/authContext.js';
 
 /*  == DRY FUNCTIONS == */
 
@@ -19,6 +20,16 @@ vi.mock('axios', () => ({
     ...mockAxios,
   }
 })); 
+
+// Replaces AuthProvider
+let currentMock = mockUseAuthNotLoggedIn;
+vi.mock('../context/AuthContext', async () => {
+  const actual = await vi.importActual('../context/AuthContext');
+  return {
+    ...actual,
+    useAuth: () => currentMock,
+  };
+});
 
 
 /* == TESTS == */
@@ -82,7 +93,7 @@ describe('App Routing', () => {
 });
 
 // Test navigation in app renders correctly
-describe('App Navigation', () => {
+describe('App Navigation when user is not logged in', () => {
   it('should navigate to Log in section and render it', async () => {
     renderWithRouter()
 
@@ -101,6 +112,49 @@ describe('App Navigation', () => {
     const button = await screen.findByRole('button', { name:/register/i });
     expect(button).toBeInTheDocument();
   });
+  it('should navigate back to Home section and render it', async () => {
+    renderWithRouter('/login')
+
+    const homeLink = screen.getByRole('link', { name: /home/i });
+    await userEvent.click(homeLink);
+    
+    expect(await screen.findByText('Welcome to Event App')).toBeInTheDocument();
+  });
+
+  it('should not render dashboard tab and logout button in navigation', async () => {
+    renderWithRouter()
+
+    const dashboardLink = screen.queryByRole('link', { name: /dashboard/i });
+    const logoutButton = screen.queryByRole('button', { name: /logout/i });
+    
+    await waitFor(() => {
+      expect(dashboardLink).not.toBeInTheDocument();
+      expect(logoutButton).not.toBeInTheDocument();
+    });
+    
+  });
+
+});
+
+describe('App Navigation when user is logged in', () => {
+  // Create user mock
+  beforeEach(() => {
+    currentMock = mockUseAuthLoggedIn;
+  });
+  
+  it('should not render login and register tabs ', async () => {
+    renderWithRouter()
+
+    const loginLink = screen.queryByRole('link', { name: /log in/i });
+    const registerLink = screen.queryByRole('link', { name: /register/i });
+    
+    await waitFor(() => {
+      expect(loginLink).not.toBeInTheDocument();
+      expect(registerLink).not.toBeInTheDocument();
+    });
+    
+  });
+  
   it('should navigate to Dashboard section and render it', async () => {
     renderWithRouter()
 
@@ -109,13 +163,15 @@ describe('App Navigation', () => {
     
     expect(await screen.findByText('Welcome to your Dashboard')).toBeInTheDocument();
   });
-  it('should navigate back to Home section and render it', async () => {
-    renderWithRouter('/login')
 
-    const homeLink = screen.getByRole('link', { name: /home/i });
-    await userEvent.click(homeLink);
+  it('should log out the user when click on Logout', async () => {
+    renderWithRouter()
+
+    const logoutButton = screen.getByRole('button', { name: /logout/i });
+    await userEvent.click(logoutButton);
     
-    expect(await screen.findByText('Welcome to Event App')).toBeInTheDocument();
+    // Check that lockout function was called
+    expect(mockLogout).toHaveBeenCalled();
   });
 
 });

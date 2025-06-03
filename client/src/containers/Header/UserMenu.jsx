@@ -1,8 +1,8 @@
 import { useAuth } from '../../context/AuthContext';
 import LogoutButton from '../../components/Auth/LogoutButton';
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-export default function LoginMenu() {
+export default function UserMenu() {
     // Show login or logout menu
 
 		const { user, isLoggedIn } = useAuth();
@@ -10,6 +10,7 @@ export default function LoginMenu() {
 		if (isLoggedIn) {
 			return (
 				<>
+					<li><NavLink to="/dashboard">Dashboard</NavLink></li>
 					<li><p>Hi, {user.username}</p></li>
 					<li><LogoutButton /></li>
 				</>
@@ -17,8 +18,8 @@ export default function LoginMenu() {
 		} else {		
 			return (
 				<>
-					<li><Link to="/login">Log In</Link></li>
-					<li><Link to="/register">Register</Link></li>
+					<li><NavLink to="/login">Log In</NavLink></li>
+					<li><NavLink to="/register">Register</NavLink></li>
 				</>
 			);
 		}
