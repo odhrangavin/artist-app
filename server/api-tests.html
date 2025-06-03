@@ -36,6 +36,12 @@
 			<form action="http://localhost:3000/api/users" method="post">
 				<label for="username">Username:</label>
 				<input type="text" name="username" required>
+				<label for="email">Email:</label>
+				<input type="text" name="email" required>
+				<label for="password">Password:</label>
+				<input type="text" name="password" required>
+				<label for="confirm">Confirm:</label>
+				<input type="text" name="confirm" required>
 				<label for="role">Role:</label>
 				<input type="text" name="role" required>
 				<button type="submit">Submit</button>
@@ -50,6 +56,14 @@
 				<input type="text" name="event_time">
 				<label for="location">Location:</label>
 				<input type="text" name="location">
+				<button type="submit">Submit</button>
+			</form>
+		</section>
+		<section id="faveAdd">
+			<h2>Fave Add</h2>
+			<form action="http://localhost:3000/api/users/me/faves" method="post">
+				<label for="title">Event ID:</label>
+				<input type="text" name="event">
 				<button type="submit">Submit</button>
 			</form>
 		</section>
