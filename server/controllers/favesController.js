@@ -1,10 +1,28 @@
 const db = require('../db');
 
+const getFave = (req, res) => {
+	let id = req.params.id;
+	db.get(`SELECT * FROM faves WHERE id = ?`,
+		[id],
+		function (err, row) {
+			res.json({user: row});
+		});
+}
+
+const getFaves = (req, res) => {
+	let id = req.user.id;
+	db.get(`SELECT * FROM faves WHERE user_id = ?`,
+		[id],
+		function (err, row) {
+			res.json({user: row});
+		});
+}
+
 const addFave = (req, res) => {
 	const { event, user_id } = req.body;
 	const created_at = new Date().toISOString();
 	db.run(`INSERT INTO faves (event, user_id, created_at)
-			VALUES (?, ?, ?)`);
+			VALUES (?, ?, ?)`),
 		[event, user_id, created_at],
 		function (err) {
 			if (err) {
@@ -18,7 +36,7 @@ const addFave = (req, res) => {
 const deleteFave = (req, res) => {
 	const event_id = req.params.id;;
 	db.run(`DELETE FROM faves WHERE id = ?
-			VALUES (?`);
+			VALUES (?`),
 		[event_id],
 		function (err) {
 			if (err) {
@@ -29,4 +47,4 @@ const deleteFave = (req, res) => {
 		}
 }
 
-module.exports = { addFave, deleteFave };
+module.exports = { getFave, getFaves, addFave, deleteFave };

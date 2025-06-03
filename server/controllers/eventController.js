@@ -1,5 +1,14 @@
 const db = require('../db');
 
+const getEvent = (req, res) => {
+	let id = req.params.id;
+	db.get(`SELECT * FROM events WHERE id = ?`,
+		[id],
+		function (err, row) {
+			res.json({event: row});
+		});
+}
+
 const getEvents = (req, res) => {
 	// Define valid searchable columns
 	const validColumns = ['title', 'event_date', 'event_time', 'location', 'venue', 'genre'];
@@ -30,9 +39,7 @@ const getEvents = (req, res) => {
 
 const createEvent = (req, res) => {
 	const { title, description, image_url, event_time, location, venue, genre, user_id } = req.body;
-	console.log(event_time)
 	const [ event_date, event_ntime ] = event_time.split("T");
-	console.log(event_date, event_ntime)
 	const created_at = new Date().toISOString();
 	db.run(`INSERT INTO events (title, description, image_url, event_date, event_time, location, venue, genre, user_id, created_at)
 	 	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -47,4 +54,34 @@ const createEvent = (req, res) => {
 	);
 };
 
-module.exports = { getEvents, createEvent };
+const editEvent = (req, res) => {
+	const { title, description, image_url, event_time, location, venue, genre, user_id, event_id } = req.body;
+	const [ event_date, event_ntime ] = event_time.split("T");
+	db.run(`UPDATE events SET title = ?, description = ?, image_url = ?, event_date = ?, event_time = ?, location = ?, venue = ?, genre = ?
+	 	WHERE id = ? AND user_id = ?`,
+		[title, description, image_url, event_date, event_ntime, location, venue, genre, event_id, user_id],
+		function (err) {
+			if (err) {
+				console.error(err.message);
+				return res.status(500).json({ error: 'Database error' });
+			}
+			res.json(this);
+		}
+	);
+}
+
+const deleteEvent = (req, res) => {
+	const { user_id, event_id } = req.body;
+	db.run(`DELETE FROM events WHERE id = ? AND user_id = ?`,
+		[event_id, user_id],
+		function (err) {
+			if (err) {
+				console.error(err.message);
+				return res.status(500).json({ error: 'Database error' });
+			}
+			res.json(this);
+		}
+	);
+}
+
+module.exports = { getEvent, getEvents, createEvent, editEvent, deleteEvent };
