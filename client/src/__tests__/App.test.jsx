@@ -31,6 +31,7 @@ vi.mock('../context/AuthContext', async () => {
   };
 });
 
+const getToken = () => localStorage.setItem('token', 'fake-jwt-token');
 
 /* == TESTS == */
 
@@ -63,6 +64,8 @@ describe('App Routing', () => {
     expect(button).toBeInTheDocument();
   });
   it('should render dashboard page at /dashboard', () => {
+    getToken(); // Set token to have access
+    
     renderWithRouter('/dashboard')
 
     expect(screen.getByText('Welcome to your Dashboard')).toBeInTheDocument();
@@ -140,6 +143,7 @@ describe('App Navigation when user is logged in', () => {
   // Create user mock
   beforeEach(() => {
     currentMock = mockUseAuthLoggedIn;
+    getToken();
   });
   
   it('should not render login and register tabs ', async () => {
