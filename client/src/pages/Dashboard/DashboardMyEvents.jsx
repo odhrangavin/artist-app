@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
+
 import API from "../../api/api";
+import { useAuth } from '../../context/AuthContext';
+import { HeartButton } from "./heart";
 
 // Component to show the current user's events using /users/me/events/
 function DashboardMyEventsList() {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [err, setErr] = useState('');
+    const { isLoggedIn } = useAuth();
 
     useEffect(() => {
         async function fetchEvents() {
@@ -43,6 +47,7 @@ function DashboardMyEventsList() {
                         <p><strong>Location:</strong> {ev.location}</p>
                         <p><strong>Venue:</strong> {ev.venue}</p>
                         <p><strong>Genre:</strong> {ev.genre}</p>
+                        <p>{isLoggedIn ? <HeartButton eventId={ev.id} /> : ''}</p>
                     </li>
                 ))}
             </ul>
