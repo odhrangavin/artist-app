@@ -2,10 +2,10 @@
 const express = require('express');
 const db = require('./db');
 const { register, login, requestReset, passwordReset, authenticateToken } = require('./controllers/authController')
-const { editUser, deleteUser } = require('./controllers/userController')
-const { getEvents, createEvent, editEvent, deleteEvent } = require('./controllers/eventController');
+const { getUser, getUsers, getUserEvents, editUser, deleteUser } = require('./controllers/userController')
+const { getEvent, getEvents, createEvent, editEvent, deleteEvent } = require('./controllers/eventController');
 const { scrapeTicketmaster, scrapeFailte } = require('./controllers/scrapeController')
-const { addFave, deleteFave } = require('./controllers/faveController')
+const { getFave, getFaves, addFave, deleteFave } = require('./controllers/faveController')
 
 const router = express.Router();
 
@@ -28,84 +28,43 @@ router.route('/events')
 
 router.route('/events/:id')
 	.post(invalidRoute)
-	.get((req, res, next) =>{
-		let id = req.params.id;
-		db.get(`SELECT * FROM events WHERE id = ${ id }`,
-		function (err, row) {
-			res.json({event: row});
-		});
-	})
+	.get(getEvent)
 	.put(authenticateToken, editEvent)
 	.delete(authenticateToken, deleteEvent);
 
 router.route('/users')
 	.post(register)
-	.get((req, res, next) =>{
-		db.all(`SELECT * FROM users`,
-		function (err, rows) {
-			res.json({users: rows});
-		});
-	})
+	.get(getUsers)
 	.put(invalidRoute)
 	.delete(invalidRoute);
 
 router.route('/users/me')
 	.post(invalidRoute)
-	.get(authenticateToken, (req, res, next) =>{
-		let id = req.user.id;
-		db.get(`SELECT * FROM users WHERE id = ${ id }`,
-			function (err, row) {
-				res.json({user: row});
-			});
-	})
+	.get(authenticateToken, getUser)
 	.put(authenticateToken, editUser)
 	.delete(authenticateToken, deleteUser);
 
 router.route('/users/me/events')
 	.post(invalidRoute)
-	.get(authenticateToken, (req, res, next) =>{
-		let id = req.user.id;
-		db.all(`SELECT * FROM events WHERE user_id = ${ id }`,
-			function (err, row) {
-				res.json({events: row});
-			});
-	})
+	.get(authenticateToken,getUserEvents)
 	.put(invalidRoute)
 	.delete(invalidRoute);
 
 router.route('/users/me/faves')
 	.post(addFave)
-	.get(authenticateToken, (req, res, next) =>{
-		let id = req.user.id;
-		db.get(`SELECT * FROM faves WHERE user_id = ${ id }`,
-			function (err, row) {
-				res.json({user: row});
-			});
-	})
+	.get(authenticateToken, getFaves)
 	.put(invalidRoute)
 	.delete(invalidRoute);
 
 router.route('/users/me/faves/:id')
 	.post(invalidRoute)
-	.get(authenticateToken, (req, res, next) =>{
-		let id = req.params.id;
-		db.get(`SELECT * FROM faves WHERE id = ${ id }`,
-			function (err, row) {
-				res.json({user: row});
-			});
-	})
+	.get(authenticateToken, getFave)
 	.put(invalidRoute)
 	.delete(authenticateToken, deleteFave);
 
 router.route('/users/:id')
 	.post(invalidRoute)
-	.get((req, res, next) =>{
-		let id = req.params.id;
-		db.get(`SELECT * FROM users WHERE id = ${ id }`,
-			function (err, row) {
-				res.json({user: row});
-			});
-	})
+	.get(getUser)
 	.put(invalidRoute)
 	.delete(invalidRoute);
 

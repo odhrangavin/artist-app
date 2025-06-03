@@ -1,5 +1,14 @@
 const db = require('../db');
 
+const getEvent = (req, res) => {
+	let id = req.params.id;
+	db.get(`SELECT * FROM events WHERE id = ?`,
+		[id],
+		function (err, row) {
+			res.json({event: row});
+		});
+}
+
 const getEvents = (req, res) => {
 	// Define valid searchable columns
 	const validColumns = ['title', 'event_date', 'event_time', 'location', 'venue', 'genre'];
@@ -75,4 +84,4 @@ const deleteEvent = (req, res) => {
 	);
 }
 
-module.exports = { getEvents, createEvent, editEvent, deleteEvent };
+module.exports = { getEvent, getEvents, createEvent, editEvent, deleteEvent };
