@@ -38,8 +38,7 @@ const addFave = (req, res) => {
 
 const deleteFave = (req, res) => {
 	const event_id = req.params.id;
-	db.run(`DELETE FROM faves WHERE id = ?
-			VALUES (?)`,
+	db.run(`DELETE FROM faves WHERE id = ?`,
 		[event_id],
 		function (err) {
 			if (err) {

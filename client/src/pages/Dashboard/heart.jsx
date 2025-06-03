@@ -1,30 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import API from '../../api/api';
 import { useAuth } from '../../context/AuthContext';
-
-async function getFaves() {
-
-  try {
-    const res = await API.get('/users/me/faves');
-    if (Object.keys(res.data).length === 0)
-    {
-      console.log('No faves');
-    }  else {  
-      console.log(res.data);
-    }
-  } catch (error) {
-    console.error(error);
-  }
-
-};
-
 
 export function HeartButton(props) {
   
   const { user } = useAuth();
-  const { eventId } = props;
+  const { eventId, faveObject } = props;
   const [liked, setLiked] = useState(false);
-  getFaves();
+  const [updatedObject, setUpdatedObject] = useState(faveObject)
+
+ 
+  useEffect(() => {
+    // Show initial faves
+    setLiked(faveObject);
+    console.log(faveObject);
+
+  }, [])
+ 
 
   const handleClick = async () => {
     
@@ -35,16 +27,20 @@ export function HeartButton(props) {
     // Update in DB
     if (newLiked) {
       try {
-        await API.post('users/me/faves', {
+        const res = await API.post('users/me/faves', {
           user_id: user.id,
           event: eventId
         });
+        // Manually update the object
+        setUpdatedObject(
+          prevFave => ({ ...prevFave, id:res.data.lastID})
+        )
       } catch(error) {
         console.log(error);
       }
     } else {
       try {
-        await API.delete('users/me/faves');
+        await API.delete(`users/me/faves/${updatedObject.id}`);
       } catch(error) {
         console.log(error);
       }
