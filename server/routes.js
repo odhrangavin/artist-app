@@ -58,7 +58,7 @@ router.route('/users/me/faves')
 
 router.route('/users/me/faves/:id')
 	.post(invalidRoute)
-	.get(authenticateToken, getFave)
+	.get(invalidRoute)
 	.put(invalidRoute)
 	.delete(authenticateToken, deleteFave);
 
