@@ -6,14 +6,16 @@ const getUser = (req, res) => {
 		[id],
 		function (err, row) {
 			res.json({user: row});
-		});
+		}
+	);
 }
 
 const getUsers = (req, res) => {
 	db.all(`SELECT * FROM users`,
 		function (err, rows) {
 			res.json({users: rows});
-		});
+		}
+	);
 }
 
 const getUserEvents = (req, res) => {
@@ -22,7 +24,8 @@ const getUserEvents = (req, res) => {
 		[id],
 		function (err, row) {
 			res.json({events: row});
-		});
+		}
+	);
 }
 
 const editUser = (req, res) => {
