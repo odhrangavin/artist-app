@@ -31,7 +31,6 @@ const getUserEvents = (req, res) => {
 const editUser = (req, res) => {
 	const { email, username } = req.body;
 	const user_id = req.user.id;
-	console.log(email, username, user_id)
 	db.run(`UPDATE users SET email = ?, username = ?
 	 	WHERE id = ?`,
 		[email, username, user_id],

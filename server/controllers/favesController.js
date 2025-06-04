@@ -41,15 +41,14 @@ const addFave = (req, res) => {
 				console.error(err.message);
 				return res.status(500).json({ error: 'Database error' });
 			}
-			res.json(this);
+			res.status(201).json(this);
 		}
 	);
 }
 
 const deleteFave = (req, res) => {
 	const event_id = req.params.id;
-	db.run(`DELETE FROM faves WHERE id = ?
-			VALUES (?)`,
+	db.run(`DELETE FROM faves WHERE event = ?`,
 		[event_id],
 		function (err) {
 			if (err) {

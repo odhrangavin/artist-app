@@ -182,7 +182,6 @@ describe('User API', () => {
 		const res = await request(app).get('/api/users/me')
 			.set('authorization', `Bearer: ${ token }`)
 		expect(res.status).toBe(200);
-		console.log(res.body.user);
 		expect(res.body.user.username).toBe('testuser');
 	});
 
@@ -219,7 +218,6 @@ describe('Events API', () => {
 			});
 		expect(res.status).toBe(201);
 		const res2 = await request(app).get('/api/events/1')
-		console.log(res2.body);
 		expect(res2.body.event.id).toBe(1);
 		expect(res2.body.event.user_id).toBe(2);
 		expect(res2.body.event.genre).toBe("Other")
@@ -253,10 +251,44 @@ describe('Events API', () => {
 			});
 		expect(res.status).toBe(200);
 		const res2 = await request(app).get('/api/events/1')
-		console.log(res2.body);
 		expect(res2.body.event.id).toBe(1);
 		expect(res2.body.event.user_id).toBe(2);
 		expect(res2.body.event.genre).toBe("Alternative")
+	})
+})
+
+describe('Faves API', () => {
+	it('should have no faves', async () => {
+		const res = await request(app).get('/api/users/me/faves')
+			.set('authorization', `Bearer: ${ token }`)
+		expect(res.status).toBe(200);
+		expect(res.body.user).toHaveLength(0);
+	})
+
+	it('should create a fave ', async () => {
+		const res = await request(app).post('/api/users/me/faves')
+			.set('authorization', `Bearer: ${ token }`)
+			.send({
+				event: 1,
+				user_id: 2
+			});
+		expect(res.status).toBe(201);
+		expect(res.body.lastID).toBe(1);
+	})
+
+	it('should now have one fave', async () => {
+		const res = await request(app).get('/api/users/me/faves')
+			.set('authorization', `Bearer: ${ token }`)
+		expect(res.status).toBe(200);
+		expect(res.body.user).toHaveLength(1);
+	})
+
+	it('should get the full faves details', async () => {
+		const res = await request(app).get('/api/users/me/faves/full')
+			.set('authorization', `Bearer: ${ token }`)
+		expect(res.status).toBe(200);
+		expect(res.body.user).toHaveLength(1);
+		expect(res.body.user[0].genre).toBe("Alternative");
 	})
 })
 
@@ -278,12 +310,14 @@ describe('Deletions', () => {
 		expect(res2.status).toBe(200);
 		expect(res2.body.results).toHaveLength(0);
 	})
-})
 
-// describe('Faves API', () => {
-// 	it('should give me some faves data TEMP TEST', async () => {
-// 		const res = await request(app).get('/api/users/me/faves/full')
-// 			.set('authorization', `Bearer: ${ token }`);
-// 		expect(res.body.user).toHaveLength(2);
-// 	});
-// });
+	it('should delete fave (DELETE)', async () => {
+		const res = await request(app).delete('/api/users/me/faves/1')
+			.set('authorization', `Bearer: ${ token }`)
+		expect(res.status).toBe(200);
+		const res2 = await request(app).get('/api/users/me/faves')
+			.set('authorization', `Bearer: ${ token }`)
+		expect(res2.status).toBe(200);
+		expect(res2.body.user).toHaveLength(0);
+	})
+})
