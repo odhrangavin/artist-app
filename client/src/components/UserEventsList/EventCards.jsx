@@ -18,8 +18,6 @@ function EventCards(props) {
         navigate(`/dashboard/events/edit/${id}`);
     };
     
-    
-    
     if (!events.length) return <div>{ noEvent || 'No events posted yet.'}</div>;
 
     return (
