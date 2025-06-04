@@ -25,7 +25,7 @@ const checkTableExists = (db, tableName) => {
 
 const token = jwt.sign({ id: 2 }, process.env.JWT_SECRET, { expiresIn: '1d' });;
 
-describe('Table checks', () =>{
+describe('Table checks', () => {
 	it('should have a users table', async () => {
 		const res = await checkTableExists(db, 'users');
 		expect(res).toBe(true);
@@ -50,6 +50,108 @@ describe('Table checks', () =>{
 		const res = await request(app).get('/api/users/1')
 		expect(res.body.user.username).toBe('system-user');
 	});
+});
+
+describe('Invalid route checks', () => {
+	it('should not access PUT /events', async () => {
+		const res = await request(app).put('/api/events')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access DELETE /events', async () => {
+		const res = await request(app).delete('/api/events')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access POST /events/:id', async () => {
+		const res = await request(app).post('/api/events/1')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access PUT /users', async () => {
+		const res = await request(app).put('/api/users')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access DELETE /users', async () => {
+		const res = await request(app).delete('/api/users')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access POST /users/me', async () => {
+		const res = await request(app).post('/api/users/me')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access POST /users/me/events', async () => {
+		const res = await request(app).post('/api/users/me/events')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access PUT /users/me/events', async () => {
+		const res = await request(app).put('/api/users/me/events')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access DELETE /users/me/events', async () => {
+		const res = await request(app).delete('/api/users/me/events')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access PUT /users/me/faves', async () => {
+		const res = await request(app).put('/api/users/me/faves')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access DELETE /users/me/faves', async () => {
+		const res = await request(app).delete('/api/users/me/faves')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access POST /users/me/faves/full', async () => {
+		const res = await request(app).post('/api/users/me/faves/full')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access PUT /users/me/faves/full', async () => {
+		const res = await request(app).put('/api/users/me/faves/full')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access DELETE /users/me/faves/full', async () => {
+		const res = await request(app).delete('/api/users/me/faves/full')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access POST /users/me/faves/:id', async () => {
+		const res = await request(app).post('/api/users/me/faves/1')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access GET /users/me/faves/:id', async () => {
+		const res = await request(app).get('/api/users/me/faves/1')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access PUT /users/me/faves/:id', async () => {
+		const res = await request(app).put('/api/users/me/faves/1')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access POST /users/:id', async () => {
+		const res = await request(app).post('/api/users/2')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access PUT /users/:id', async () => {
+		const res = await request(app).put('/api/users/2')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access DELETE /users/:id', async () => {
+		const res = await request(app).delete('/api/users/2')
+		expect(res.status).toBe(500);
+	})
 });
 
 
@@ -99,3 +201,10 @@ describe('User API', () => {
 	});
 });
 
+// describe('Faves API', () => {
+// 	it('should give me some faves data TEMP TEST', async () => {
+// 		const res = await request(app).get('/api/users/me/faves/full')
+// 			.set('authorization', `Bearer: ${ token }`);
+// 		expect(res.body.user).toHaveLength(2);
+// 	});
+// });

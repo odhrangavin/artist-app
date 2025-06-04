@@ -22,7 +22,6 @@ const getFaves = (req, res) => {
 
 const getFavesEvents = (req, res) => {
 	let user_id = req.user.id;
-	console.log(user_id)
 	db.all(`SELECT * FROM events JOIN faves ON events.id = faves.event WHERE faves.user_id = ?;`,
 		[user_id],
 		function (err, row) {
