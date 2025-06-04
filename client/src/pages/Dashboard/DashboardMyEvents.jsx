@@ -28,10 +28,10 @@ function DashboardMyEventsList() {
 			fetchEvents();
 			
 			// Get list of faves made by the user
-			const fetchFaves = async () => {
+			async function fetchFaves() {
 				try {
 					const res = await API.get('/users/me/faves');
-					setFaveList(res.data.user);
+					setFaveList(res.data.user || []);
 				} catch (error) {
 					console.error(error);
 				}
@@ -44,7 +44,12 @@ function DashboardMyEventsList() {
     if (err) return <div className="error">{err}</div>;
     
     return (
-			<EventCards events={events} faves={faveList} title="My Events" />
+			<EventCards 
+				events={events} 
+				faves={faveList} 
+				title="My Events" 
+				fave={true} 
+			/>
     );
 }
 

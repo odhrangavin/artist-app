@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom"; // For navigation
 
 import { useAuth } from '../../context/AuthContext';
 import { HeartButton } from '../../pages/Dashboard/Heart';
+import { RemoveFave } from '../../pages/Dashboard/RemoveFave';
 
 // Component to show the current user's events using /users/me/events/
 function EventCards(props) {
-    const { events, faves, title, noEvent } = props;
+    const { events, faves, title, noEvent, fave, remove, onFaveRemoved } = props;
 
     const navigate = useNavigate();
 
@@ -31,6 +32,9 @@ function EventCards(props) {
                   style={{ maxWidth: 220, maxHeight: 130 }} 
                 />
               )}
+              {remove && <RemoveFave
+                eventId={ev.id} faveId={ev.faveId} onFaveRemoved={onFaveRemoved} 
+              />}
               <h4>{ev.title}</h4>
               <p>{ev.description}</p>
               <p><strong>Date:</strong> {ev.event_date}</p>
@@ -53,10 +57,10 @@ function EventCards(props) {
                 >
                   Edit Event
                 </button>
-                <HeartButton 
+                {fave && <HeartButton 
                   eventId={ev.id} 
                   faveObject={faves.find(fave => fave.event === ev.id)} 
-                />
+                />}
               </div>
             </li>
           ))}

@@ -6,16 +6,14 @@ export function HeartButton(props) {
   
   const { user } = useAuth();
   const { eventId, faveObject } = props;
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(!!faveObject);
   const [updatedObject, setUpdatedObject] = useState(faveObject)
 
- 
+  // Force showing liked events in case faveObject is loaded late
   useEffect(() => {
-    // Show initial faves
-    setLiked(faveObject);
-    console.log(faveObject);
-
-  }, [])
+    setLiked(!!faveObject);
+    setUpdatedObject(faveObject);
+  }, [faveObject])
  
 
   const handleClick = async () => {
