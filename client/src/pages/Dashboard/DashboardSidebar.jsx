@@ -19,14 +19,6 @@ export default function DashboardSidebar({ currentSection, onSectionChange }) {
                             All My Events
                         </button>
                     </li>
-                    {/* <li>
-                        <button
-                            className={currentSection === "edit" ? "active" : ""}
-                            onClick={() => onSectionChange("edit")}
-                        >
-                            Edit Event
-                        </button>
-                    </li> */}
                     <li>
                         <button
                             className={currentSection === "favorites" ? "active" : ""}

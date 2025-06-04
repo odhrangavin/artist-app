@@ -5,19 +5,197 @@
   flex-direction: column;
   min-height: 100vh;
 }
-.dashboard-container {
+
+.dashboard-create-event {
+  padding-top: 1.5rem;
+}
+
+.event-form {
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(255, 255, 255, 0.07);
+  padding: 2rem;
+  min-width: 330px;
+  max-width: 390px;
+  flex: 1 1 340px;
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.event-form label {
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+  margin-bottom: 0.2em;
+}
+.event-form .event-form-row {
+  display: flex;
+  gap: 1rem;
+}
+.event-form input, .event-form textarea, .event-form select {
+  padding: 0.5em;
+  border-radius: 6px;
+  font-size: 1em;
+  margin-top: 0.2em;
+  border: 1px solid #dde4ea;
+  transition: border 0.16s;
+}
+.event-form input:focus, .event-form textarea:focus, .event-form select:focus {
+  outline: none;
+}
+.event-form textarea {
+  min-height: 60px;
+  resize: vertical;
+}
+.event-form .event-submit-btn {
+  margin-top: 1em;
+  border: none;
+  border-radius: 6px;
+  padding: 0.7em 1.6em;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, box-shadow 0.18s;
+  box-shadow: 0 1px 3px rgba(36, 116, 229, 0.08);
+}
+.event-form .event-submit-btn:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 3px 12px rgba(36, 116, 229, 0.1);
+}
+.event-form .event-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.event-preview {
+  min-width: 320px;
+  flex: 1 1 320px;
+}
+.event-preview h3 {
+  margin-bottom: 0.7em;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.event-card-preview {
+  border-radius: 10px;
+  background: #f8fafb;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.045);
+  padding: 1.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 270px;
+}
+.event-card-preview .event-image-preview {
+  width: 96%;
+  max-width: 340px;
+  height: 170px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 1em;
+  background: #e3e7eb;
+  border: 1px solid #dde4ea;
+}
+.event-card-preview .event-image-placeholder {
+  width: 96%;
+  max-width: 340px;
+  height: 170px;
+  background: #e3e7eb;
+  color: #888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-size: 1.1em;
+  margin-bottom: 1em;
+  border: 1px solid #dde4ea;
+  font-style: italic;
+}
+.event-card-preview .event-preview-content {
   width: 100%;
 }
-.dashboard .event-form {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.5rem;
-  border-right: 1px solid #ccc;
-  padding: 0 0.5rem;
+.event-card-preview .event-preview-content h4 {
+  font-size: 1.25em;
+  font-weight: 600;
+  margin: 0.3em 0 0.7em 0;
 }
-.dashboard .event-form textarea {
-  resize: none;
-  width: 500px;
+.event-card-preview .event-preview-content .event-preview-date,
+.event-card-preview .event-preview-content .event-preview-location,
+.event-card-preview .event-preview-content .event-preview-genre {
+  color: #4a6177;
+  font-size: 1em;
+  margin: 0.15em 0;
+}
+.event-card-preview .event-preview-content .event-preview-genre {
+  font-style: italic;
+}
+.event-card-preview .event-preview-content .event-preview-description {
+  color: #222;
+  margin-top: 0.6em;
+  font-size: 1em;
+  min-height: 2.2em;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+/* Utility/Error/Success styles */
+.error {
+  color: #c00;
+  background: #ffeaea;
+  border-radius: 6px;
+  padding: 0.5em 1em;
+  margin: 1em 0 0.5em 0;
+  font-size: 1em;
+}
+
+.success {
+  color: #217a3c;
+  background: #e7faed;
+  border-radius: 6px;
+  padding: 0.5em 1em;
+  margin: 1em 0 0.5em 0;
+  font-size: 1em;
+}
+
+.user-events-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.user-events-list .event-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 0;
+}
+.user-events-list .event-card {
+  background: #1a1a1a;
+  color: #ccc;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.1);
+}
+.user-events-list .event-card h4 {
+  margin: 0.5rem 0 0.2rem;
+}
+.user-events-list .event-card p {
+  margin: 0.2rem 0;
+}
+.user-events-list .event-card a {
+  display: inline-block;
+  margin-top: 0.5rem;
+  text-decoration: underline;
+}
+.user-events-list .event-card .event-image {
+  width: 100%;
+  height: 160px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 0.5rem;
 }

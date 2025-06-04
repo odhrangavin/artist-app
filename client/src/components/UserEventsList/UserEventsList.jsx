@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import API from "../../api/api";
 import UserEventSearchForm from "./UserEventSearchForm";
 import "./UserEventsList.css";
+import Pagination from "./Pagination";
 
 // Helper to extract dropdown options from all events (not filtered!)
 function extractOptions(events) {
@@ -43,7 +44,7 @@ function filterEventsByDate(events, { dateFrom, dateTo }) {
     });
 }
 
-const EVENTS_PER_PAGE = 6;
+const EVENTS_PER_PAGE = 12;
 
 export default function UserEventList() {
     const [events, setEvents] = useState([]);
@@ -115,7 +116,7 @@ export default function UserEventList() {
         // options stay the same (from allEvents)
     }
 
-    // Pagination logic
+    //Pagination logic
     const totalPages = Math.ceil(events.length / EVENTS_PER_PAGE);
     const displayedEvents = events.slice(
         (page - 1) * EVENTS_PER_PAGE,
@@ -123,8 +124,9 @@ export default function UserEventList() {
     );
 
     function handlePageChange(newPage) {
+        if (newPage < 1 || newPage > totalPages) return;
         setPage(newPage);
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        // window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     return (
@@ -171,29 +173,7 @@ export default function UserEventList() {
                             ))
                         )}
                     </ul>
-                    {totalPages > 1 && (
-                        <div className="pagination">
-                            {Array.from({ length: totalPages }, (_, i) => (
-                                <button
-                                    key={i + 1}
-                                    onClick={() => handlePageChange(i + 1)}
-                                    disabled={page === i + 1}
-                                    style={{
-                                        margin: "0 3px",
-                                        background: page === i + 1 ? "#1a1a1a" : "#eee",
-                                        color: page === i + 1 ? "#fff" : "#222",
-                                        border: "none",
-                                        borderRadius: "4px",
-                                        padding: "6px 12px",
-                                        cursor: page === i + 1 ? "default" : "pointer",
-                                        fontWeight: page === i + 1 ? "bold" : "normal"
-                                    }}
-                                >
-                                    {i + 1}
-                                </button>
-                            ))}
-                        </div>
-                    )}
+                    <Pagination page={page} totalPages={totalPages} onPageChange={handlePageChange} />
                 </>
             )}
         </div>
