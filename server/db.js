@@ -42,7 +42,8 @@ db.run(
 		location    TEXT,
 		venue       TEXT,
 		user_id     INTEGER NOT NULL,
-		created_at  TEXT,	
+		created_at  TEXT,
+		suspended   INTEGER,
 		FOREIGN KEY(user_id) REFERENCES users(id)
 	)`,
 	err => { 

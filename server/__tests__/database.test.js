@@ -255,6 +255,28 @@ describe('Events API', () => {
 		expect(res2.body.event.user_id).toBe(2);
 		expect(res2.body.event.genre).toBe("Alternative")
 	})
+
+	it('should suspend the test event', async () => {
+		const res = await request(app).patch('/api/events/1')
+			.set('authorization', `Bearer: ${ token }`)
+			.send({ suspended: true });
+		expect(res.status).toBe(200);
+		const res2 = await request(app).get('/api/events/1')
+		expect(res2.body.event.id).toBe(1);
+		expect(res2.body.event.user_id).toBe(2);
+		expect(res2.body.event.suspended).toBe(1)
+	})
+
+	it('should un-suspend the test event', async () => {
+		const res = await request(app).patch('/api/events/1')
+			.set('authorization', `Bearer: ${ token }`)
+			.send({ suspended: false });
+		expect(res.status).toBe(200);
+		const res2 = await request(app).get('/api/events/1')
+		expect(res2.body.event.id).toBe(1);
+		expect(res2.body.event.user_id).toBe(2);
+		expect(res2.body.event.suspended).toBe(0)
+	})
 })
 
 describe('Faves API', () => {
