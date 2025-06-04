@@ -8,6 +8,7 @@ export default function UserEventDetail() {
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [userMap, setUserMap] = useState({});
 
     useEffect(() => {
         async function fetchEvent() {
@@ -24,9 +25,36 @@ export default function UserEventDetail() {
         fetchEvent();
     }, [id]);
 
+
+    // Fetch users
+    useEffect(() => {
+        async function fetchUsers() {
+            try {
+                const res = await API.get('/users');
+                // user_id -> username map
+                const map = {};
+                (res.data.users || res.data).forEach(u => {
+                    map[u.id] = u.username;
+                });
+                setUserMap(map);
+            } catch (e) {
+                console.error('Could not load users:', e);
+            }
+        }
+
+        if (event && !event.username) {
+            fetchUsers();
+        }
+    }, [event]);
+
     if (loading) return <div>Loading event...</div>;
     if (error) return <div className="error">{error}</div>;
     if (!event) return <div>Event not found.</div>;
+
+    let author = event.username;
+    if (!author && event.user_id && userMap[event.user_id]) {
+        author = userMap[event.user_id];
+    }
 
     return (
         <div className="event-detail" role="region" aria-label="Event detail">
@@ -37,7 +65,7 @@ export default function UserEventDetail() {
             <p><strong>City:</strong> {event.location}</p>
             <p><strong>Venue:</strong> {event.venue}</p>
             <p><strong>Genre:</strong> {event.genre}</p>
-            <p><strong>Author:</strong> {event.author}</p>
+            <p><strong>Author:</strong> {author ? author : 'Unknown'}</p>
         </div>
     );
 }

@@ -312,6 +312,16 @@ describe('Faves API', () => {
 		expect(res.body.user).toHaveLength(1);
 		expect(res.body.user[0].genre).toBe("Alternative");
 	})
+
+	it('should error on attempting to create a duplicate fave', async () => {
+		const res = await request(app).post('/api/users/me/faves')
+			.set('authorization', `Bearer: ${ token }`)
+			.send({
+				event: 1,
+				user_id: 2
+			});
+		expect(res.status).toBe(500);
+	})
 })
 
 describe('Deletions', () => {
