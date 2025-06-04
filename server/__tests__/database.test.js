@@ -197,30 +197,6 @@ describe('User API', () => {
 		expect(res2.body.user.username).toBe('testuser-modified');
 		expect(res2.body.user.email).toBe('test@example.com');
 	});
-
-	it('should delete user (DELETE)', async () => {
-		const res = await request(app).delete('/api/users/me')
-			.set('authorization', `Bearer: ${ token }`)
-		expect(res.status).toBe(200);
-		const res2 = await request(app).get('/api/users');
-		expect(res2.status).toBe(200);
-		expect(res2.body.users).toHaveLength(1);
-	})
-
-	it('should create another new user (POST))', async () => {
-		const res = await request(app).post('/api/users')
-			.send({ username: 'testuser', 
-				email: 'retest@example.com', 
-				password: 'test1234' ,
-				confirm: 'test1234',
-				role: 'artist'
-			});
-		expect(res.status).toBe(201);
-		const res2 = await request(app).get('/api/users/2')
-		expect(res2.body.user.username).toBe('testuser');
-		expect(res2.body.user.email).toBe('retest@example.com');
- 
-	});
 });
 
 describe('Events API', () => {
@@ -263,6 +239,45 @@ describe('Events API', () => {
 		const res = await request(app).get('/api/events?genre=alternative')
 		expect(res.body.results).toHaveLength(0);
 	});
+
+	it('should edit the test event', async () => {
+		const res = await request(app).put('/api/events/1')
+			.set('authorization', `Bearer: ${ token }`)
+			.send({ title: "Testing Event",
+				description: "An event for testing",
+				image_url: "",
+				event_time: "",
+				location: "Test Location",
+				venue: "Test Venue",
+				genre: "Alternative",
+			});
+		expect(res.status).toBe(200);
+		const res2 = await request(app).get('/api/events/1')
+		console.log(res2.body);
+		expect(res2.body.event.id).toBe(1);
+		expect(res2.body.event.user_id).toBe(2);
+		expect(res2.body.event.genre).toBe("Alternative")
+	})
+})
+
+describe('Deletions', () => {
+	it('should delete user (DELETE)', async () => {
+		const res = await request(app).delete('/api/users/me')
+			.set('authorization', `Bearer: ${ token }`)
+		expect(res.status).toBe(200);
+		const res2 = await request(app).get('/api/users');
+		expect(res2.status).toBe(200);
+		expect(res2.body.users).toHaveLength(1);
+	})
+
+	it('should delete event (DELETE)', async () => {
+		const res = await request(app).delete('/api/events/1')
+			.set('authorization', `Bearer: ${ token }`)
+		expect(res.status).toBe(200);
+		const res2 = await request(app).get('/api/events');
+		expect(res2.status).toBe(200);
+		expect(res2.body.results).toHaveLength(0);
+	})
 })
 
 // describe('Faves API', () => {
