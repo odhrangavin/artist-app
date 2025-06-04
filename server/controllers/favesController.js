@@ -1,18 +1,17 @@
 const db = require('../db');
 
-const getFave = (req, res) => {
-	let event_id = req.params.id;
-	let user_id = req.user.id
-	db.get(`SELECT * FROM faves WHERE event_id = ? AND user_id = ?`,
-		[event_id, user_id],
-		function (err, row) {
-			res.json({user: row});
-		});
-}
+// const getFave = (req, res) => {
+// 	let event_id = req.params.id;
+// 	let user_id = req.user.id
+// 	db.get(`SELECT * FROM faves WHERE event_id = ? AND user_id = ?`,
+// 		[event_id, user_id],
+// 		function (err, row) {
+// 			res.json({user: row});
+// 		});
+// }
 
 const getFaves = (req, res) => {
 	let id = req.user.id;
-	db.all(`SELECT * FROM faves WHERE user_id = ?`,
 	db.all(`SELECT * FROM faves WHERE user_id = ?`,
 		[id],
 		function (err, row) {
