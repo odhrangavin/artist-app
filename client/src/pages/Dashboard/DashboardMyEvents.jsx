@@ -3,7 +3,7 @@ import API from "../../api/api";
 import { useNavigate } from "react-router-dom"; // For navigation
 
 // Component to show the current user's events using /users/me/events/
-function DashboardMyEventsList() {
+function DashboardMyEvents({ onEditEvent }) {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [err, setErr] = useState('');
@@ -30,7 +30,7 @@ function DashboardMyEventsList() {
     };
 
     const handleEdit = (id) => {
-        navigate(`/dashboard/events/edit/${id}`);
+        navigate(`/dashboard/events/${id}`);
     };
 
     if (loading) return <div>Loading your events...</div>;
@@ -61,13 +61,15 @@ function DashboardMyEventsList() {
                             >
                                 View Event
                             </button>
-                            <button
-                                type="button"
-                                className="event-action-btn event-edit-btn"
-                                onClick={() => handleEdit(ev.id)}
-                            >
-                                Edit Event
-                            </button>
+                            <div className="event-card-actions">
+                                <button
+                                    type="button"
+                                    className="event-action-btn event-edit-btn"
+                                    onClick={() => onEditEvent(ev.id)}
+                                >
+                                    Edit Event
+                                </button>
+                            </div>
                         </div>
                     </li>
                 ))}
@@ -76,4 +78,4 @@ function DashboardMyEventsList() {
     );
 }
 
-export default DashboardMyEventsList;
+export default DashboardMyEvents;
