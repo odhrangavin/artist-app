@@ -42,7 +42,8 @@ db.run(
 		location    TEXT,
 		venue       TEXT,
 		user_id     INTEGER NOT NULL,
-		created_at  TEXT,	
+		created_at  TEXT,
+		suspended   INTEGER,
 		FOREIGN KEY(user_id) REFERENCES users(id)
 	)`,
 	err => { 
@@ -73,7 +74,8 @@ db.run(
 		user_id    INTEGER NOT NULL,
 		created_at TEXT,
 		FOREIGN KEY(event) REFERENCES events(id),
-		FOREIGN KEY(user_id) REFERENCES users(id)
+		FOREIGN KEY(user_id) REFERENCES users(id),
+		UNIQUE(event,user_id)
 	)`,
 	err => { 
 		if (err){

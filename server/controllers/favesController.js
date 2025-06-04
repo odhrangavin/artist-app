@@ -1,13 +1,13 @@
 const db = require('../db');
 
 // const getFave = (req, res) => {
-// 	let id = req.params.id;
-// 	db.get(`SELECT * FROM faves WHERE id = ?`,
-// 		[id],
+// 	let event_id = req.params.id;
+// 	let user_id = req.user.id
+// 	db.get(`SELECT * FROM faves WHERE event_id = ? AND user_id = ?`,
+// 		[event_id, user_id],
 // 		function (err, row) {
 // 			res.json({user: row});
-// 		}
-// 	);
+// 		});
 // }
 
 const getFaves = (req, res) => {
@@ -22,7 +22,6 @@ const getFaves = (req, res) => {
 
 const getFavesEvents = (req, res) => {
 	let user_id = req.user.id;
-	console.log(user_id)
 	db.all(`SELECT * FROM events JOIN faves ON events.id = faves.event WHERE faves.user_id = ?;`,
 		[user_id],
 		function (err, row) {
@@ -42,14 +41,14 @@ const addFave = (req, res) => {
 				console.error(err.message);
 				return res.status(500).json({ error: 'Database error' });
 			}
-			res.json(this);
+			res.status(201).json(this);
 		}
 	);
 }
 
 const deleteFave = (req, res) => {
 	const event_id = req.params.id;
-	db.run(`DELETE FROM faves WHERE id = ?`,
+	db.run(`DELETE FROM faves WHERE event = ?`,
 		[event_id],
 		function (err) {
 			if (err) {

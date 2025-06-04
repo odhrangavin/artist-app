@@ -7,8 +7,8 @@ const genres = [
     "Alternative", "Blues", "Children's Theatre", "Circus & Specialty Acts", "Classical", "Comedy",
     "Community/Civic", "Country", "Dance", "Dance/Electronic", "Equestrian", "Fairs & Festivals", "Family",
     "Fitness", "Folk", "Football", "Hip-Hop/Rap", "Jazz", "Latin", "Lecture/Seminar", "Metal", "Miscellaneous",
-    "Miscellaneous Theatre", "Music", "Other", "Pop", "R&B", "Reggae", "Rock", "Rugby", "Soccer", "Theatre",
-    "Variety", "World", "Wrestling"
+    "Miscellaneous Theatre", "Music", "Pop", "R&B", "Reggae", "Rock", "Rugby", "Soccer", "Theatre",
+    "Variety", "World", "Wrestling", "Other"
 ];
 
 // Helper for min datetime-local value

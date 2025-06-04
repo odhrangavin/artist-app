@@ -3,7 +3,7 @@ const express = require('express');
 const db = require('./db');
 const { register, login, requestReset, passwordReset, authenticateToken } = require('./controllers/authController')
 const { getUser, getUsers, getUserEvents, editUser, deleteUser } = require('./controllers/userController')
-const { getEvent, getEvents, createEvent, editEvent, deleteEvent } = require('./controllers/eventController');
+const { getEvent, getEvents, createEvent, editEvent, deleteEvent, toggleEvent } = require('./controllers/eventController');
 const { scrapeTicketmaster, scrapeFailte } = require('./controllers/scrapeController')
 const { getFaves, getFavesEvents, addFave, deleteFave } = require('./controllers/favesController')
 
@@ -30,7 +30,8 @@ router.route('/events/:id')
 	.post(invalidRoute)
 	.get(getEvent)
 	.put(authenticateToken, editEvent)
-	.delete(authenticateToken, deleteEvent);
+	.delete(authenticateToken, deleteEvent)
+	.patch(authenticateToken, toggleEvent);
 
 router.route('/users')
 	.post(register)
@@ -51,7 +52,7 @@ router.route('/users/me/events')
 	.delete(invalidRoute);
 
 router.route('/users/me/faves')
-	.post(addFave)
+	.post(authenticateToken, addFave)
 	.get(authenticateToken, getFaves)
 	.put(invalidRoute)
 	.delete(invalidRoute);

@@ -29,7 +29,8 @@ const getUserEvents = (req, res) => {
 }
 
 const editUser = (req, res) => {
-	const { email, username, user_id } = req.body;
+	const { email, username } = req.body;
+	const user_id = req.user.id;
 	db.run(`UPDATE users SET email = ?, username = ?
 	 	WHERE id = ?`,
 		[email, username, user_id],
@@ -44,7 +45,7 @@ const editUser = (req, res) => {
 }
 
 const deleteUser = (req, res) => {
-	const { user_id } = req.body;
+	const user_id = req.user.id;
 	db.run(`DELETE FROM users WHERE id = ?`,
 		[user_id],
 		function (err) {

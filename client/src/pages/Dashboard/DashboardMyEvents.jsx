@@ -4,7 +4,7 @@ import API from "../../api/api";
 import EventCards from '../../components/UserEventsList/EventCards';
 
 // Component to show the current user's events using /users/me/events/
-function DashboardMyEventsList() {
+function DashboardMyEvents({ onEditEvent }) {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [err, setErr] = useState('');
@@ -53,4 +53,4 @@ function DashboardMyEventsList() {
     );
 }
 
-export default DashboardMyEventsList;
+export default DashboardMyEvents;
