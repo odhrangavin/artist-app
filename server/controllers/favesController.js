@@ -20,6 +20,17 @@ const getFaves = (req, res) => {
 	);
 }
 
+const getFavesEvents = (req, res) => {
+	let user_id = req.user.id;
+	console.log(user_id)
+	db.all(`SELECT * FROM events JOIN faves ON events.id = faves.event WHERE faves.user_id = ?;`,
+		[user_id],
+		function (err, row) {
+			res.json({user: row});
+		}
+	);
+}
+
 const addFave = (req, res) => {
 	const { event, user_id } = req.body;
 	const created_at = new Date().toISOString();
@@ -50,4 +61,4 @@ const deleteFave = (req, res) => {
 	);
 }
 
-module.exports = { getFaves, addFave, deleteFave };
+module.exports = { getFaves, getFavesEvents, addFave, deleteFave };

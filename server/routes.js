@@ -5,7 +5,7 @@ const { register, login, requestReset, passwordReset, authenticateToken } = requ
 const { getUser, getUsers, getUserEvents, editUser, deleteUser } = require('./controllers/userController')
 const { getEvent, getEvents, createEvent, editEvent, deleteEvent } = require('./controllers/eventController');
 const { scrapeTicketmaster, scrapeFailte } = require('./controllers/scrapeController')
-const { getFave, getFaves, addFave, deleteFave } = require('./controllers/favesController')
+const { getFaves, getFavesEvents, addFave, deleteFave } = require('./controllers/favesController')
 
 const router = express.Router();
 
@@ -53,6 +53,12 @@ router.route('/users/me/events')
 router.route('/users/me/faves')
 	.post(addFave)
 	.get(authenticateToken, getFaves)
+	.put(invalidRoute)
+	.delete(invalidRoute);
+
+router.route('/users/me/faves/full')
+	.post(invalidRoute)
+	.get(authenticateToken, getFavesEvents)
 	.put(invalidRoute)
 	.delete(invalidRoute);
 
