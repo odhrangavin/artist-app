@@ -55,7 +55,9 @@ const createEvent = (req, res) => {
 };
 
 const editEvent = (req, res) => {
-	const { title, description, image_url, event_time, location, venue, genre, user_id, event_id } = req.body;
+	const event_id = req.params.id;
+	const user_id = req.user.id;
+	const { title, description, image_url, event_time, location, venue, genre } = req.body;
 	const [ event_date, event_ntime ] = event_time.split("T");
 	db.run(`UPDATE events SET title = ?, description = ?, image_url = ?, event_date = ?, event_time = ?, location = ?, venue = ?, genre = ?
 	 	WHERE id = ? AND user_id = ?`,
@@ -65,7 +67,10 @@ const editEvent = (req, res) => {
 				console.error(err.message);
 				return res.status(500).json({ error: 'Database error' });
 			}
-			res.json(this);
+			if (this.changes === 0) {
+            	return res.status(404).json({ error: 'Event not found or you are not the owner' });
+        	}
+			res.json({ success: true, message: "Event updated." });
 		}
 	);
 }
