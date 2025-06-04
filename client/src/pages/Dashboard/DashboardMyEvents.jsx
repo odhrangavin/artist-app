@@ -1,22 +1,14 @@
 import { useState, useEffect } from "react";
 
 import API from "../../api/api";
-<<<<<<< HEAD
 import EventCards from '../../components/UserEventsList/EventCards';
-=======
-import { useNavigate } from "react-router-dom"; // For navigation
->>>>>>> main
 
 // Component to show the current user's events using /users/me/events/
 function DashboardMyEventsList() {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [err, setErr] = useState('');
-<<<<<<< HEAD
 		const [faveList, setFaveList] = useState([]);
-=======
-    const navigate = useNavigate();
->>>>>>> main
 
     useEffect(() => {
 			
@@ -47,14 +39,6 @@ function DashboardMyEventsList() {
 			fetchFaves();
 
     }, []);
-
-    const handleView = (id) => {
-        navigate(`/events/${id}`);
-    };
-
-    const handleEdit = (id) => {
-        navigate(`/dashboard/events/edit/${id}`);
-    };
 
     if (loading) return <div>Loading your events...</div>;
     if (err) return <div className="error">{err}</div>;

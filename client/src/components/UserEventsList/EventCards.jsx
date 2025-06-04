@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // For navigation
 
 import { useAuth } from '../../context/AuthContext';
 import { HeartButton } from '../../pages/Dashboard/Heart';
@@ -6,8 +7,19 @@ import { HeartButton } from '../../pages/Dashboard/Heart';
 // Component to show the current user's events using /users/me/events/
 function EventCards(props) {
     const { events, faves, title, noEvent } = props;
-    const { isLoggedIn } = useAuth();
 
+    const navigate = useNavigate();
+
+    const handleView = (id) => {
+        navigate(`/events/${id}`);
+    };
+
+    const handleEdit = (id) => {
+        navigate(`/dashboard/events/edit/${id}`);
+    };
+    
+    
+    
     if (!events.length) return <div>{ noEvent || 'No events posted yet.'}</div>;
 
     return (
