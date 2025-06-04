@@ -1,3 +1,56 @@
+import { useState, useEffect } from "react";
+
+import API from "../../api/api";
+import EventCards from '../../components/UserEventsList/EventCards';
+
 export default function DashboardFavorites() {
-    return <div>Favorites (favorite events go here)</div>;
+
+	const [events, setEvents] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [err, setErr] = useState('');
+	const [faveList, setFaveList] = useState([]);
+
+	useEffect(() => {
+		
+		// Get list of events created by the user
+		async function fetchEvents() {
+			setLoading(true);
+			setErr('');
+			try {
+				const res = await API.get(`/users/me/events/`);
+				setEvents(res.data.events || []);
+			} catch (e) {
+				setErr('Failed to load events.');
+				setEvents([]);
+			}
+			setLoading(false);
+		}
+		fetchEvents();
+		
+		// Get list of faves made by the user
+		async function fetchFaves() {
+			try {
+				const res = await API.get('/users/me/faves');
+				setFaveList(res.data.user);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchFaves();
+
+	}, []);
+
+	useEffect(() => {
+		console.log(faveList)
+	})
+
+	if (loading) return <div>Loading your events...</div>;
+	if (err) return <div className="error">{err}</div>;
+    
+	return( 
+		<EventCards 
+			events={events}	faves={faveList} title="My Favorite Events" 
+			noEvent="You have no event in your faves." 
+		/>
+	);
 }

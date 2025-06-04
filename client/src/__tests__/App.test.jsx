@@ -95,7 +95,7 @@ describe('App Routing', () => {
     const eventContainer = await screen.findByRole('region', {name:'Event detail'});
     expect(eventContainer).toBeInTheDocument();
   });
-  it('should render a 404 not fuond at any wrong page', async () => {
+  it('should render a 404 not found at any wrong page', async () => {
     renderWithRouter('/pagewithtypo')
     
     await waitFor(() => {
