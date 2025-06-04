@@ -85,8 +85,8 @@ describe('Login', () => {
     // Click on login button
     await userEvent.click(buttonLogin);
     // If answer is successfull
-    const dashboardTitle = await screen.findByText('Welcome to your Dashboard');
-    expect(dashboardTitle).toBeInTheDocument();
+    const createEventTitle = await screen.findByText(/create your event/i);
+    expect(createEventTitle).toBeInTheDocument();
   });
 
   it('write on input fields and fail login', async () => {
@@ -138,11 +138,11 @@ describe('Register', () => {
     const inputUser = screen.getByPlaceholderText(/Username/i);
     const inputPass = screen.getByPlaceholderText(/create a password/i);
     const inputConfirm = screen.getByPlaceholderText(/repeat the password/i);
-    const buttonArtist = screen.getByRole('button', { name: /artist/i });
-    const buttonAudience = screen.getByRole('button', { name: /audience/i });
+    const buttonOrganizer = screen.getByRole('button', { name: /organizer/i });
+    const buttonAttendee = screen.getByRole('button', { name: /attendee/i });
     const buttonRegister = screen.getByRole('button', { name: /register/i });
     const errorMessage = screen.getByTestId('error-message');
-    return [buttonArtist, buttonAudience, buttonRegister, errorMessage, inputEmail, 
+    return [buttonOrganizer, buttonAttendee, buttonRegister, errorMessage, inputEmail, 
       inputUser, inputPass, inputConfirm];
   }
   
@@ -160,13 +160,13 @@ describe('Register', () => {
   it('initial values of register fields should be empty and button disabled', async () => {
     renderWithRouter('/register');
 
-    const [ buttonArtist, buttonAudience, buttonRegister, errorMessage, 
+    const [ buttonOrganizer, buttonAttendee, buttonRegister, errorMessage, 
       ...inputElements ] = getRegisterElements();
 
     await waitFor(() => {
       inputElements.map(inputElement => expect(inputElement).toHaveValue(''));
-      expect(buttonArtist).toHaveValue('artist');
-      expect(buttonAudience).toHaveValue('audience');
+      expect(buttonOrganizer).toHaveValue('organizer');
+      expect(buttonAttendee).toHaveValue('attendee');
       expect(errorMessage).toHaveTextContent('');
       expect(buttonRegister).toBeDisabled();
     });
@@ -176,7 +176,7 @@ describe('Register', () => {
     
     renderWithRouter('/register');
 
-    const [ buttonArtist, buttonAudience, buttonRegister, errorMessage, inputEmail, 
+    const [ buttonOrganizer, buttonAttendee, buttonRegister, errorMessage, inputEmail, 
       inputUser, inputPass, inputConfirm ] = getRegisterElements()
 
     // Type on fields  
@@ -184,7 +184,7 @@ describe('Register', () => {
     await userEvent.type(inputUser, 'testuser');
     await userEvent.type(inputPass, '1234');
     await userEvent.type(inputConfirm, '1234');
-    await userEvent.click(buttonArtist);
+    await userEvent.click(buttonOrganizer);
 
     // Check updates
     expect(inputEmail).toHaveValue('testuser@gmail.com');
@@ -197,8 +197,8 @@ describe('Register', () => {
     // Click on register button
     await userEvent.click(buttonRegister);
     // If answer is successfull
-    const dashboardTitle = await screen.findByText('Welcome to your Dashboard');
-    expect(dashboardTitle).toBeInTheDocument();
+    const createEventTitle = await screen.findByText(/create your event/i);
+    expect(createEventTitle).toBeInTheDocument();
   });
 
   it('write on input fields and fail register', async () => {
@@ -214,7 +214,7 @@ describe('Register', () => {
     
     renderWithRouter('/register');
 
-    const [ buttonArtist, buttonAudience, buttonRegister, errorMessage, inputEmail, 
+    const [ buttonOrganizer, buttonAttendee, buttonRegister, errorMessage, inputEmail, 
       inputUser, inputPass, inputConfirm ] = getRegisterElements()
 
     // Type on fields  
@@ -222,7 +222,7 @@ describe('Register', () => {
     await userEvent.type(inputUser, 'testuser');
     await userEvent.type(inputPass, '1234');
     await userEvent.type(inputConfirm, '1234');
-    await userEvent.click(buttonAudience);
+    await userEvent.click(buttonAttendee);
 
     // Check relevant updates (this time I clicked on audience button) 
     expect(errorMessage).toHaveTextContent('');

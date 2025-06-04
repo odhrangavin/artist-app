@@ -69,7 +69,7 @@ describe('App Routing', () => {
     renderWithRouter('/dashboard')
 
     await waitFor(() => {
-      expect(screen.getByText('Welcome to your Dashboard')).toBeInTheDocument();
+      expect(screen.getByText(/create your event/i)).toBeInTheDocument();
     })
   });
   it('should render forgot-password page at /forgot-password', async () => {
@@ -174,7 +174,7 @@ describe('App Navigation when user is logged in', () => {
     const dashboardLink = screen.getByRole('link', { name: /dashboard/i });
     await userEvent.click(dashboardLink);
     
-    expect(await screen.findByText('Welcome to your Dashboard')).toBeInTheDocument();
+    expect(await screen.findByText(/create your event/i)).toBeInTheDocument();
   });
 
   it('should log out the user when click on Logout', async () => {

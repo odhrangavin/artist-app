@@ -83,14 +83,13 @@ export default function UserEventList() {
 		}
 	}, [allEvents])
 
-	
-
 
 	async function fetchAllEvents() {
 		setLoading(true);
 		try {
 			const res = await API.get("/events");
 			let all = res.data.results || [];
+			console.log(all[0]);
 
 			// Only future events for dropdowns
 			const futureEvents = all.filter(ev => ev.event_date && ev.event_date >= new Date().toISOString().slice(0, 10));

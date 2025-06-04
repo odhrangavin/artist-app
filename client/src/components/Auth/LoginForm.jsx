@@ -5,19 +5,22 @@ export default function LoginForm() {
 	const [form, setForm] = useState({ username: '', password: '' });
 	const [error, setError] = useState('');
 	const { login } = useAuth();
-
+	const [isLoading, setIsLoading] = useState(false);
 
 	const handleSubmit = async (e) => {
 		// Send data to the server to login
 		
 		e.preventDefault();
-		
+		setIsLoading(true); // Show waiting message
+	
 		try {
-			await login(form);
+			await login(form);		
 		} catch (err) {
 			// Show error message
 			setError(err.message);
+			setIsLoading(false);
 		}
+		
 	};
 
 	const handleChange = (e) => {
@@ -51,7 +54,7 @@ export default function LoginForm() {
 				/>
 				<br />
 				<button type="submit" disabled={!form.username || !form.password}>
-					Log in
+					{!isLoading ? 'Log In' : 'Please Wait'}
 				</button>
 				<br />
 				<span className='error-message' data-testid='error-message'>{error}</span>

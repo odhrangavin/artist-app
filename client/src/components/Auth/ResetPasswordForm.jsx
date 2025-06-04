@@ -6,16 +6,19 @@ export default function ResetPasswordForm() {
 	const [form, setForm] = useState({ newPassword: '', confirm:'', token:'' });
 	const [ error, setError ] = useState('');
 	const navigate = useNavigate();
+	const [isLoading, setIsLoading] = useState(false);
 
 	const handleSubmit = async (e) => {
 		// Send new password and token and redirect to login
 		
 		e.preventDefault();
 		const { newPassword, confirm, token } = form;
+		setIsLoading(true); // Show waiting message
 
     // Check passwords match
     if(newPassword != confirm || !token) {
       setError(`Passwords do not match`);
+			setIsLoading(false);
       return;
     }
 
@@ -24,6 +27,7 @@ export default function ResetPasswordForm() {
 			navigate('/login');
 		} catch (err) {
 			setError(`Couldn't reset the password`);
+			setIsLoading(false);
 		}
 	};
 
@@ -67,7 +71,7 @@ export default function ResetPasswordForm() {
 				<button type="submit" 
 					disabled={!form.newPassword || !form.confirm || !form.token}
 				>
-					Confirm Reset
+					{!isLoading ? 'Confirm Reset' : 'Please Wait'}
 					</button>
 				<br />
 				<span className='error-message' data-testid='error-message'>{error}</span>

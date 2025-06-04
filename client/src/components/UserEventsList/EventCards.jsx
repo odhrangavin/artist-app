@@ -51,7 +51,7 @@ function EventCards(props) {
                 >
                   View Event
                 </button>
-                (ev.user_id === user.id) ? 
+                (ev.user_id !== user.id) ? 
                 (<>
                   {console.log(ev)}
                   {console.log(user.id)}
