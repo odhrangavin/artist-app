@@ -3,12 +3,14 @@ import API from "../../api/api";
 import UserEventSearchForm from "./UserEventSearchForm";
 import "./UserEventsList.css";
 import Pagination from "./Pagination";
+import { HeartButton } from "../../pages/Dashboard/Heart";
+import { useAuth } from '../../context/AuthContext';
 
 // Helper to extract dropdown options from all events (not filtered!)
 function extractOptions(events) {
 	const cities = [];
 	const venuesByCity = {};
-	const allGenresSet = new Set();
+	const allGenresSet = new Set()
 
 	events.forEach((e) => {
 		// Cities
@@ -56,12 +58,33 @@ export default function UserEventList() {
 	});
 	const [loading, setLoading] = useState(false);
 	const [page, setPage] = useState(1);
+	const [faveList, setFaveList] = useState([]);
 	const fullCityList = useRef([]);
+	const { isLoggedIn } = useAuth();
 
 	// Initial load: fetch all events, build dropdowns from those
 	useEffect(() => {
 		fetchAllEvents();
 	}, []);
+
+	// Get list of faves made by the user
+	useEffect(() => {
+		if (isLoggedIn) {
+			async function fetchFaves() {
+				try {
+					const res = await API.get('/users/me/faves');
+					setFaveList(res.data.user || []);
+				
+				} catch (error) {
+					console.error(error);
+				} 
+			};
+			fetchFaves();	
+		}
+	}, [allEvents])
+
+	
+
 
 	async function fetchAllEvents() {
 		setLoading(true);
@@ -169,6 +192,12 @@ export default function UserEventList() {
                                     >
                                         View Event
                                     </a>
+																		{isLoggedIn && 
+																			<HeartButton 	
+																				eventId={e.id} 
+																				faveObject={faveList.find(fave => fave.event == e.id)}
+																			/>
+																		}
                                 </li>
                             ))
                         )}
