@@ -46,7 +46,7 @@ const editUser = (req, res) => {
 }
 
 const deleteUser = (req, res) => {
-	const { user_id } = req.body;
+	const user_id = req.user.id;
 	db.run(`DELETE FROM users WHERE id = ?`,
 		[user_id],
 		function (err) {

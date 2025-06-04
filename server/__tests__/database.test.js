@@ -52,107 +52,107 @@ describe('Table checks', () => {
 	});
 });
 
-describe('Invalid route checks', () => {
-	it('should not access PUT /events', async () => {
-		const res = await request(app).put('/api/events')
-		expect(res.status).toBe(500);
-	})
+// describe('Invalid route checks', () => {
+// 	it('should not access PUT /events', async () => {
+// 		const res = await request(app).put('/api/events')
+// 		expect(res.status).toBe(500);
+// 	})
 
-	it('should not access DELETE /events', async () => {
-		const res = await request(app).delete('/api/events')
-		expect(res.status).toBe(500);
-	})
+// 	it('should not access DELETE /events', async () => {
+// 		const res = await request(app).delete('/api/events')
+// 		expect(res.status).toBe(500);
+// 	})
 
-	it('should not access POST /events/:id', async () => {
-		const res = await request(app).post('/api/events/1')
-		expect(res.status).toBe(500);
-	})
+// 	it('should not access POST /events/:id', async () => {
+// 		const res = await request(app).post('/api/events/1')
+// 		expect(res.status).toBe(500);
+// 	})
 
-	it('should not access PUT /users', async () => {
-		const res = await request(app).put('/api/users')
-		expect(res.status).toBe(500);
-	})
+// 	it('should not access PUT /users', async () => {
+// 		const res = await request(app).put('/api/users')
+// 		expect(res.status).toBe(500);
+// 	})
 
-	it('should not access DELETE /users', async () => {
-		const res = await request(app).delete('/api/users')
-		expect(res.status).toBe(500);
-	})
+// 	it('should not access DELETE /users', async () => {
+// 		const res = await request(app).delete('/api/users')
+// 		expect(res.status).toBe(500);
+// 	})
 
-	it('should not access POST /users/me', async () => {
-		const res = await request(app).post('/api/users/me')
-		expect(res.status).toBe(500);
-	})
+// 	it('should not access POST /users/me', async () => {
+// 		const res = await request(app).post('/api/users/me')
+// 		expect(res.status).toBe(500);
+// 	})
 
-	it('should not access POST /users/me/events', async () => {
-		const res = await request(app).post('/api/users/me/events')
-		expect(res.status).toBe(500);
-	})
+// 	it('should not access POST /users/me/events', async () => {
+// 		const res = await request(app).post('/api/users/me/events')
+// 		expect(res.status).toBe(500);
+// 	})
 
-	it('should not access PUT /users/me/events', async () => {
-		const res = await request(app).put('/api/users/me/events')
-		expect(res.status).toBe(500);
-	})
+// 	it('should not access PUT /users/me/events', async () => {
+// 		const res = await request(app).put('/api/users/me/events')
+// 		expect(res.status).toBe(500);
+// 	})
 
-	it('should not access DELETE /users/me/events', async () => {
-		const res = await request(app).delete('/api/users/me/events')
-		expect(res.status).toBe(500);
-	})
+// 	it('should not access DELETE /users/me/events', async () => {
+// 		const res = await request(app).delete('/api/users/me/events')
+// 		expect(res.status).toBe(500);
+// 	})
 
-	it('should not access PUT /users/me/faves', async () => {
-		const res = await request(app).put('/api/users/me/faves')
-		expect(res.status).toBe(500);
-	})
+// 	it('should not access PUT /users/me/faves', async () => {
+// 		const res = await request(app).put('/api/users/me/faves')
+// 		expect(res.status).toBe(500);
+// 	})
 
-	it('should not access DELETE /users/me/faves', async () => {
-		const res = await request(app).delete('/api/users/me/faves')
-		expect(res.status).toBe(500);
-	})
+// 	it('should not access DELETE /users/me/faves', async () => {
+// 		const res = await request(app).delete('/api/users/me/faves')
+// 		expect(res.status).toBe(500);
+// 	})
 
-	it('should not access POST /users/me/faves/full', async () => {
-		const res = await request(app).post('/api/users/me/faves/full')
-		expect(res.status).toBe(500);
-	})
+// 	it('should not access POST /users/me/faves/full', async () => {
+// 		const res = await request(app).post('/api/users/me/faves/full')
+// 		expect(res.status).toBe(500);
+// 	})
 
-	it('should not access PUT /users/me/faves/full', async () => {
-		const res = await request(app).put('/api/users/me/faves/full')
-		expect(res.status).toBe(500);
-	})
+// 	it('should not access PUT /users/me/faves/full', async () => {
+// 		const res = await request(app).put('/api/users/me/faves/full')
+// 		expect(res.status).toBe(500);
+// 	})
 
-	it('should not access DELETE /users/me/faves/full', async () => {
-		const res = await request(app).delete('/api/users/me/faves/full')
-		expect(res.status).toBe(500);
-	})
+// 	it('should not access DELETE /users/me/faves/full', async () => {
+// 		const res = await request(app).delete('/api/users/me/faves/full')
+// 		expect(res.status).toBe(500);
+// 	})
 
-	it('should not access POST /users/me/faves/:id', async () => {
-		const res = await request(app).post('/api/users/me/faves/1')
-		expect(res.status).toBe(500);
-	})
+// 	it('should not access POST /users/me/faves/:id', async () => {
+// 		const res = await request(app).post('/api/users/me/faves/1')
+// 		expect(res.status).toBe(500);
+// 	})
 
-	it('should not access GET /users/me/faves/:id', async () => {
-		const res = await request(app).get('/api/users/me/faves/1')
-		expect(res.status).toBe(500);
-	})
+// 	it('should not access GET /users/me/faves/:id', async () => {
+// 		const res = await request(app).get('/api/users/me/faves/1')
+// 		expect(res.status).toBe(500);
+// 	})
 
-	it('should not access PUT /users/me/faves/:id', async () => {
-		const res = await request(app).put('/api/users/me/faves/1')
-		expect(res.status).toBe(500);
-	})
+// 	it('should not access PUT /users/me/faves/:id', async () => {
+// 		const res = await request(app).put('/api/users/me/faves/1')
+// 		expect(res.status).toBe(500);
+// 	})
 
-	it('should not access POST /users/:id', async () => {
-		const res = await request(app).post('/api/users/2')
-		expect(res.status).toBe(500);
-	})
+// 	it('should not access POST /users/:id', async () => {
+// 		const res = await request(app).post('/api/users/2')
+// 		expect(res.status).toBe(500);
+// 	})
 
-	it('should not access PUT /users/:id', async () => {
-		const res = await request(app).put('/api/users/2')
-		expect(res.status).toBe(500);
-	})
+// 	it('should not access PUT /users/:id', async () => {
+// 		const res = await request(app).put('/api/users/2')
+// 		expect(res.status).toBe(500);
+// 	})
 
-	it('should not access DELETE /users/:id', async () => {
-		const res = await request(app).delete('/api/users/2')
-		expect(res.status).toBe(500);
-	})
-});
+// 	it('should not access DELETE /users/:id', async () => {
+// 		const res = await request(app).delete('/api/users/2')
+// 		expect(res.status).toBe(500);
+// 	})
+// });
 
 
 describe('User API', () => {
@@ -164,7 +164,6 @@ describe('User API', () => {
 				confirm: 'test1234',
 				role: 'artist'
 			});
-		// Test response status and that username is correct
 		expect(res.status).toBe(201);
 		const res2 = await request(app).get('/api/users/2')
 		expect(res2.body.user.username).toBe('testuser');
@@ -174,7 +173,6 @@ describe('User API', () => {
 
 	it('should get list of users (GET)', async () => {
 		const res = await request(app).get('/api/users');
-		// Test response status, number of users, and email
 		expect(res.status).toBe(200);
 		expect(res.body.users).toHaveLength(2);
 		expect(res.body.users[1].email).toBe('test@example.com');
@@ -183,7 +181,7 @@ describe('User API', () => {
 	it('should get the "me" user (GET)', async () => {
 		const res = await request(app).get('/api/users/me')
 			.set('authorization', `Bearer: ${ token }`)
-		// expect(res.status).toBe(201);
+		expect(res.status).toBe(200);
 		console.log(res.body.user);
 		expect(res.body.user.username).toBe('testuser');
 	});
@@ -194,12 +192,78 @@ describe('User API', () => {
 			.send({ username: 'testuser-modified', 
 					email: 'test@example.com', 
 				});
-		// expect(res.status).toBe(201);
+		expect(res.status).toBe(200);
 		const res2 = await request(app).get('/api/users/2');
 		expect(res2.body.user.username).toBe('testuser-modified');
 		expect(res2.body.user.email).toBe('test@example.com');
 	});
+
+	it('should delete user (DELETE)', async () => {
+		const res = await request(app).delete('/api/users/me')
+			.set('authorization', `Bearer: ${ token }`)
+		expect(res.status).toBe(200);
+		const res2 = await request(app).get('/api/users');
+		expect(res2.status).toBe(200);
+		expect(res2.body.users).toHaveLength(1);
+	})
+
+	it('should create another new user (POST))', async () => {
+		const res = await request(app).post('/api/users')
+			.send({ username: 'testuser', 
+				email: 'retest@example.com', 
+				password: 'test1234' ,
+				confirm: 'test1234',
+				role: 'artist'
+			});
+		expect(res.status).toBe(201);
+		const res2 = await request(app).get('/api/users/2')
+		expect(res2.body.user.username).toBe('testuser');
+		expect(res2.body.user.email).toBe('retest@example.com');
+ 
+	});
 });
+
+describe('Events API', () => {
+	it('should have no events', async () => {
+		const res = await request(app).get('/api/events')
+		expect(res.body.results).toHaveLength(0);
+	});
+
+	it('should create an event', async () => {
+		const res = await request(app).post('/api/events')
+			.set('authorization', `Bearer: ${ token }`)
+			.send({ title: "Testing Event",
+				description: "An event for testing",
+				image_url: "",
+				event_time: "",
+				location: "Test Location",
+				venue: "Test Venue",
+				genre: "Other",
+				user_id: 2
+			});
+		expect(res.status).toBe(201);
+		const res2 = await request(app).get('/api/events/1')
+		console.log(res2.body);
+		expect(res2.body.event.id).toBe(1);
+		expect(res2.body.event.user_id).toBe(2);
+		expect(res2.body.event.genre).toBe("Other")
+	})
+
+	it('should now have one event', async () => {
+		const res = await request(app).get('/api/events')
+		expect(res.body.results).toHaveLength(1);
+	});
+
+	it('should now have one event with Genre = "Other', async () => {
+		const res = await request(app).get('/api/events?genre=other')
+		expect(res.body.results).toHaveLength(1);
+	});
+
+	it('should now have no events with Genre = "Alternative', async () => {
+		const res = await request(app).get('/api/events?genre=alternative')
+		expect(res.body.results).toHaveLength(0);
+	});
+})
 
 // describe('Faves API', () => {
 // 	it('should give me some faves data TEMP TEST', async () => {

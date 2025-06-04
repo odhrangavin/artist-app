@@ -38,6 +38,7 @@ const getEvents = (req, res) => {
 };
 
 const createEvent = (req, res) => {
+	console.log(req.body);
 	const { title, description, image_url, event_time, location, venue, genre, user_id } = req.body;
 	const [ event_date, event_ntime ] = event_time.split("T");
 	const created_at = new Date().toISOString();
@@ -49,7 +50,7 @@ const createEvent = (req, res) => {
 				console.error(err.message);
 				return res.status(500).json({ error: 'Database error' });
 			}
-			res.json(this);
+			res.status(201).json(this);
 		}
 	);
 };
