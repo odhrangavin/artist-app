@@ -7,12 +7,25 @@ export default function DashboardEditEvent({ eventId, onBack }) {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
+    function getNowLocalISO() {
+        const now = new Date();
+        const pad = n => n.toString().padStart(2, '0');
+        const yyyy = now.getFullYear();
+        const MM = pad(now.getMonth() + 1);
+        const dd = pad(now.getDate());
+        const hh = pad(now.getHours());
+        const mm = pad(now.getMinutes());
+        return `${yyyy}-${MM}-${dd}T${hh}:${mm}`;
+    }
+
     useEffect(() => {
         async function fetchEvent() {
+            setLoading(true);
+            setError("");
             try {
                 const res = await API.get(`/events/${eventId}`);
                 setForm(res.data.event);
-            } catch (e) {
+            } catch {
                 setError("Failed to load event.");
             } finally {
                 setLoading(false);
@@ -21,13 +34,15 @@ export default function DashboardEditEvent({ eventId, onBack }) {
         fetchEvent();
     }, [eventId]);
 
-    const handleChange = e => {
+    function handleChange(e) {
         const { name, value } = e.target;
         setForm(prev => ({ ...prev, [name]: value }));
-    };
+    }
 
-    const handleSubmit = async e => {
+    async function handleSubmit(e) {
         e.preventDefault();
+        setError("");
+        setSuccess("");
         try {
             await API.put(`/events/${eventId}`, form);
             setSuccess("Event updated!");
@@ -35,10 +50,10 @@ export default function DashboardEditEvent({ eventId, onBack }) {
                 setSuccess("");
                 onBack();
             }, 1200);
-        } catch (e) {
+        } catch {
             setError("Failed to update event.");
         }
-    };
+    }
 
     if (loading) return <div>Loading event...</div>;
     if (error) return <div className="error">{error}</div>;
@@ -58,7 +73,8 @@ export default function DashboardEditEvent({ eventId, onBack }) {
                     <input
                         name="event_time"
                         type="datetime-local"
-                        value={form.event_time ? form.event_time.substring(0, 16) : ""}
+                        value={form.event_time}
+                        min={getNowLocalISO()}
                         onChange={handleChange}
                         required
                     />
@@ -72,13 +88,14 @@ export default function DashboardEditEvent({ eventId, onBack }) {
                 <label>Genre
                     <input name="genre" value={form.genre || ""} onChange={handleChange} required />
                 </label>
-                <label>Description</label>
-                <textarea name="description" value={form.description || ""} onChange={handleChange} required rows="4" maxLength={400} />
+                <label>Description
+                    <textarea name="description" value={form.description || ""} onChange={handleChange} required rows="4" maxLength={400} />
+                </label>
                 <button type="submit" className="event-submit-btn">Update Event</button>
                 {success && <div className="success">{success}</div>}
                 {error && <div className="error">{error}</div>}
             </form>
-            <button className="event-action-btn" style={{ marginTop: "1em" }} onClick={onBack}>Back to My Events</button>
+            <button className="event-action-btn" onClick={onBack}>Back to My Events</button>
         </section>
     );
 }
