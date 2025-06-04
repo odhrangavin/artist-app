@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import DashboardSidebar from "./DashboardSidebar";
 import DashboardCreateEvent from "./DashboardCreateEvent";
 import DashboardMyEvents from "./DashboardMyEvents";
@@ -9,7 +9,7 @@ export default function Dashboard() {
 
     return (
         <div className="dashboard-container" style={{ display: "flex" }}>
-
+            <h2 style={{ display: "none" }}>Welcome to your Dashboard</h2>
             <main style={{ flex: 1, marginLeft: 24 }}>
                 {currentSection === "create" && <DashboardCreateEvent />}
                 {currentSection === "my-events" && <DashboardMyEvents />}

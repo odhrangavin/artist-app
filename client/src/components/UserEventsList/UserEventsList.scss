@@ -30,6 +30,35 @@
   }
 }
 
+//Pagination styles
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+  
+    .page-item {
+      margin: 0 0.25rem;
+  
+      a {
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #ccc;
+        border-radius: 0.25rem;
+        text-decoration: none;
+        color: #333;
+  
+        &:hover {
+          background-color: #f0f0f0;
+        }
+      }
+  
+      &.active a {
+        background-color: #007bff;
+        color: white;
+      }
+    }
+  }
+
 //events list styles
 .events-section{
     display: flex;

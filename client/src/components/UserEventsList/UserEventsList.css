@@ -27,6 +27,30 @@
   width: 140px;
 }
 
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.pagination .page-item {
+  margin: 0 0.25rem;
+}
+.pagination .page-item a {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  color: #333;
+}
+.pagination .page-item a:hover {
+  background-color: #f0f0f0;
+}
+.pagination .page-item.active a {
+  background-color: #007bff;
+  color: white;
+}
+
 .events-section {
   display: flex;
   flex-direction: column;

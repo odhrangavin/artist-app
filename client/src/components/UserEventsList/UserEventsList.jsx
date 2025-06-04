@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import API from "../../api/api";
 import UserEventSearchForm from "./UserEventSearchForm";
 import "./UserEventsList.css";
+import Pagination from "./Pagination";
 
 // Helper to extract dropdown options from all events (not filtered!)
 function extractOptions(events) {
@@ -43,7 +44,7 @@ function filterEventsByDate(events, { dateFrom, dateTo }) {
 	});
 }
 
-const EVENTS_PER_PAGE = 6;
+const EVENTS_PER_PAGE = 12;
 
 export default function UserEventList() {
 	const [events, setEvents] = useState([]);
@@ -115,87 +116,66 @@ export default function UserEventList() {
 		// options stay the same (from allEvents)
 	}
 
-	// Pagination logic
-	const totalPages = Math.ceil(events.length / EVENTS_PER_PAGE);
-	const displayedEvents = events.slice(
-		(page - 1) * EVENTS_PER_PAGE,
-		page * EVENTS_PER_PAGE
-	);
+    //Pagination logic
+    const totalPages = Math.ceil(events.length / EVENTS_PER_PAGE);
+    const displayedEvents = events.slice(
+        (page - 1) * EVENTS_PER_PAGE,
+        page * EVENTS_PER_PAGE
+    );
 
-	function handlePageChange(newPage) {
-		setPage(newPage);
-		window.scrollTo({ top: 0, behavior: "smooth" });
-	}
+    function handlePageChange(newPage) {
+        if (newPage < 1 || newPage > totalPages) return;
+        setPage(newPage);
+        // window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
-	return (
-		<div>
-			<UserEventSearchForm
-				onSearch={handleSearch}
-				cityOptions={fullCityList.current.length > 0 ? fullCityList.current : options.cities}
-				venueOptions={options.venuesByCity}
-				genreOptions={options.allGenres}
-				loading={loading}
-			/>
-			{loading ? (
-					<p>Loading...</p>
-				) : (
-					<>
-							<ul className="event-grid">
-									{displayedEvents.length === 0 ? (
-											<li>No events found.</li>
-									) : (
-											displayedEvents.map((e) => (
-													<li key={e.id} className="event-card">
-															{e.image_url && <img src={e.image_url} alt={e.title} className="event-image" />}
-															<h3>{e.title}</h3>
-															<p>
-																	<strong>Date/Time:</strong> {e.event_date} {e.event_time}
-															</p>
-															<p>
-																	<strong>City:</strong> {e.location}
-															</p>
-															<p>
-																	<strong>Venue:</strong> {e.venue}
-															</p>
-															<p>
-																	<strong>Genre:</strong> {e.genre}
-															</p>
-															<p>{e.description || "No description available"}</p>
-															<a
-																	href={`/events/${e.id}`}
-																	rel="noopener noreferrer"
-															>
-																	View Event
-															</a>
-													</li>
-											))
-									)}
-							</ul>
-							{totalPages > 1 && (
-								<div className="pagination">
-									{Array.from({ length: totalPages }, (_, i) => (
-										<button
-											key={i + 1}
-											onClick={() => handlePageChange(i + 1)}
-											disabled={page === i + 1}
-											style={{
-												margin: "0 3px",
-												background: page === i + 1 ? "#1a1a1a" : "#eee",
-												color: page === i + 1 ? "#fff" : "#222",
-												border: "none",
-												borderRadius: "4px",
-												padding: "6px 12px",
-												cursor: page === i + 1 ? "default" : "pointer",
-												fontWeight: page === i + 1 ? "bold" : "normal"
-											}}
-										>
-											{i + 1}
-										</button>
-									))}
-								</div>
-							)}
-					</>
-			)}
-		</div>
-	);
+    return (
+        <div>
+            <UserEventSearchForm
+                onSearch={handleSearch}
+                cityOptions={fullCityList.current.length > 0 ? fullCityList.current : options.cities}
+                venueOptions={options.venuesByCity}
+                genreOptions={options.allGenres}
+                loading={loading}
+            />
+            {loading ? (
+                <p>Loading...</p>
+            ) : (
+                <>
+                    <ul className="event-grid">
+                        {displayedEvents.length === 0 ? (
+                            <li>No events found.</li>
+                        ) : (
+                            displayedEvents.map((e) => (
+                                <li key={e.id} className="event-card">
+                                    {e.image_url && <img src={e.image_url} alt={e.title} className="event-image" />}
+                                    <h3>{e.title}</h3>
+                                    <p>
+                                        <strong>Date/Time:</strong> {e.event_date} {e.event_time}
+                                    </p>
+                                    <p>
+                                        <strong>City:</strong> {e.location}
+                                    </p>
+                                    <p>
+                                        <strong>Venue:</strong> {e.venue}
+                                    </p>
+                                    <p>
+                                        <strong>Genre:</strong> {e.genre}
+                                    </p>
+                                    <p>{e.description || "No description available"}</p>
+                                    <a
+                                        href={`/events/${e.id}`}
+                                        rel="noopener noreferrer"
+                                    >
+                                        View Event
+                                    </a>
+                                </li>
+                            ))
+                        )}
+                    </ul>
+                    <Pagination page={page} totalPages={totalPages} onPageChange={handlePageChange} />
+                </>
+            )}
+        </div>
+    );
 }

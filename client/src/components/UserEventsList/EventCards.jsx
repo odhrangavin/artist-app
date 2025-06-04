@@ -13,7 +13,7 @@ function EventCards(props) {
     return (
       <section className="user-events-list">
         <h3>{title}</h3>
-        <ul>
+        <ul className="event-grid">
           {events.map(ev => (
             <li key={ev.id} className="event-card">
               {ev.image_url && (
@@ -28,11 +28,26 @@ function EventCards(props) {
               <p><strong>Location:</strong> {ev.location}</p>
               <p><strong>Venue:</strong> {ev.venue}</p>
               <p><strong>Genre:</strong> {ev.genre}</p>
-              <p>{isLoggedIn ? 
-                <HeartButton eventId={ev.id} 
+              <div className="event-card-actions" style={{ marginTop: "0.7em", display: "flex", gap: "0.7em" }}>
+                <button
+                  type="button"
+                  className="event-action-btn event-view-btn"
+                  onClick={() => handleView(ev.id)}
+                >
+                  View Event
+                </button>
+                <button
+                  type="button"
+                  className="event-action-btn event-edit-btn"
+                  onClick={() => handleEdit(ev.id)}
+                >
+                  Edit Event
+                </button>
+                <HeartButton 
+                  eventId={ev.id} 
                   faveObject={faves.find(fave => fave.event === ev.id)} 
-                /> : ''}
-              </p>
+                />
+              </div>
             </li>
           ))}
         </ul>
