@@ -16,8 +16,8 @@ const invalidRoute = (req, res, next) =>{
 router.post('/login', login);
 router.post('/users/request-reset', requestReset);
 router.post('/users/password-reset', passwordReset);
-router.get('/test/ticketmaster', scrapeTicketmaster);
-router.get('/test/failte', scrapeFailte);
+router.get('/scraper/ticketmaster', scrapeTicketmaster);
+router.get('/scraper/failte', scrapeFailte);
 
 //authentication?
 router.route('/events')
