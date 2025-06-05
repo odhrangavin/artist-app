@@ -14,7 +14,7 @@ export function AttendingButton(props) {
   useEffect(() => {
     setAttending(!!attendObject);
     setUpdatedObject(attendObject);
-    setButtonText(!attendObject ? 'I Will Attend' : `I Won't Attend`);
+    setButtonText(!attendObject ? `I'll Attend` : `Cancel Attendance`);
     
     //console.log(eventId)
   }, [attendObject]);
@@ -36,14 +36,14 @@ export function AttendingButton(props) {
         setUpdatedObject(
           prevAttending => ({ ...prevAttending, id:res.data.lastID})
         )
-        setButtonText(`I Won't Attend`);
+        setButtonText(`Cancel Attendance`);
       } catch(error) {
         console.log(error);
       }
     } else {
       try {
         await API.delete(`users/me/attending/${updatedObject.id}`);
-        setButtonText('I Will Attend');
+        setButtonText(`I'll Attend`);
       } catch(error) {
         console.log(error);
       }

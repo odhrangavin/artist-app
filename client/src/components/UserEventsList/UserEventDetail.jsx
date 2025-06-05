@@ -105,8 +105,8 @@ export default function UserEventDetail() {
                 </div>
 
             )}
-            {event.description && <p><strong>Description:</strong> {event.description}</p>}
             <small>{attendanceNumber} Event App users are attending.</small>
+            {event.description && <p><strong>Description:</strong> {event.description}</p>}
             <p><strong>Date/Time:</strong> {event.event_date} {event.event_time}</p>
             <p><strong>City:</strong> {event.location}</p>
             <p><strong>Venue:</strong> {event.venue}</p>

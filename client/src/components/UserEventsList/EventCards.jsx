@@ -74,7 +74,7 @@ function EventCards(props) {
                 <button
                   type="button"
                   className="event-action-btn event-edit-btn"
-                  onClick={() => handleEdit(ev.id)}
+                  onClick={() => onEditEvent(ev.id)}
                 >
                   Edit Event
                 </button> : <AttendingButton 
