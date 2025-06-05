@@ -48,7 +48,7 @@ function DashboardMyEvents({ onEditEvent }) {
 				events={events} 
 				faves={faveList} 
 				title="My Events" 
-				fave={true} 
+		 
 			/>
     );
 }

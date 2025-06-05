@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import API from '../../api/api';
 import { useAuth } from '../../context/AuthContext';
-import "./Dashboard.css";
+import "./Dashboard.scss";
 
 const genres = [
     "Alternative", "Blues", "Children's Theatre", "Circus & Specialty Acts", "Classical", "Comedy",

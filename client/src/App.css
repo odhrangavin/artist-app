@@ -20,7 +20,10 @@ input {
 }
 
 .favourite-button {
+  position: absolute;
   width: 1.5rem;
   height: 1.5rem;
   cursor: pointer;
+  top: 8px;
+  right: 8px;
 }

@@ -18,19 +18,20 @@ export default function DashboardFavorites() {
 			const res = await API.get(`/users/me/faves/full`);
 			console.log(res.data.user[0])
 
-			// Normalize data
+			// Normalize data for events
 			const eventList = res.data.user.map(dataObject => {
 					const { id, event, ...data } = dataObject;
 					const modData = {
 						...data,
 						id: event,
-						faveId: id
+						event: id
 					}
 					return modData
 				}
 			)
 
 			setEvents(eventList || []);
+			setFaveList(res.data.user || []);
 
 		} catch (e) {
 			setErr('Failed to load events.');
@@ -50,9 +51,9 @@ export default function DashboardFavorites() {
 	return( 
 		<EventCards 
 			events={events}	
+			faves={faveList}
 			title="My Favorite Events" 
 			noEvent="You have no event in your faves."
-			remove={true}
 			onFaveRemoved={refreshFavorites}
 		/>
 

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import API from "../../api/api";
 import UserEventSearchForm from "./UserEventSearchForm";
-import "./UserEventsList.css";
+import "./UserEventsList.scss";
 import Pagination from "./Pagination";
 import { HeartButton } from "../../pages/Dashboard/Heart";
 import { useAuth } from '../../context/AuthContext';

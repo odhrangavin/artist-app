@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 export function HeartButton(props) {
   
   const { user } = useAuth();
-  const { eventId, faveObject } = props;
+  const { eventId, faveObject, onFaveRemoved } = props;
   const [liked, setLiked] = useState(!!faveObject);
   const [updatedObject, setUpdatedObject] = useState(faveObject)
 
@@ -38,7 +38,11 @@ export function HeartButton(props) {
       }
     } else {
       try {
+        console.log(updatedObject.id)
         await API.delete(`users/me/faves/${updatedObject.id}`);
+        if (onFaveRemoved) {
+          onFaveRemoved();
+        }
       } catch(error) {
         console.log(error);
       }
