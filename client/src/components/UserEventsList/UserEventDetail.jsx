@@ -59,7 +59,6 @@ export default function UserEventDetail() {
 
     return (
         <div className="event-detail" role="region" aria-label="Event detail">
-            <button onClick={() => navigate(-1)}>Go Back</button>
             <h2>{event.title}</h2>
 
             {event.image_url && (
@@ -94,6 +93,7 @@ export default function UserEventDetail() {
             <p><strong>Venue:</strong> {event.venue}</p>
             <p><strong>Genre:</strong> {event.genre}</p>
             <p><strong>Author:</strong> {author ? author : 'Unknown'}</p>
+            <button className="back-btn" onClick={() => navigate(-1)}>Go Back</button>
         </div>
     );
 }

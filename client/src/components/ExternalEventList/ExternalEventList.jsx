@@ -105,30 +105,6 @@ export default function ExternalEventList() {
                             ))
                         )}
                     </ul>
-                    {/* Pagination controls */}
-                    {/* {totalPages > 1 && (
-                        <div className="pagination">
-                            {Array.from({ length: totalPages }, (_, i) => (
-                                <button
-                                    key={i + 1}
-                                    onClick={() => handlePageChange(i + 1)}
-                                    disabled={page === i + 1}
-                                    style={{
-                                        margin: "0 3px",
-                                        background: page === i + 1 ? "#1a1a1a" : "#eee",
-                                        color: page === i + 1 ? "#fff" : "#222",
-                                        border: "none",
-                                        borderRadius: "4px",
-                                        padding: "6px 12px",
-                                        cursor: page === i + 1 ? "default" : "pointer",
-                                        fontWeight: page === i + 1 ? "bold" : "normal"
-                                    }}
-                                >
-                                    {i + 1}
-                                </button>
-                            ))}
-                        </div>
-                    )} */}
                 </>
             )}
         </div>
