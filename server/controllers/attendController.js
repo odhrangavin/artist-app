@@ -10,9 +10,9 @@ const db = require('../db');
 // 		});
 // }
 
-const getFaves = (req, res) => {
+const getAttending = (req, res) => {
 	let id = req.user.id;
-	db.all(`SELECT * FROM faves WHERE user_id = ?`,
+	db.all(`SELECT * FROM attending WHERE user_id = ?`,
 		[id],
 		function (err, row) {
 			res.json({user: row});
@@ -20,7 +20,7 @@ const getFaves = (req, res) => {
 	);
 }
 
-const getFavesEvents = (req, res) => {
+const getAttendingEvents = (req, res) => {
 	let user_id = req.user.id;
 	db.all(`SELECT
 				events.id,
@@ -36,11 +36,11 @@ const getFavesEvents = (req, res) => {
 				events.user_id AS event_user_id,
 				events.created_at,
 				events.suspended,
-				faves.id,
-				faves.event,
-				faves.user_id AS faves_user_id,
-				faves.created_at
-			FROM events JOIN faves ON events.id = faves.event WHERE faves.user_id = ?;`,
+				attending.id,
+				attending.event,
+				attending.user_id AS attending_user_id,
+				attending.created_at
+			FROM events JOIN attending ON events.id = attending.event WHERE attending.user_id = ?;`,
 		[user_id],
 		function (err, row) {
 			res.json({user: row});
@@ -48,10 +48,20 @@ const getFavesEvents = (req, res) => {
 	);
 }
 
-const addFave = (req, res) => {
+const getAttendanceCount = (req, res) => {
+	let event_id = req.params.id;
+	db.get(`SELECT count(id) AS attendance FROM attending WHERE event = ?`,
+		[event_id],
+		function (err, row) {
+			res.json(row)
+		}
+	)
+}
+
+const addAttending = (req, res) => {
 	const { event, user_id } = req.body;
 	const created_at = new Date().toISOString();
-	db.run(`INSERT INTO faves (event, user_id, created_at)
+	db.run(`INSERT INTO attending (event, user_id, created_at)
 			VALUES (?, ?, ?)`,
 		[event, user_id, created_at],
 		function (err) {
@@ -64,9 +74,9 @@ const addFave = (req, res) => {
 	);
 }
 
-const deleteFave = (req, res) => {
+const deleteAttending = (req, res) => {
 	const id = req.params.id;
-	db.run(`DELETE FROM faves WHERE id = ?`,
+	db.run(`DELETE FROM attending WHERE id = ?`,
 		[id],
 		function (err) {
 			if (err) {
@@ -78,4 +88,4 @@ const deleteFave = (req, res) => {
 	);
 }
 
-module.exports = { getFaves, getFavesEvents, addFave, deleteFave };
+module.exports = { getAttending, getAttendingEvents, getAttendanceCount, addAttending, deleteAttending };

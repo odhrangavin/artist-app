@@ -6,6 +6,7 @@ const { getUser, getUsers, getUserEvents, editUser, deleteUser } = require('./co
 const { getEvent, getEvents, createEvent, editEvent, deleteEvent, toggleEvent } = require('./controllers/eventController');
 const { scrapeTicketmaster, scrapeFailte } = require('./controllers/scrapeController')
 const { getFaves, getFavesEvents, getFaveCount, addFave, deleteFave } = require('./controllers/favesController')
+const { getAttending, getAttendingEvents, getAttendanceCount, addAttending, deleteAttending } = require('./controllers/attendController')
 
 const router = express.Router();
 
@@ -35,7 +36,7 @@ router.route('/events/:id')
 
 router.route('/events/:id/attendance')
 	.post(invalidRoute)
-	.get(getFaveCount)
+	.get(getAttendanceCount)
 	.put(invalidRoute)
 	.delete(invalidRoute)
 
@@ -74,6 +75,24 @@ router.route('/users/me/faves/:id')
 	.get(invalidRoute)
 	.put(invalidRoute)
 	.delete(authenticateToken, deleteFave);
+
+router.route('/users/me/attending')
+	.post(authenticateToken, addAttending)
+	.get(authenticateToken, getAttending)
+	.put(invalidRoute)
+	.delete(invalidRoute);
+
+router.route('/users/me/attending/full')
+	.post(invalidRoute)
+	.get(authenticateToken, getAttendingEvents)
+	.put(invalidRoute)
+	.delete(invalidRoute);
+
+router.route('/users/me/attending/:id')
+	.post(invalidRoute)
+	.get(invalidRoute)
+	.put(invalidRoute)
+	.delete(authenticateToken, deleteAttending);
 
 router.route('/users/:id')
 	.post(invalidRoute)

@@ -331,6 +331,51 @@ describe('Faves API', () => {
 			});
 		expect(res.status).toBe(500);
 	})
+})
+
+describe('Attending API', () => {
+	it('should have no faves', async () => {
+		const res = await request(app).get('/api/users/me/attending')
+			.set('authorization', `Bearer: ${ token }`)
+		expect(res.status).toBe(200);
+		expect(res.body.user).toHaveLength(0);
+	})
+
+	it('should create a attendance', async () => {
+		const res = await request(app).post('/api/users/me/attending')
+			.set('authorization', `Bearer: ${ token }`)
+			.send({
+				event: 1,
+				user_id: 2
+			});
+		expect(res.status).toBe(201);
+		expect(res.body.lastID).toBe(1);
+	})
+
+	it('should now have one fave', async () => {
+		const res = await request(app).get('/api/users/me/attending')
+			.set('authorization', `Bearer: ${ token }`)
+		expect(res.status).toBe(200);
+		expect(res.body.user).toHaveLength(1);
+	})
+
+	it('should get the full attendance details', async () => {
+		const res = await request(app).get('/api/users/me/attending/full')
+			.set('authorization', `Bearer: ${ token }`)
+		expect(res.status).toBe(200);
+		expect(res.body.user).toHaveLength(1);
+		expect(res.body.user[0].genre).toBe("Alternative");
+	})
+
+	it('should error on attempting to create a duplicate attendance', async () => {
+		const res = await request(app).post('/api/users/me/attending')
+			.set('authorization', `Bearer: ${ token }`)
+			.send({
+				event: 1,
+				user_id: 2
+			});
+		expect(res.status).toBe(500);
+	})
 
 	it('should give an attendance count', async () => {
 		const res = await request(app).get('/api/events/1/attendance')
