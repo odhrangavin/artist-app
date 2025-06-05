@@ -18,7 +18,16 @@ function DashboardMyEvents({ onEditEvent }) {
 				setErr('');
 				try {
 					const res = await API.get(`/users/me/events/`);
-					setEvents(res.data.events || []);
+					
+					const eventList = res.data.events.map(dataObject => {
+						const { user_id, ...data } = dataObject;
+						return {
+							event_user_id: user_id,
+							...data
+						}
+					})
+					
+					setEvents(eventList || []);
 				} catch (e) {
 					setErr('Failed to load your events.');
 					setEvents([]);
