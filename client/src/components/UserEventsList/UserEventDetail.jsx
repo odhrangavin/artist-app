@@ -5,12 +5,14 @@ import './UserEventsList.css';
 
 export default function UserEventDetail() {
     const { id } = useParams();
+    const navigate = useNavigate()
+
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const navigate = useNavigate()
     const [userMap, setUserMap] = useState({});
-
+    const [attendanceNumber, setAttendanceNumber] = useState('');
+    
     useEffect(() => {
         async function fetchEvent() {
             setLoading(true);
@@ -48,6 +50,22 @@ export default function UserEventDetail() {
         }
     }, [event]);
 
+    useEffect(() => {
+        async function fetchAttendance() {
+            try {
+                const res = await API.get(`/events/${event.id}/attendance`);
+               
+                setAttendanceNumber(res.data.attendance);
+            } catch (e) {
+                console.error('Could not load attendance', e);
+            }
+        }
+
+        if (event && !event.username) {
+            fetchAttendance();
+        }
+    }, [event]);
+
     if (loading) return <div>Loading event...</div>;
     if (error) return <div className="error">{error}</div>;
     if (!event) return <div>Event not found.</div>;
@@ -63,6 +81,7 @@ export default function UserEventDetail() {
             <h2>{event.title}</h2>
             {event.image_url && <img className='event-detail-image' src={event.image_url} alt={event.title} />}
             {event.description && <p><strong>Description:</strong> {event.description}</p>}
+            <small>{attendanceNumber} Event App users are attending.</small>
             <p><strong>Date/Time:</strong> {event.event_date} {event.event_time}</p>
             <p><strong>City:</strong> {event.location}</p>
             <p><strong>Venue:</strong> {event.venue}</p>

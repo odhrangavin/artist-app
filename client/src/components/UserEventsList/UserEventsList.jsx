@@ -87,11 +87,11 @@ export default function UserEventList() {
 			
 			async function fetchAttending() {
 				try {
-					const res = await API.get(`/users/me/attending`);
+					const res = await API.get(`/users/me/attending/full`);
 					setAttendingList(res.data.user || []);
 
 				} catch (error) {
-					setErr('Failed to load attending.');
+					console.error(error);
 					setAttendingList([]);
 				}
 			};
@@ -156,75 +156,77 @@ export default function UserEventList() {
     //Pagination logic
     const totalPages = Math.ceil(events.length / EVENTS_PER_PAGE);
     const displayedEvents = events.slice(
-        (page - 1) * EVENTS_PER_PAGE,
-        page * EVENTS_PER_PAGE
+			(page - 1) * EVENTS_PER_PAGE,
+			page * EVENTS_PER_PAGE
     );
 
     function handlePageChange(newPage) {
-        if (newPage < 1 || newPage > totalPages) return;
-        setPage(newPage);
-        // window.scrollTo({ top: 0, behavior: "smooth" });
+			if (newPage < 1 || newPage > totalPages) return;
+			setPage(newPage);
+			// window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     return (
-        <div>
-            <UserEventSearchForm
-                onSearch={handleSearch}
-                cityOptions={fullCityList.current.length > 0 ? fullCityList.current : options.cities}
-                venueOptions={options.venuesByCity}
-                genreOptions={options.allGenres}
-                loading={loading}
-            />
-            {loading ? (
-                <p>Loading...</p>
-            ) : (
-                <>
-                    <ul className="event-grid">
-                        {displayedEvents.length === 0 ? (
-                            <li>No events found.</li>
-                        ) : (
-                            displayedEvents.map((e) => (
-                                <li key={e.id} className="event-card">
-																	{e.image_url && <img src={e.image_url} alt={e.title} className="event-image" />}
-																	<h3>{e.title}</h3>
-																	<p>
-																		<strong>Date/Time:</strong> {e.event_date} {e.event_time}
-																	</p>
-																	<p>
-																		<strong>City:</strong> {e.location}
-																	</p>
-																	<p>
-																		<strong>Venue:</strong> {e.venue}
-																	</p>
-																	<p>
-																		<strong>Genre:</strong> {e.genre}
-																	</p>
-																	<p>{e.description || "No description available"}</p>
-																	<a
-																		href={`/events/${e.id}`}
-																		rel="noopener noreferrer"
-																	>
-																		View Event
-																	</a>
-																	{isLoggedIn && 
-																		<HeartButton 	
-																			eventId={e.id} 
-																			faveObject={faveList.find(fave => fave.event == e.id)}
-																		/>
-																	}
-																	{isLoggedIn && user.id !== e.user_id &&
-																		<AttendingButton 
-																			eventId={e.id}
-																			attendObject={attendingList.find(attend => attend.event === e.id)}  
-																		/>
-																	}
-                                </li>
-                            ))
-                        )}
-                    </ul>
-                    <Pagination page={page} totalPages={totalPages} onPageChange={handlePageChange} />
-                </>
-            )}
-        </div>
+			<div>
+				<UserEventSearchForm
+					onSearch={handleSearch}
+					cityOptions={fullCityList.current.length > 0 ? fullCityList.current : options.cities}
+					venueOptions={options.venuesByCity}
+					genreOptions={options.allGenres}
+					loading={loading}
+				/>
+				{loading ? (
+						<p>Loading...</p>
+				) : (
+					<>
+						<ul className="event-grid">
+							{displayedEvents.length === 0 ? (
+								<li>No events found.</li>
+							) : (
+								displayedEvents.map((e) => (
+									<li key={e.id} className="event-card">
+										{e.image_url && <img src={e.image_url} alt={e.title} className="event-image" />}
+										<h3>{e.title}</h3>
+										<p>
+											<strong>Date/Time:</strong> {e.event_date} {e.event_time}
+										</p>
+										<p>
+											<strong>City:</strong> {e.location}
+										</p>
+										<p>
+											<strong>Venue:</strong> {e.venue}
+										</p>
+										<p>
+											<strong>Genre:</strong> {e.genre}
+										</p>
+										<p>{e.description || "No description available"}</p>
+										<a
+											href={`/events/${e.id}`}
+											rel="noopener noreferrer"
+										>
+											View Event
+										</a>
+										{isLoggedIn && (
+											<>
+												<HeartButton 	
+													eventId={e.id} 
+													faveObject={faveList.find(fave => fave.event == e.id)}
+												/>
+												{user.id !== e.user_id &&
+													<AttendingButton 
+														eventId={e.id}
+														attendObject={attendingList.find(attend => attend.event === e.id)}  
+													/>
+												}
+											</>
+										)}
+									</li>
+								))
+							)}
+						</ul>
+						<Pagination page={page} totalPages={totalPages} onPageChange={handlePageChange} />
+					</>
+				)}
+			</div>
     );
 }
