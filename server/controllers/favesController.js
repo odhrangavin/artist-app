@@ -48,6 +48,16 @@ const getFavesEvents = (req, res) => {
 	);
 }
 
+const getFaveCount = (req, res) => {
+	let event_id = req.params.id;
+	db.get(`SELECT count(id) AS attendance FROM faves WHERE event = ?`,
+		[event_id],
+		function (err, row) {
+			res.json(row)
+		}
+	)
+}
+
 const addFave = (req, res) => {
 	const { event, user_id } = req.body;
 	const created_at = new Date().toISOString();
@@ -78,4 +88,4 @@ const deleteFave = (req, res) => {
 	);
 }
 
-module.exports = { getFaves, getFavesEvents, addFave, deleteFave };
+module.exports = { getFaves, getFavesEvents, getFaveCount, addFave, deleteFave };

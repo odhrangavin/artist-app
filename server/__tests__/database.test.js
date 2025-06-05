@@ -322,6 +322,12 @@ describe('Faves API', () => {
 			});
 		expect(res.status).toBe(500);
 	})
+
+	it('should give an attendance count', async () => {
+		const res = await request(app).get('/api/events/1/attendance')
+		expect(res.status).toBe(200);
+		expect(res.body.attendance).toBe(1);
+	})
 })
 
 describe('Deletions', () => {

@@ -5,7 +5,7 @@ const { register, login, requestReset, passwordReset, authenticateToken } = requ
 const { getUser, getUsers, getUserEvents, editUser, deleteUser } = require('./controllers/userController')
 const { getEvent, getEvents, createEvent, editEvent, deleteEvent, toggleEvent } = require('./controllers/eventController');
 const { scrapeTicketmaster, scrapeFailte } = require('./controllers/scrapeController')
-const { getFaves, getFavesEvents, addFave, deleteFave } = require('./controllers/favesController')
+const { getFaves, getFavesEvents, getFaveCount, addFave, deleteFave } = require('./controllers/favesController')
 
 const router = express.Router();
 
@@ -16,8 +16,8 @@ const invalidRoute = (req, res, next) =>{
 router.post('/login', login);
 router.post('/users/request-reset', requestReset);
 router.post('/users/password-reset', passwordReset);
-router.get('/test/ticketmaster', scrapeTicketmaster);
-router.get('/test/failte', scrapeFailte);
+router.get('/scraper/ticketmaster', scrapeTicketmaster);
+router.get('/scraper/failte', scrapeFailte);
 
 //authentication?
 router.route('/events')
@@ -32,6 +32,12 @@ router.route('/events/:id')
 	.put(authenticateToken, editEvent)
 	.delete(authenticateToken, deleteEvent)
 	.patch(authenticateToken, toggleEvent);
+
+router.route('/events/:id/attendance')
+	.post(invalidRoute)
+	.get(getFaveCount)
+	.put(invalidRoute)
+	.delete(invalidRoute)
 
 router.route('/users')
 	.post(register)
