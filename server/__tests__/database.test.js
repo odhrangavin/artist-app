@@ -277,6 +277,15 @@ describe('Events API', () => {
 		expect(res2.body.event.user_id).toBe(2);
 		expect(res2.body.event.suspended).toBe(0)
 	})
+
+	it('should return a list of a user\'s events', async () => {
+		const res = await request(app).get('/api/users/me/events')
+			.set('authorization', `Bearer: ${ token }`)
+		expect(res.status).toBe(200);
+		expect(res.body.events[0].id).toBe(1);
+		expect(res.body.events[0].user_id).toBe(2);
+		expect(res.body.events[0].genre).toBe('Alternative');
+	})
 })
 
 describe('Faves API', () => {
