@@ -63,24 +63,34 @@ describe('App Routing', () => {
     const button = screen.getByRole('button', { name:/register/i });
     expect(button).toBeInTheDocument();
   });
-  it('should render dashboard page at /dashboard', () => {
+  it('should render dashboard page at /dashboard', async () => {
+    currentMock = mockUseAuthLoggedIn;
     getToken(); // Set token to have access
     
     renderWithRouter('/dashboard')
 
-    expect(screen.getByText('Welcome to your Dashboard')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/create your event/i)).toBeInTheDocument();
+    })
+    // Set mock back to default value
+    currentMock = mockUseAuthNotLoggedIn;
   });
-  it('should render forgot-password page at /forgot-password', () => {
+  it('should render forgot-password page at /forgot-password', async () => {
     renderWithRouter('/forgot-password')
 
     const button = screen.getByRole('button', { name:/request reset/i });
-    expect(button).toBeInTheDocument();
+    
+    await waitFor(() => {
+      expect(button).toBeInTheDocument();
+    });
   });
-  it('should render reset-password page at /reset-password', () => {
+  it('should render reset-password page at /reset-password', async () => {
     renderWithRouter('/reset-password')
 
-    const button = screen.getByRole('button', { name:/confirm reset/i });
-    expect(button).toBeInTheDocument();
+    await waitFor(() => {
+      const button = screen.getByRole('button', { name:/confirm reset/i });
+      expect(button).toBeInTheDocument();
+    });
   });
   it('should render a particular event at /events/:id', async () => {
     renderWithRouter('/events/1')
@@ -88,10 +98,12 @@ describe('App Routing', () => {
     const eventContainer = await screen.findByRole('region', {name:'Event detail'});
     expect(eventContainer).toBeInTheDocument();
   });
-  it('should render a 404 not fuond at any wrong page', () => {
+  it('should render a 404 not found at any wrong page', async () => {
     renderWithRouter('/pagewithtypo')
-
-    expect(screen.getByText('404 - Page Not Found')).toBeInTheDocument();
+    
+    await waitFor(() => {
+      expect(screen.getByText('404 - Page Not Found')).toBeInTheDocument();
+    });
   });
 });
 
@@ -165,7 +177,7 @@ describe('App Navigation when user is logged in', () => {
     const dashboardLink = screen.getByRole('link', { name: /dashboard/i });
     await userEvent.click(dashboardLink);
     
-    expect(await screen.findByText('Welcome to your Dashboard')).toBeInTheDocument();
+    expect(await screen.findByText(/create your event/i)).toBeInTheDocument();
   });
 
   it('should log out the user when click on Logout', async () => {

@@ -1,120 +1,141 @@
 import { useState, useRef, useEffect } from "react";
 import API from "../../api/api";
 import UserEventSearchForm from "./UserEventSearchForm";
-import "./UserEventsList.css";
+import "./UserEventsList.scss";
 import Pagination from "./Pagination";
+import { HeartButton } from "../../pages/Dashboard/Heart";
+import { useAuth } from '../../context/AuthContext';
 
 // Helper to extract dropdown options from all events (not filtered!)
 function extractOptions(events) {
-    const cities = [];
-    const venuesByCity = {};
-    const allGenresSet = new Set();
+	const cities = [];
+	const venuesByCity = {};
+	const allGenresSet = new Set()
 
-    events.forEach((e) => {
-        // Cities
-        if (e.location && !cities.includes(e.location)) {
-            cities.push(e.location);
-            venuesByCity[e.location] = [];
-        }
-        // Venues by city
-        if (e.location && e.venue && !venuesByCity[e.location].includes(e.venue)) {
-            venuesByCity[e.location].push(e.venue);
-        }
-        // Genres (flat, global)
-        if (e.genre) {
-            allGenresSet.add(e.genre);
-        }
-    });
+	events.forEach((e) => {
+		// Cities
+		if (e.location && !cities.includes(e.location)) {
+			cities.push(e.location);
+			venuesByCity[e.location] = [];
+		}
+		// Venues by city
+		if (e.location && e.venue && !venuesByCity[e.location].includes(e.venue)) {
+			venuesByCity[e.location].push(e.venue);
+		}
+		// Genres (flat, global)
+		if (e.genre) {
+			allGenresSet.add(e.genre);
+		}
+	});
 
-    return {
-        cities,
-        venuesByCity,
-        allGenres: Array.from(allGenresSet).sort(),
-    };
+	return {
+		cities,
+		venuesByCity,
+		allGenres: Array.from(allGenresSet).sort(),
+	};
 }
 
 // Date filter helper
 function filterEventsByDate(events, { dateFrom, dateTo }) {
-    const today = new Date().toISOString().slice(0, 10);
-    return events.filter((ev) => {
-        if (!ev.event_date || ev.event_date < today) return false;
-        if (dateFrom && ev.event_date < dateFrom) return false;
-        if (dateTo && ev.event_date > dateTo) return false;
-        return true;
-    });
+	const today = new Date().toISOString().slice(0, 10);
+	return events.filter((ev) => {
+		if (!ev.event_date || ev.event_date < today) return false;
+		if (dateFrom && ev.event_date < dateFrom) return false;
+		if (dateTo && ev.event_date > dateTo) return false;
+		return true;
+	});
 }
 
 const EVENTS_PER_PAGE = 12;
 
 export default function UserEventList() {
-    const [events, setEvents] = useState([]);
-    const [allEvents, setAllEvents] = useState([]);
-    const [options, setOptions] = useState({
-        cities: [],
-        venuesByCity: {},
-        allGenres: [],
-    });
-    const [loading, setLoading] = useState(false);
-    const [page, setPage] = useState(1);
-    const fullCityList = useRef([]);
+	const [events, setEvents] = useState([]);
+	const [allEvents, setAllEvents] = useState([]);
+	const [options, setOptions] = useState({
+		cities: [],
+		venuesByCity: {},
+		allGenres: [],
+	});
+	const [loading, setLoading] = useState(false);
+	const [page, setPage] = useState(1);
+	const [faveList, setFaveList] = useState([]);
+	const fullCityList = useRef([]);
+	const { isLoggedIn } = useAuth();
 
-    // Initial load: fetch all events, build dropdowns from those
-    useEffect(() => {
-        fetchAllEvents();
-    }, []);
+	// Initial load: fetch all events, build dropdowns from those
+	useEffect(() => {
+		fetchAllEvents();
+	}, []);
 
-    async function fetchAllEvents() {
-        setLoading(true);
-        try {
-            const res = await API.get("/events");
-            let all = res.data.results || [];
+	// Get list of faves made by the user
+	useEffect(() => {
+		if (isLoggedIn) {
+			async function fetchFaves() {
+				try {
+					const res = await API.get('/users/me/faves');
+					setFaveList(res.data.user || []);
+				
+				} catch (error) {
+					console.error(error);
+				} 
+			};
+			fetchFaves();	
+		}
+	}, [allEvents])
 
-            // Only future events for dropdowns
-            const futureEvents = all.filter(ev => ev.event_date && ev.event_date >= new Date().toISOString().slice(0, 10));
 
-            setAllEvents(futureEvents);
-            setOptions(extractOptions(futureEvents));
-            setEvents(futureEvents); // Show all by default
-            setPage(1);
-            fullCityList.current = extractOptions(futureEvents).cities;
-        } catch (e) {
-            setEvents([]);
-            setAllEvents([]);
-            setOptions({ cities: [], venuesByCity: {}, allGenres: [] });
-        }
-        setLoading(false);
-    }
+	async function fetchAllEvents() {
+		setLoading(true);
+		try {
+			const res = await API.get("/events");
+			let all = res.data.results || [];
 
-    function handleSearch({ keyword, dateFrom, dateTo, city, venue, genre }) {
-        // Always filter from allEvents (future events), not last filtered
-        let filtered = allEvents;
+			// Only future events for dropdowns
+			const futureEvents = all.filter(ev => ev.event_date && ev.event_date >= new Date().toISOString().slice(0, 10));
 
-        if (keyword) {
-            filtered = filtered.filter(e =>
-                e.title && e.title.toLowerCase().includes(keyword.toLowerCase())
-            );
-        }
-        if (city) {
-            filtered = filtered.filter(e =>
-                e.location && e.location === city
-            );
-        }
-        if (venue) {
-            filtered = filtered.filter(e =>
-                e.venue && e.venue === venue
-            );
-        }
-        if (genre) {
-            filtered = filtered.filter(e =>
-                e.genre && e.genre === genre
-            );
-        }
-        filtered = filterEventsByDate(filtered, { dateFrom, dateTo });
+			setAllEvents(futureEvents);
+			setOptions(extractOptions(futureEvents));
+			setEvents(futureEvents); // Show all by default
+			setPage(1);
+			fullCityList.current = extractOptions(futureEvents).cities;
+		} catch (e) {
+			setEvents([]);
+			setAllEvents([]);
+			setOptions({ cities: [], venuesByCity: {}, allGenres: [] });
+		}
+		setLoading(false);
+	}
 
-        setEvents(filtered);
-        setPage(1);
-        // options stay the same (from allEvents)
-    }
+	function handleSearch({ keyword, dateFrom, dateTo, city, venue, genre }) {
+		// Always filter from allEvents (future events), not last filtered
+		let filtered = allEvents;
+
+		if (keyword) {
+			filtered = filtered.filter(e =>
+				e.title && e.title.toLowerCase().includes(keyword.toLowerCase())
+			);
+		}
+		if (city) {
+			filtered = filtered.filter(e =>
+				e.location && e.location === city
+			);
+		}
+		if (venue) {
+			filtered = filtered.filter(e =>
+				e.venue && e.venue === venue
+			);
+		}
+		if (genre) {
+			filtered = filtered.filter(e =>
+				e.genre && e.genre === genre
+			);
+		}
+		filtered = filterEventsByDate(filtered, { dateFrom, dateTo });
+
+		setEvents(filtered);
+		setPage(1);
+		// options stay the same (from allEvents)
+	}
 
     //Pagination logic
     const totalPages = Math.ceil(events.length / EVENTS_PER_PAGE);
@@ -169,6 +190,12 @@ export default function UserEventList() {
                                     >
                                         View Event
                                     </a>
+																		{isLoggedIn && 
+																			<HeartButton 	
+																				eventId={e.id} 
+																				faveObject={faveList.find(fave => fave.event == e.id)}
+																			/>
+																		}
                                 </li>
                             ))
                         )}

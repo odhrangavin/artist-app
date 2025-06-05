@@ -1,80 +1,64 @@
 import { useState, useEffect } from "react";
+
 import API from "../../api/api";
-import { useNavigate } from "react-router-dom"; // For navigation
+import EventCards from '../../components/UserEventsList/EventCards';
 
 // Component to show the current user's events using /users/me/events/
 function DashboardMyEvents({ onEditEvent }) {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [err, setErr] = useState('');
-    const navigate = useNavigate();
+		const [faveList, setFaveList] = useState([]);
 
     useEffect(() => {
-        async function fetchEvents() {
-            setLoading(true);
-            setErr('');
-            try {
-                const res = await API.get(`/users/me/events/`);
-                setEvents(res.data.events || []);
-            } catch (e) {
-                setErr('Failed to load your events.');
-                setEvents([]);
-            }
-            setLoading(false);
-        }
-        fetchEvents();
+			
+			// Get list of events created by the user
+			async function fetchEvents() {
+				setLoading(true);
+				setErr('');
+				try {
+					const res = await API.get(`/users/me/events/`);
+					
+					const eventList = res.data.events.map(dataObject => {
+						const { user_id, ...data } = dataObject;
+						return {
+							event_user_id: user_id,
+							...data
+						}
+					})
+					
+					setEvents(eventList || []);
+				} catch (e) {
+					setErr('Failed to load your events.');
+					setEvents([]);
+				}
+				setLoading(false);
+			}
+			fetchEvents();
+			
+			// Get list of faves made by the user
+			async function fetchFaves() {
+				try {
+					const res = await API.get('/users/me/faves');
+					setFaveList(res.data.user || []);
+				} catch (error) {
+					console.error(error);
+				}
+			};
+			fetchFaves();
+
     }, []);
-
-    const handleView = (id) => {
-        navigate(`/events/${id}`);
-    };
-
-    const handleEdit = (id) => {
-        navigate(`/dashboard/events/${id}`);
-    };
 
     if (loading) return <div>Loading your events...</div>;
     if (err) return <div className="error">{err}</div>;
-    if (!events.length) return <div>No events posted yet.</div>;
-
+    
     return (
-        <section className="user-events-list">
-            <h3>Your Events</h3>
-            <ul className="event-grid">
-                {events.map(ev => (
-                    <li key={ev.id} className="event-card">
-                        {ev.image_url && (
-                            <img src={ev.image_url} alt={ev.title} style={{ maxWidth: 220, maxHeight: 130 }} />
-                        )}
-                        <h4>{ev.title}</h4>
-                        <p>{ev.description}</p>
-                        <p><strong>Date:</strong> {ev.event_date}</p>
-                        <p><strong>Time:</strong> {ev.event_time}</p>
-                        <p><strong>Location:</strong> {ev.location}</p>
-                        <p><strong>Venue:</strong> {ev.venue}</p>
-                        <p><strong>Genre:</strong> {ev.genre}</p>
-                        <div className="event-card-actions" style={{ marginTop: "0.7em", display: "flex", gap: "0.7em" }}>
-                            <button
-                                type="button"
-                                className="event-action-btn event-view-btn"
-                                onClick={() => handleView(ev.id)}
-                            >
-                                View Event
-                            </button>
-                            <div className="event-card-actions">
-                                <button
-                                    type="button"
-                                    className="event-action-btn event-edit-btn"
-                                    onClick={() => onEditEvent(ev.id)}
-                                >
-                                    Edit Event
-                                </button>
-                            </div>
-                        </div>
-                    </li>
-                ))}
-            </ul>
-        </section>
+			<EventCards 
+				events={events} 
+				faves={faveList} 
+				title="My Events" 
+		 
+			/>
     );
 }
 
