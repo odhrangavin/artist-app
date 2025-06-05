@@ -148,7 +148,10 @@ export default function UserEventList() {
                         ) : (
                             displayedEvents.map((e) => (
                                 <li key={e.id} className="event-card">
-                                    {e.image_url && <img src={e.image_url} alt={e.title} className="event-image" />}
+
+
+
+                                    {/* {e.image_url && <img src={e.image_url} alt={e.title} className="event-image" />} */}
                                     <h3>{e.title}</h3>
                                     <p>
                                         <strong>Date/Time:</strong> {e.event_date} {e.event_time}

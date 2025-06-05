@@ -44,7 +44,29 @@ function DashboardMyEvents({ onEditEvent }) {
                 {events.map(ev => (
                     <li key={ev.id} className="event-card">
                         {ev.image_url && (
-                            <img src={ev.image_url} alt={ev.title} style={{ maxWidth: 220, maxHeight: 130 }} />
+                            <div style={{ position: "relative", display: "inline-block" }}>
+                                {(!!ev.suspended) && (
+                                    <div style={{
+                                        position: "absolute",
+                                        top: 10,
+                                        left: "50%",
+                                        transform: "translateX(-50%)",
+                                        background: "#c00",
+                                        color: "#fff",
+                                        fontWeight: "bold",
+                                        fontSize: "1.3em",
+                                        padding: "0.3em 1.2em",
+                                        borderRadius: 8,
+                                        zIndex: 2,
+                                        opacity: 0.92,
+                                        boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                                        pointerEvents: "none"
+                                    }}>
+                                        Suspended
+                                    </div>
+                                )}
+                                <img src={ev.image_url} alt={ev.title} style={{ maxWidth: 220, maxHeight: 130, borderRadius: 6 }} />
+                            </div>
                         )}
                         <h4>{ev.title}</h4>
                         <p>{ev.description}</p>
