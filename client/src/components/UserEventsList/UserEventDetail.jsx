@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import API from '../../api/api';
 import './UserEventsList.css';
 
@@ -8,6 +8,7 @@ export default function UserEventDetail() {
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const navigate = useNavigate()
     const [userMap, setUserMap] = useState({});
 
     useEffect(() => {
@@ -58,6 +59,7 @@ export default function UserEventDetail() {
 
     return (
         <div className="event-detail" role="region" aria-label="Event detail">
+            <button onClick={() => navigate(-1)}>Go Back</button>
             <h2>{event.title}</h2>
 
             {event.image_url && (

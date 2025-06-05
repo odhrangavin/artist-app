@@ -13,7 +13,7 @@ export const mockUseAuthNotLoggedIn = {
 };
 
 export const mockUseAuthLoggedIn = {
-  user: { id: 1, username: 'usertest', email: 'user@test.com' },
+  user: { id: 1, username: 'usertest', email: 'user@test.com', role: 'organizer' },
   isLoggedIn: true,
   login: mockLogin,
   logout: mockLogout,

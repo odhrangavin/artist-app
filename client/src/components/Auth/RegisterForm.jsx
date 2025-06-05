@@ -8,23 +8,27 @@ export default function RegisterForm() {
 	);
 	const [error, setError] = useState('');
 	const { login } = useAuth();
+	const [isLoading, setIsLoading] = useState(false);
 
 	// Get value from the role button
 	const selectedRole = (e) => {
 		setForm({ ...form, role: e.target.value });
 	};
 
-	const register = async (e) => {	
+	const handleSubmit = async (e) => {	
 		e.preventDefault();
+		setIsLoading(true); // Show waiting message
 		
 		// Check role's value is artist or audience
-		if (form.role != 'artist' && form.role != 'audience') {
+		if (form.role != 'organizer' && form.role != 'attendee') {
 			setError('Please, tell us if you are an artist or part of the Audience');
+			setIsLoading(false);
 			return;
 		}
 		// Validate password match
 		if (form.password !== form.confirm) {
 			setError('Passwords do not match');
+			setIsLoading(false);
 			return;
 		}
 		
@@ -39,6 +43,7 @@ export default function RegisterForm() {
 
 		} catch (err) {
 			setError('Sign-up error');
+			setIsLoading(false);
 		}
 	};
 
@@ -50,7 +55,7 @@ export default function RegisterForm() {
 	}
 
 	return (
-		<form onSubmit={register}>
+		<form onSubmit={handleSubmit}>
 			<label>Email Address</label>
 			<input 
 				name="email"
@@ -93,17 +98,29 @@ export default function RegisterForm() {
 			/>
 			<br />
 			<h4>How would you like to use ArtistsApp?</h4>
-			<button type="button" name="role" value="artist" onClick={selectedRole}>
-				I'm an Artist
+			<button 
+				type="button" 
+				name="role" 
+				value="organizer" 
+				aria-label="organizer" 
+				onClick={selectedRole}
+			>
+				I want to create events
 			</button>
-			<button type="button" name="role" value="audience" onClick={selectedRole}>
-				I'm part of the Audience
+			<button 
+				type="button" 
+				name="role" 
+				value="attendee" 
+				aria-label="attendee" 
+				onClick={selectedRole}
+			>
+				I want to attend events
 			</button>
 			<br />
 			<button type="submit" 
 				disabled={Object.values(form).some(fieldValue => !fieldValue)}
 			>
-				Register
+				{!isLoading ? 'Register' : 'Please Wait'}
 			</button>
 			<br />
 			<span className='error-message' data-testid='error-message'>{error}</span>

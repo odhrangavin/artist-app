@@ -84,4 +84,21 @@ db.run(
 	}
 );
 
+db.run(
+	`CREATE TABLE IF NOT EXISTS attending (
+		id         INTEGER PRIMARY KEY,
+		event      INTEGER NOT NULL,
+		user_id    INTEGER NOT NULL,
+		created_at TEXT,
+		FOREIGN KEY(event) REFERENCES events(id),
+		FOREIGN KEY(user_id) REFERENCES users(id),
+		UNIQUE(event,user_id)
+	)`,
+	err => { 
+		if (err){
+			console.error('faves table error:', err);
+		}	
+	}
+);
+
 module.exports = db;

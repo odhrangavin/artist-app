@@ -25,7 +25,7 @@ export function AuthProvider({ children }) {
       }
     };
     fetchUser();
-  }, []); // [] means the function is executed once unless the component is restarted.
+  }, []);
 
   // login function
   const login = async (credentials) => {
