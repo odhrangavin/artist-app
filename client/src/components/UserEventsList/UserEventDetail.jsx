@@ -61,7 +61,33 @@ export default function UserEventDetail() {
         <div className="event-detail" role="region" aria-label="Event detail">
             <button onClick={() => navigate(-1)}>Go Back</button>
             <h2>{event.title}</h2>
-            {event.image_url && <img className='event-detail-image' src={event.image_url} alt={event.title} />}
+
+            {event.image_url && (
+                <div style={{ position: "relative", width: "100%", maxWidth: 600, margin: "0 auto" }}>
+                    {!!event.suspended && (
+                        <div style={{
+                            position: "absolute",
+                            top: 10,
+                            left: "50%",
+                            transform: "translateX(-50%)",
+                            background: "#c00",
+                            color: "#fff",
+                            fontWeight: "bold",
+                            fontSize: "1.3em",
+                            padding: "0.3em 1.2em",
+                            borderRadius: 8,
+                            zIndex: 2,
+                            opacity: 0.92,
+                            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                            pointerEvents: "none"
+                        }}>
+                            Suspended
+                        </div>
+                    )}
+                    <img className='event-detail-image' src={event.image_url} alt={event.title} />
+                </div>
+
+            )}
             {event.description && <p><strong>Description:</strong> {event.description}</p>}
             <p><strong>Date/Time:</strong> {event.event_date} {event.event_time}</p>
             <p><strong>City:</strong> {event.location}</p>
