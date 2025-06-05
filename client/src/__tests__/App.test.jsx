@@ -8,7 +8,8 @@ import mockAxios from './__mocks__/axios.js';
 import { AuthProvider } from '../context/AuthContext.jsx';
 import renderWithRouter from './testUtils.jsx';
 import App from '../App';
-import { mockUseAuthLoggedIn, mockUseAuthNotLoggedIn, mockLogout } from './__mocks__/authContext.js';
+import { mockUseAuthLoggedInO, mockUseAuthLoggedInA, 
+  mockUseAuthNotLoggedIn, mockLogout } from './__mocks__/authContext.js';
 
 /*  == DRY FUNCTIONS == */
 
@@ -51,6 +52,11 @@ describe('App screen', () => {
 
 // Test routes in app render correctly
 describe('App Routing', () => {
+  afterEach(() => {
+    // Clean mocks so other tests that requrie user not logged in can pass
+    currentMock = mockUseAuthNotLoggedIn;
+    localStorage.clear();
+  });
   it('should render login page at /login', () => {   
     renderWithRouter('/login')
 
@@ -63,8 +69,8 @@ describe('App Routing', () => {
     const button = screen.getByRole('button', { name:/register/i });
     expect(button).toBeInTheDocument();
   });
-  it('should render dashboard page at /dashboard', async () => {
-    currentMock = mockUseAuthLoggedIn;
+  it('should render dashboard page for organizer at /dashboard', async () => {
+    currentMock = mockUseAuthLoggedInO;
     getToken(); // Set token to have access
     
     renderWithRouter('/dashboard')
@@ -72,8 +78,23 @@ describe('App Routing', () => {
     await waitFor(() => {
       expect(screen.getByText(/create your event/i)).toBeInTheDocument();
     })
-    // Set mock back to default value
-    currentMock = mockUseAuthNotLoggedIn;
+  });
+  it('should render dashboard page (favorites) for attendee at /dashboard', async () => {
+    currentMock = mockUseAuthLoggedInA;
+    getToken(); // Set token to have access
+    
+    renderWithRouter('/dashboard')
+
+    await waitFor(() => {
+      expect(screen.queryByText(/create your event/i)).not.toBeInTheDocument();
+      expect(screen.getByText(/my favorite events/i)).toBeInTheDocument();
+    })
+  });
+  it('should not render dashboard page at /register and redirect to log in instead ', () => {
+    renderWithRouter('/dashboard') // User not logged in
+
+    const button = screen.getByRole('button', { name:/log in/i });
+    expect(button).toBeInTheDocument();
   });
   it('should render forgot-password page at /forgot-password', async () => {
     renderWithRouter('/forgot-password')
@@ -154,7 +175,7 @@ describe('App Navigation when user is not logged in', () => {
 describe('App Navigation when user is logged in', () => {
   // Create user mock
   beforeEach(() => {
-    currentMock = mockUseAuthLoggedIn;
+    currentMock = mockUseAuthLoggedInO;
     getToken();
   });
   
