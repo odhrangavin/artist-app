@@ -11,6 +11,9 @@
   font-size: 1.2rem;
   margin: 0.5rem;
 }
+.event-detail .back-btn {
+  margin-top: 2rem;
+}
 
 .user-event-search-form {
   display: flex;
@@ -69,11 +72,17 @@
 }
 
 .event-card {
+  position: relative;
   background: #1a1a1a;
   color: #ccc;
   padding: 1rem;
   border-radius: 0.5rem;
   box-shadow: 0 2px 6px rgba(255, 255, 255, 0.1);
+}
+.event-card .event-description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.5rem;
 }
 .event-card h4 {
   margin: 0.5rem 0 0.2rem;
