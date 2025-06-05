@@ -63,7 +63,7 @@ export default function UserEventList() {
 	const [faveList, setFaveList] = useState([]);
 	const [attendingList, setAttendingList] = useState([]);
 	const fullCityList = useRef([]);
-	const { isLoggedIn } = useAuth();
+	const { isLoggedIn, user } = useAuth();
 
 	// Initial load: fetch all events, build dropdowns from those
 	useEffect(() => {
@@ -212,10 +212,10 @@ export default function UserEventList() {
 																			faveObject={faveList.find(fave => fave.event == e.id)}
 																		/>
 																	}
-																	{isLoggedIn && 
+																	{isLoggedIn && user.id !== e.user_id &&
 																		<AttendingButton 
-																			eventId={ev.id}
-																			attendObject={attends.find(attend => attend.event === ev.id)}  
+																			eventId={e.id}
+																			attendObject={attendingList.find(attend => attend.event === e.id)}  
 																		/>
 																	}
                                 </li>
