@@ -9,6 +9,7 @@ export default function DashboardFavorites() {
 	const [loading, setLoading] = useState(true);
 	const [err, setErr] = useState('');
 	const [faveList, setFaveList] = useState([]);
+	const [attendingList, setAttendingList] = useState([]);
 
 	// Get list of events created by the user
 	const refreshFavorites = async () =>  {
@@ -39,9 +40,28 @@ export default function DashboardFavorites() {
 		setLoading(false);
 	}
 
+	const refreshAttending = async () =>  {
+		setLoading(true);
+		setErr('');
+		try {
+			const res = await API.get(`/users/me/attending`);
+
+			setAttendingList(res.data.user || []);
+
+		} catch (e) {
+			setErr('Failed to load attending.');
+			setAttendingList([]);
+		}
+		setLoading(false);
+	}
+
+
+
 	// Refresh event list in first render
 	useEffect(() => {
 		refreshFavorites();
+		refreshAttending();
+
 	}, []);
 
 	if (loading) return <div>Loading your events...</div>;
@@ -54,6 +74,7 @@ export default function DashboardFavorites() {
 			title="My Favorite Events" 
 			noEvent="You have no event in your faves."
 			onFaveRemoved={refreshFavorites}
+			attends={attendingList}
 		/>
 
 	);

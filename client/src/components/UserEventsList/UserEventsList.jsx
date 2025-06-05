@@ -3,8 +3,10 @@ import API from "../../api/api";
 import UserEventSearchForm from "./UserEventSearchForm";
 import "./UserEventsList.scss";
 import Pagination from "./Pagination";
-import { HeartButton } from "../../pages/Dashboard/Heart";
+import { HeartButton } from "../../pages/Dashboard/HeartButton";
+import { AttendingButton } from "../../pages/Dashboard/AttendingButton";
 import { useAuth } from '../../context/AuthContext';
+
 
 // Helper to extract dropdown options from all events (not filtered!)
 function extractOptions(events) {
@@ -59,6 +61,7 @@ export default function UserEventList() {
 	const [loading, setLoading] = useState(false);
 	const [page, setPage] = useState(1);
 	const [faveList, setFaveList] = useState([]);
+	const [attendingList, setAttendingList] = useState([]);
 	const fullCityList = useRef([]);
 	const { isLoggedIn } = useAuth();
 
@@ -77,9 +80,22 @@ export default function UserEventList() {
 				
 				} catch (error) {
 					console.error(error);
+					setFaveList([]);
 				} 
 			};
 			fetchFaves();	
+			
+			async function fetchAttending() {
+				try {
+					const res = await API.get(`/users/me/attending`);
+					setAttendingList(res.data.user || []);
+
+				} catch (error) {
+					setErr('Failed to load attending.');
+					setAttendingList([]);
+				}
+			};
+			fetchAttending();
 		}
 	}, [allEvents])
 
@@ -169,33 +185,39 @@ export default function UserEventList() {
                         ) : (
                             displayedEvents.map((e) => (
                                 <li key={e.id} className="event-card">
-                                    {e.image_url && <img src={e.image_url} alt={e.title} className="event-image" />}
-                                    <h3>{e.title}</h3>
-                                    <p>
-                                        <strong>Date/Time:</strong> {e.event_date} {e.event_time}
-                                    </p>
-                                    <p>
-                                        <strong>City:</strong> {e.location}
-                                    </p>
-                                    <p>
-                                        <strong>Venue:</strong> {e.venue}
-                                    </p>
-                                    <p>
-                                        <strong>Genre:</strong> {e.genre}
-                                    </p>
-                                    <p>{e.description || "No description available"}</p>
-                                    <a
-                                        href={`/events/${e.id}`}
-                                        rel="noopener noreferrer"
-                                    >
-                                        View Event
-                                    </a>
-																		{isLoggedIn && 
-																			<HeartButton 	
-																				eventId={e.id} 
-																				faveObject={faveList.find(fave => fave.event == e.id)}
-																			/>
-																		}
+																	{e.image_url && <img src={e.image_url} alt={e.title} className="event-image" />}
+																	<h3>{e.title}</h3>
+																	<p>
+																		<strong>Date/Time:</strong> {e.event_date} {e.event_time}
+																	</p>
+																	<p>
+																		<strong>City:</strong> {e.location}
+																	</p>
+																	<p>
+																		<strong>Venue:</strong> {e.venue}
+																	</p>
+																	<p>
+																		<strong>Genre:</strong> {e.genre}
+																	</p>
+																	<p>{e.description || "No description available"}</p>
+																	<a
+																		href={`/events/${e.id}`}
+																		rel="noopener noreferrer"
+																	>
+																		View Event
+																	</a>
+																	{isLoggedIn && 
+																		<HeartButton 	
+																			eventId={e.id} 
+																			faveObject={faveList.find(fave => fave.event == e.id)}
+																		/>
+																	}
+																	{isLoggedIn && 
+																		<AttendingButton 
+																			eventId={ev.id}
+																			attendObject={attends.find(attend => attend.event === ev.id)}  
+																		/>
+																	}
                                 </li>
                             ))
                         )}

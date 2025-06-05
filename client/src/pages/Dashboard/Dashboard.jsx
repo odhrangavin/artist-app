@@ -29,10 +29,11 @@ export default function Dashboard() {
 			return null;
 	}
 
-	return (
-		<div className="dashboard">
-			<h2 style={{ display: "none" }}>Welcome to your Dashboard</h2>
-			{isLoggedIn && user.role === "organizer" ? (
+	function MainSection() {
+		if (!isLoggedIn) return // To avoid error. Not logged users should be redirected by Protected component
+			 
+		if (user.role == "organizer") {
+			return (
 				<>
 					<main style={{ flex: 1, marginLeft: 24 }}>
 						{renderMain()}
@@ -42,10 +43,21 @@ export default function Dashboard() {
 						onSectionChange={setCurrentSection}
 					/>
 				</>
-				) : <main style={{ flex: 1, marginLeft: 24 }}>
-					<DashboardFavorites />
-				</main>
-			}
+			);
+		} else if (user.role == "attendee") {
+			return (
+			<main style={{ flex: 1, marginLeft: 24 }}>
+				<DashboardFavorites />
+			</main>
+		);} else {
+			return <p>Are you an organizer or an attendee?</p>;
+		}
+	}
+
+	return (
+		<div className="dashboard">
+			<h2 style={{ display: "none" }}>Welcome to your Dashboard</h2>
+			<MainSection />
 		</div>
 	);
 }

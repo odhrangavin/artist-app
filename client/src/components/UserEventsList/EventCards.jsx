@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // For navigation
 
 import { useAuth } from '../../context/AuthContext';
-import { HeartButton } from '../../pages/Dashboard/Heart';
+import { HeartButton } from '../../pages/Dashboard/HeartButton';
+import { AttendingButton } from "../../pages/Dashboard/AttendingButton";
 
 
 // Component to show the current user's events using /users/me/events/
 function EventCards(props) {
-    const { events, faves, title, noEvent, onFaveRemoved } = props;
+    const { events, faves, title, noEvent, onFaveRemoved, attends } = props;
     const { user } = useAuth();
 
     const navigate = useNavigate();
@@ -55,8 +56,12 @@ function EventCards(props) {
                     onClick={() => handleEdit(ev.id)}
                   >
                     Edit Event
-                  </button> : ''
+                  </button> : <AttendingButton 
+                    eventId={ev.id}
+                    attendObject={attends.find(attend => attend.event === ev.id)}  
+                  />
                 } 
+              
                 <HeartButton 
                   eventId={ev.id} 
                   faveObject={faves.find(fave => fave.event === ev.id)} 
