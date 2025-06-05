@@ -23,3 +23,5 @@ text-git.md
 *.njsproj
 *.sln
 *.sw?
+
+coverage/*
