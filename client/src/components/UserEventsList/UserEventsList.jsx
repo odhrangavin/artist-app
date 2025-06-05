@@ -151,7 +151,7 @@ export default function UserEventList() {
 
 
 
-                                    {/* {e.image_url && <img src={e.image_url} alt={e.title} className="event-image" />} */}
+                                    {e.image_url && <img src={e.image_url} alt={e.title} className="event-image" />} 
                                     <h3>{e.title}</h3>
                                     <p>
                                         <strong>Date/Time:</strong> {e.event_date} {e.event_time}
