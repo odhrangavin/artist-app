@@ -25,13 +25,14 @@ const scrapeTicketmaster = async (req, res) => {
 		eventItem.classifications?.[0].genre.name ?? '',
 		eventItem._embedded.venues[0]?.city.name || '',
 		eventItem._embedded.venues[0]?.name || '',
+		eventItem?.info || eventItem?.description || '',
 		created_at,
 		1
 	])
 
 	const stmt = db.prepare(`INSERT OR IGNORE INTO events
-							 (external_id, title, image_url, event_date, event_time, genre, location, venue, created_at, user_id) 
-							 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+							 (external_id, title, image_url, event_date, event_time, genre, location, venue, description, created_at, user_id) 
+							 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
 	db.serialize(() => {
 		db.run('BEGIN TRANSACTION');
 		let insertedRows = 0;
