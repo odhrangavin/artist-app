@@ -77,7 +77,7 @@ export default function UserEventList() {
 				try {
 					const res = await API.get('/users/me/faves');
 					setFaveList(res.data.user || []);
-				
+
 				} catch (error) {
 					console.error(error);
 					setFaveList([]);
@@ -185,7 +185,30 @@ export default function UserEventList() {
 							) : (
 								displayedEvents.map((e) => (
 									<li key={e.id} className="event-card">
-										{e.image_url && <img src={e.image_url} alt={e.title} className="event-image" />}
+										{e.image_url && (
+											<div style={{ position: "relative", display: "inline-block" }}>
+												{!!e.suspended && (
+													<div style={{
+														position: "absolute",
+														top: 10,
+														left: "50%",
+														transform: "translateX(-50%)",
+														background: "#c00",
+														color: "#fff",
+														fontWeight: "bold",
+														fontSize: "1.3em",
+														padding: "0.3em 1.2em",
+														borderRadius: 8,
+														zIndex: 2,
+														opacity: 0.92,
+														boxShadow: "0 2px 8px rgba(0,0,0,0.15)"
+													}}>
+														Suspended
+													</div>
+												)}	
+												<img src={e.image_url} alt={e.title} className="event-image" />
+											</div>
+										)}
 										<h3>{e.title}</h3>
 										<p>
 											<strong>Date/Time:</strong> {e.event_date} {e.event_time}
@@ -199,7 +222,17 @@ export default function UserEventList() {
 										<p>
 											<strong>Genre:</strong> {e.genre}
 										</p>
-										<p>{e.description || "No description available"}</p>
+										{/* <p>{e.info || e.description || "No description available"}</p> */}
+										<p className="event-description">
+											{(e.info || e.description || "No description available").length > 180
+												? (
+													<>
+														{(e.info || e.description || "No description available").slice(0, 180)}...
+													</>
+												)
+												: (e.info || e.description || "No description available")
+											}
+										</p>
 										<a
 											href={`/events/${e.id}`}
 											rel="noopener noreferrer"

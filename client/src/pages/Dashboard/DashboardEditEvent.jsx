@@ -6,6 +6,7 @@ export default function DashboardEditEvent({ eventId, onBack }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+    const [suspendLoading, setSuspendLoading] = useState(false);
 
     function getNowLocalISO() {
         const now = new Date();
@@ -18,13 +19,22 @@ export default function DashboardEditEvent({ eventId, onBack }) {
         return `${yyyy}-${MM}-${dd}T${hh}:${mm}`;
     }
 
+    function makeDateTimeLocal(date, time) {
+        if (!date || !time) return '';
+        if (time.includes('T')) return time;
+        // Handles if time is "17:00" or "17:00:00"
+        return `${date}T${time.slice(0, 5)}`;
+    }
+
     useEffect(() => {
         async function fetchEvent() {
             setLoading(true);
             setError("");
             try {
                 const res = await API.get(`/events/${eventId}`);
-                setForm(res.data.event);
+                const event = res.data.event;
+                event.event_time = makeDateTimeLocal(event.event_date, event.event_time);
+                setForm(event);
             } catch {
                 setError("Failed to load event.");
             } finally {
@@ -55,6 +65,23 @@ export default function DashboardEditEvent({ eventId, onBack }) {
         }
     }
 
+    // --- SUSPEND/UNSUSPEND LOGIC ---
+    async function handleSuspendToggle() {
+        if (!form) return;
+        setSuspendLoading(true);
+        setError("");
+        setSuccess("");
+        try {
+            const newSuspended = !form.suspended;
+            await API.patch(`/events/${eventId}`, { suspended: newSuspended });
+            setForm(prev => ({ ...prev, suspended: newSuspended }));
+            setSuccess(newSuspended ? "Event suspended!" : "Event unsuspended!");
+        } catch {
+            setError("Failed to update suspension status.");
+        }
+        setSuspendLoading(false);
+    }
+
     if (loading) return <div>Loading event...</div>;
     if (error) return <div className="error">{error}</div>;
     if (!form) return null;
@@ -62,6 +89,48 @@ export default function DashboardEditEvent({ eventId, onBack }) {
     return (
         <section className="event-edit-section">
             <h2>Edit Event</h2>
+            {!!form.suspended && (
+                <div style={{
+                    background: "#c00", color: "#fff", fontWeight: "bold",
+                    fontSize: "2em", padding: "0.3em 0.8em", borderRadius: 8,
+                    marginBottom: "1em", textAlign: "center"
+                }}>
+                    Suspended
+                </div>
+            )}
+
+            <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 20 }}>
+                {form.image_url && (
+                    <div style={{ position: "relative", display: "inline-block" }}>
+                        {!!form.suspended && (
+                            <div style={{
+                                position: "absolute",
+                                top: 10,
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                                background: "#c00",
+                                color: "#fff",
+                                fontWeight: "bold",
+                                fontSize: "1.5em",
+                                padding: "0.3em 1.2em",
+                                borderRadius: 8,
+                                zIndex: 2,
+                                opacity: 0.92,
+                                boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                                pointerEvents: "none"
+                            }}>
+                                Suspended
+                            </div>
+                        )}
+                        <img
+                            className="event-detail-image"
+                            src={form.image_url}
+                            alt={form.title}
+                            style={{ maxWidth: 260, borderRadius: 8 }}
+                        />
+                    </div>
+                )}
+            </div>
             <form className="event-form" onSubmit={handleSubmit}>
                 <label>Title
                     <input name="title" value={form.title || ""} onChange={handleChange} required maxLength={60} />
@@ -95,6 +164,19 @@ export default function DashboardEditEvent({ eventId, onBack }) {
                 {success && <div className="success">{success}</div>}
                 {error && <div className="error">{error}</div>}
             </form>
+            <button
+                className="event-action-btn"
+                onClick={handleSuspendToggle}
+                disabled={suspendLoading}
+                style={{
+                    margin: "1em 0",
+                    background: form.suspended ? "#999" : "#c00",
+                    color: "#fff",
+                    fontWeight: "bold"
+                }}
+            >
+                {form.suspended ? "Unsuspend Event" : "Suspend Event"}
+            </button>
             <button className="event-action-btn" onClick={onBack}>Back to My Events</button>
         </section>
     );
