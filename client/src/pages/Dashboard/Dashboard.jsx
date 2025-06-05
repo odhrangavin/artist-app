@@ -35,13 +35,13 @@ export default function Dashboard() {
 		if (user.role == "organizer") {
 			return (
 				<>
-					<main style={{ flex: 1, marginLeft: 24 }}>
-						{renderMain()}
-					</main>
 					<DashboardSidebar
 						currentSection={typeof currentSection === "string" ? currentSection : "my-events"}
 						onSectionChange={setCurrentSection}
 					/>
+					<main style={{ flex: 1, marginLeft: 24 }}>
+						{renderMain()}
+					</main>
 				</>
 			);
 		} else if (user.role == "attendee") {
