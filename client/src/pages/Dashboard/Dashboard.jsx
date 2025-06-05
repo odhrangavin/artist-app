@@ -8,7 +8,7 @@ import { useAuth } from "../../context/AuthContext";
 
 export default function Dashboard() {
 	const [currentSection, setCurrentSection] = useState("create");
-	const { user } = useAuth();
+	const { user, isLoggedIn } = useAuth();
 
 	function renderMain() {
 			if (typeof currentSection === "string") {
@@ -32,7 +32,7 @@ export default function Dashboard() {
 	return (
 		<div className="dashboard">
 			<h2 style={{ display: "none" }}>Welcome to your Dashboard</h2>
-			{user.role === "organizer" ? (
+			{isLoggedIn && user.role === "organizer" ? (
 				<>
 					<main style={{ flex: 1, marginLeft: 24 }}>
 						{renderMain()}

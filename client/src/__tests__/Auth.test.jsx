@@ -9,26 +9,28 @@ import { act } from 'react';
 // == Mock ==
 vi.mock("axios", () => {
   const instance = {
-      get: vi.fn(() => Promise.resolve({ data: {
-          // Data not necessary
-        }
-      })),
-      post: vi.fn(() => Promise.resolve({ data: {
-        token: 'fake-jwt-token'
-        }
-      })),
-      interceptors: {
-        request: { use: vi.fn() },
-        response: { use: vi.fn() },
-      },
-    };
+    get: vi.fn(() => Promise.resolve({ data: {
+        user: {
+          username: 'testuser',
+          role: 'organizer',
+          isLoggedIn: true,
+        },
+      }
+    })),
+    post: vi.fn(() => Promise.resolve({ data: {
+      token: 'fake-jwt-token',
+    }})),
+    interceptors: {
+      request: { use: vi.fn() },
+      response: { use: vi.fn() },
+    },
+  };
   
   return {
     default: {
       create: vi.fn(() => instance),
-    }
-  }
-
+    },
+  };
 });
 
 
@@ -69,7 +71,8 @@ describe('Login', () => {
   })
   
   it('write on input fields and success login', async () => {
-    
+    // Set up necessary mocks
+  
     renderWithRouter('/login');
 
     const [ inputUser, inputPass, buttonLogin, errorMessage ] = getLoginElements()
@@ -173,7 +176,8 @@ describe('Register', () => {
   })
 
   it('write on input fields and success register', async () => {
-    
+ 
+
     renderWithRouter('/register');
 
     const [ buttonOrganizer, buttonAttendee, buttonRegister, errorMessage, inputEmail, 
@@ -185,6 +189,7 @@ describe('Register', () => {
     await userEvent.type(inputPass, '1234');
     await userEvent.type(inputConfirm, '1234');
     await userEvent.click(buttonOrganizer);
+    
 
     // Check updates
     expect(inputEmail).toHaveValue('testuser@gmail.com');
@@ -199,6 +204,7 @@ describe('Register', () => {
     // If answer is successfull
     const createEventTitle = await screen.findByText(/create your event/i);
     expect(createEventTitle).toBeInTheDocument();
+
   });
 
   it('write on input fields and fail register', async () => {

@@ -16,7 +16,6 @@ export default function DashboardFavorites() {
 		setErr('');
 		try {
 			const res = await API.get(`/users/me/faves/full`);
-			console.log(res.data.user[0])
 
 			// Normalize data for events
 			const eventList = res.data.user.map(dataObject => {

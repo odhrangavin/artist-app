@@ -64,6 +64,7 @@ describe('App Routing', () => {
     expect(button).toBeInTheDocument();
   });
   it('should render dashboard page at /dashboard', async () => {
+    currentMock = mockUseAuthLoggedIn;
     getToken(); // Set token to have access
     
     renderWithRouter('/dashboard')
@@ -71,6 +72,8 @@ describe('App Routing', () => {
     await waitFor(() => {
       expect(screen.getByText(/create your event/i)).toBeInTheDocument();
     })
+    // Set mock back to default value
+    currentMock = mockUseAuthNotLoggedIn;
   });
   it('should render forgot-password page at /forgot-password', async () => {
     renderWithRouter('/forgot-password')

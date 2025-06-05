@@ -38,7 +38,6 @@ export function HeartButton(props) {
       }
     } else {
       try {
-        console.log(updatedObject.id)
         await API.delete(`users/me/faves/${updatedObject.id}`);
         if (onFaveRemoved) {
           onFaveRemoved();

@@ -48,10 +48,7 @@ function EventCards(props) {
                 >
                   View Event
                 </button>
-                (ev.user_id !== user.id) ? 
-                (<>
-                  {/*console.log(ev)*/}
-                  {/*console.log(user.id)*/}
+                {ev.event_user_id === user.id ?      
                   <button
                     type="button"
                     className="event-action-btn event-edit-btn"
@@ -59,8 +56,7 @@ function EventCards(props) {
                   >
                     Edit Event
                   </button> : ''
-                </>)
-                
+                } 
                 <HeartButton 
                   eventId={ev.id} 
                   faveObject={faves.find(fave => fave.event === ev.id)} 
