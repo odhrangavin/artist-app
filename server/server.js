@@ -3,6 +3,7 @@ const env = require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const cors = require('cors');
+const multer = require('multer');
 
 const app = express();
 const PORT = 3000;
@@ -19,6 +20,16 @@ app.use(cors());
 app.use('/api', router);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+
+const storage = multer.diskStorage({
+	destination: (req, file, cb) => {
+		cb(null, 'images/');
+	},
+	filename: (req, file, cb) => {
+		cb(null, file.originalname);
+	}
+});
+const upload = multer({ storage });
 
 //basic routes
 app.get('/', (req, res) => {
@@ -50,6 +61,12 @@ app.get('/api-tests', (req, res) => {
 app.get('/login-tests', (req, res) => {
 	res.sendFile(__dirname + '/login-tests.html');
 });
+
+app.post('/api/upload', upload.single('file'), (req, res) => {
+	res.json({ url: 'http://localhost:3000/images/' + req.file.filename });
+});
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.listen(PORT, () => {
 	// console.log(`Server running: http://localhost:${PORT}/`);

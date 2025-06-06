@@ -1,5 +1,4 @@
 const db = require('../db');
-const multer = require('multer');
 
 const getEvent = (req, res) => {
 	let id = req.params.id;
@@ -54,11 +53,6 @@ const createEvent = (req, res) => {
 		}
 	);
 };
-
-const storeEventImage = (req, res) => {
-	res.json({ url: eventImageUrl });
-}
-
 
 const editEvent = (req, res) => {
 	const event_id = req.params.id;
