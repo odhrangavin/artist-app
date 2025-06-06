@@ -16,6 +16,13 @@ export default function UserEventSearchForm({
     const [venue, setVenue] = useState("");
     const [genre, setGenre] = useState("");
 
+
+    const sortedCities = [...cityOptions].sort((a, b) => a.localeCompare(b));
+    const sortedGenres = [...genreOptions].sort((a, b) => a.localeCompare(b));
+    const sortedVenues = city && venueOptions[city]
+        ? [...venueOptions[city]].sort((a, b) => a.localeCompare(b))
+        : [];
+
     function handleSubmit(e) {
         e.preventDefault();
         onSearch({ keyword, dateFrom, dateTo, city, venue, genre });
@@ -64,7 +71,7 @@ export default function UserEventSearchForm({
             />
             <select value={city} onChange={handleCityChange}>
                 <option value="">All cities</option>
-                {cityOptions.map((c) => (
+                {sortedCities.map((c) => (
                     <option key={c} value={c}>{c}</option>
                 ))}
             </select>
