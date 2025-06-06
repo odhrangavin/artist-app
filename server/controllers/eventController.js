@@ -54,7 +54,6 @@ const createEvent = (req, res) => {
 	);
 };
 
-
 const editEvent = (req, res) => {
 	const event_id = req.params.id;
 	const user_id = req.user.id;
