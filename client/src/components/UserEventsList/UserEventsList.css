@@ -4,7 +4,10 @@
   align-items: center;
   justify-content: center;
 }
-.event-detail .event-detail-image {
+.event-detail-image {
+  width: 70%;
+}
+.event-detail-description {
   width: 70%;
 }
 .event-detail p {

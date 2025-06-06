@@ -12,7 +12,7 @@ export default function UserEventDetail() {
     const [error, setError] = useState('');
     const [userMap, setUserMap] = useState({});
     const [attendanceNumber, setAttendanceNumber] = useState('');
-    
+
     useEffect(() => {
         async function fetchEvent() {
             setLoading(true);
@@ -54,7 +54,7 @@ export default function UserEventDetail() {
         async function fetchAttendance() {
             try {
                 const res = await API.get(`/events/${event.id}/attendance`);
-               
+
                 setAttendanceNumber(res.data.attendance);
             } catch (e) {
                 console.error('Could not load attendance', e);
@@ -106,7 +106,7 @@ export default function UserEventDetail() {
 
             )}
             <small>{attendanceNumber} Event App users are attending.</small>
-            {event.description && <p><strong>Description:</strong> {event.description}</p>}
+            {event.description && <p className='event-detail-description'><strong>Description:</strong> {event.description}</p>}
             <p><strong>Date/Time:</strong> {event.event_date} {event.event_time}</p>
             <p><strong>City:</strong> {event.location}</p>
             <p><strong>Venue:</strong> {event.venue}</p>
