@@ -24,19 +24,43 @@ function getNowLocalISO() {
 }
 
 
-function EventPreview({ event, imagePreview, onClearImage }) {
-    if (!event.title && !event.description) return null;
+function EventPreview({ event, imagePreview, onClearImage, onImageDrop }) {
+    // if (!event.title && !event.description) return null;  //appear only when type title
     return (
-        <div className="event-card-preview">
+        <div
+            className="event-card-preview"
+            onDragOver={e => {
+                e.preventDefault();
+                e.stopPropagation();
+            }}
+            onDrop={e => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    onImageDrop(e.dataTransfer.files[0]);
+                }
+            }}
+            style={{ border: "2px dashed #ddd", borderRadius: 8, overflow: "hidden", background: "#fafbfc" }}
+        >
             {(imagePreview || event.image_url) ? (
                 <img
                     src={imagePreview || event.image_url}
                     alt={event.title || "Event"}
                     className="event-image-preview"
+                    style={{ width: "100%", height: 180, objectFit: "cover" }}
                 />
             ) : (
-                <div className="event-image-placeholder">
-                    Image Preview
+                <div className="event-image-placeholder" style={{
+                    width: "100%",
+                    height: 180,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "#999",
+                    background: "#f6f6f6",
+                    fontSize: "1.1em"
+                }}>
+                    Drag & drop image here<br />(or use upload below)
                 </div>
             )}
             <div className="event-preview-content">
@@ -89,6 +113,18 @@ export default function DashboardCreateEvent() {
             setForm(prev => ({ ...prev, image_url: "" }));
         }
     };
+
+    // Handler drag-and-drop
+    const handleImageDrop = file => {
+        if (file && file.type.startsWith("image/")) {
+            setImageFile(file);
+            setImagePreview(URL.createObjectURL(file));
+            setForm(prev => ({ ...prev, image_url: "" }));
+            document.getElementById("event-image-upload").value = "";
+        }
+    };
+
+
 
     const handleClearImage = () => {
         setImageFile(null);
@@ -176,23 +212,28 @@ export default function DashboardCreateEvent() {
                             onChange={handleImageChange}
                             style={{ marginLeft: 8, flex: 1 }}
                         />
+                        {/* Show attached file name and remove button if imageFile exists */}
                         {imageFile && (
-                            <button
-                                type="button"
-                                aria-label="Remove attached image"
-                                onClick={handleClearImage}
-                                style={{
-                                    marginLeft: 8,
-                                    background: "none",
-                                    border: "none",
-                                    color: "#c00",
-                                    fontWeight: "bold",
-                                    fontSize: "1.3em",
-                                    cursor: "pointer"
-                                }}
-                            >
-                                ×
-                            </button>
+                            <span style={{ display: "inline-flex", alignItems: "center", marginLeft: 8 }}>
+                                <span style={{ color: "#2474e5", fontWeight: 500, marginRight: 4 }}>
+                                    {imageFile.name}
+                                </span>
+                                <button
+                                    type="button"
+                                    aria-label="Remove attached image"
+                                    onClick={handleClearImage}
+                                    style={{
+                                        background: "none",
+                                        border: "none",
+                                        color: "#c00",
+                                        fontWeight: "bold",
+                                        fontSize: "1.3em",
+                                        cursor: "pointer"
+                                    }}
+                                >
+                                    ×
+                                </button>
+                            </span>
                         )}
                     </label>
                     <label>Date & Time
@@ -226,7 +267,7 @@ export default function DashboardCreateEvent() {
                     {/* {success && <div className="success">{success}</div>} */}
                 </form>
                 <div style={{ flex: 1, maxWidth: 350 }}>
-                    <EventPreview event={form} imagePreview={imagePreview} onClearImage={handleClearImage} />
+                    <EventPreview event={form} imagePreview={imagePreview} onClearImage={handleClearImage} onImageDrop={handleImageDrop} />
                     {success && (
                         <div style={{ marginTop: "1em", color: "#2474e5", fontWeight: 600, fontSize: "1.1em" }}>
                             Event Created!

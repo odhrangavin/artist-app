@@ -6,6 +6,30 @@
   padding-top: 1.5rem;
 }
 
+.dashboard-sidebar {
+  width: 10rem;
+  background-color: #1a1a1a;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  padding: 1rem;
+}
+.dashboard-sidebar .sidebar-list {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  transition: background-color 0.2s ease;
+  font-size: 1rem;
+}
+.dashboard-sidebar .sidebar-list li .active {
+  color: #00ff9d;
+}
+.dashboard-sidebar .sidebar-list li button:hover {
+  color: #00ff9d;
+  background-color: #252525;
+  border: none;
+}
+
 .event-form {
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(255, 255, 255, 0.07);
@@ -116,6 +140,7 @@
   font-size: 1.25em;
   font-weight: 600;
   margin: 0.3em 0 0.7em 0;
+  color: #4a6177;
 }
 .event-card-preview .event-preview-content .event-preview-date,
 .event-card-preview .event-preview-content .event-preview-location,
@@ -171,6 +196,7 @@
   padding: 0;
 }
 .user-events-list .event-card {
+  position: relative;
   background: #1a1a1a;
   color: #ccc;
   padding: 1rem;

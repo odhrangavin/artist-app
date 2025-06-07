@@ -25,8 +25,8 @@ const getEvents = (req, res) => {
 
 	// If no valid query parameters, return all rows
 	const sql = conditions.length > 0 
-		? `SELECT * FROM events WHERE ${conditions.join(' AND ')}`
-		: `SELECT * FROM events`;
+		? `SELECT * FROM events WHERE ${conditions.join(' AND ')} ORDER BY event_date, event_time`
+		: `SELECT * FROM events ORDER BY event_date, event_time`;
 
 	db.all(sql, params, (err, rows) => {
 		if (err) {
@@ -53,7 +53,6 @@ const createEvent = (req, res) => {
 		}
 	);
 };
-
 
 const editEvent = (req, res) => {
 	const event_id = req.params.id;

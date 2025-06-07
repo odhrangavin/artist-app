@@ -4,7 +4,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-  .event-detail-image{
+  &-image{
+    width: 70%;
+  }
+  &-description{
     width: 70%;
   }
   p{
