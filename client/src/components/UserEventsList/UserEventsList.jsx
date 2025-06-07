@@ -87,7 +87,7 @@ export default function UserEventList() {
 			
 			async function fetchAttending() {
 				try {
-					const res = await API.get(`/users/me/attending/full`);
+					const res = await API.get(`/users/me/attending`);
 					setAttendingList(res.data.user || []);
 
 				} catch (error) {
@@ -103,7 +103,8 @@ export default function UserEventList() {
 	async function fetchAllEvents() {
 		setLoading(true);
 		try {
-			const res = await API.get("/events");
+			const res = await API.get('/events');
+	
 			let all = res.data.results || [];
 
 			// Only future events for dropdowns

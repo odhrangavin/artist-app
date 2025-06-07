@@ -26,4 +26,14 @@ input {
   cursor: pointer;
   top: 8px;
   right: 8px;
+  padding: 5px;
+  overflow: hidden;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.favourite-button:hover {
+  color: red;
+  background-color: rgba(218, 27, 27, 0.1);
+  border-radius: 100%;
 }
