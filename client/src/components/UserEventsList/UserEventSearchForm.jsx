@@ -69,13 +69,22 @@ export default function UserEventSearchForm({
                 onChange={(e) => setDateTo(e.target.value)}
                 placeholder="To date"
             />
-            <select value={city} onChange={handleCityChange}>
+            <select 
+                value={city} 
+                onChange={handleCityChange}
+                aria-label="Select a city"
+            >
                 <option value="">All cities</option>
                 {sortedCities.map((c) => (
                     <option key={c} value={c}>{c}</option>
                 ))}
             </select>
-            <select value={venue} onChange={handleVenueChange} disabled={!city}>
+            <select 
+                value={venue} 
+                onChange={handleVenueChange} 
+                disabled={!city}
+                aria-label="Select a venue"
+            >
                 <option value="">All venues</option>
                 {city && venueOptions[city]
                     ? venueOptions[city].map((v) => (
@@ -83,7 +92,11 @@ export default function UserEventSearchForm({
                     ))
                     : null}
             </select>
-            <select value={genre} onChange={(e) => setGenre(e.target.value)}>
+            <select 
+                value={genre} 
+                onChange={(e) => setGenre(e.target.value)}
+                aria-label="Select a genre"
+            >
                 <option value="">All genres</option>
                 {genreOptions.map((g) => (
                     <option key={g} value={g}>{g}</option>
