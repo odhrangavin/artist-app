@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import API from "../../api/api";
 import UserEventSearchForm from "./UserEventSearchForm";
 import "./UserEventsList.scss";
@@ -234,12 +235,9 @@ export default function UserEventList() {
 												: (e.info || e.description || "No description available")
 											}
 										</p>
-										<a
-											href={`/events/${e.id}`}
-											rel="noopener noreferrer"
-										>
+										<Link to={`/events/${e.id}`}>
 											View Event
-										</a>
+										</Link>
 										{isLoggedIn && (
 											<>
 												<HeartButton 	

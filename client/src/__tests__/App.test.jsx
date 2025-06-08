@@ -142,8 +142,8 @@ describe('App Navigation when user is not logged in', () => {
   it('should navigate to Register section and render it', async () => {
     renderWithRouter()
 
-    const registerLink = screen.getByRole('link', { name: /register/i });
-    await userEvent.click(registerLink);
+    const registerLink = screen.getAllByRole('link', { name: /register/i });
+    await userEvent.click(registerLink[0]);
     
     const button = await screen.findByRole('button', { name:/register/i });
     expect(button).toBeInTheDocument();

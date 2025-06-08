@@ -54,6 +54,7 @@ export default function UserEventSearchForm({
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 placeholder="Event title"
+                aria-label="Event title"
             />
             <input
                 type="date"
@@ -61,6 +62,7 @@ export default function UserEventSearchForm({
                 min={today}
                 onChange={(e) => setDateFrom(e.target.value)}
                 placeholder="From date"
+                aria-label="From date"
             />
             <input
                 type="date"
@@ -68,6 +70,7 @@ export default function UserEventSearchForm({
                 min={dateFrom}
                 onChange={(e) => setDateTo(e.target.value)}
                 placeholder="To date"
+                aria-label="To date"
             />
             <select 
                 value={city} 
