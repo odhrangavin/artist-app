@@ -9,29 +9,69 @@ header {
   top: 0;
   z-index: 1000;
 }
-header h1 {
+header .header-logo {
+  text-decoration: none;
+}
+header .header-logo h1 {
   color: #00ff9d;
   font-size: 1.5rem;
   margin: 0;
   font-weight: 700;
   letter-spacing: -0.5px;
   text-transform: uppercase;
-}
-header h1:hover {
-  transform: scale(1.02);
   transition: all 0.3s ease;
 }
-header ul {
+header .header-logo h1:hover {
+  filter: brightness(1.1);
+}
+header .burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 1rem;
+  z-index: 1100;
+}
+header .burger span {
+  display: block;
+  height: 4px;
+  width: 100%;
+  background: #00ff9d;
+  margin: 5px 0;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+header .burger.open span:nth-child(1) {
+  transform: translateY(12px) rotate(45deg);
+}
+header .burger.open span:nth-child(2) {
+  opacity: 0;
+}
+header .burger.open span:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+}
+header .nav-menu {
   list-style: none;
   display: flex;
+  align-items: center;
   gap: 2rem;
   margin: 0;
   padding: 0;
+  transition: max-height 0.3s;
 }
-header ul li {
+header .nav-menu li {
   position: relative;
 }
-header ul li a {
+header .nav-menu li .greeting-message {
+  padding: 0;
+  margin: 0;
+}
+header .nav-menu li a {
   color: #f5f5f5;
   text-decoration: none;
   font-weight: 500;
@@ -39,14 +79,14 @@ header ul li a {
   border-radius: 4px;
   transition: all 0.3s ease;
 }
-header ul li a:hover {
+header .nav-menu li a:hover {
   color: #00ff9d;
   background-color: #272727;
 }
-header ul li a.active {
+header .nav-menu li a.active {
   color: #00ff9d;
 }
-header ul li a.active::after {
+header .nav-menu li a.active::after {
   content: "";
   position: absolute;
   bottom: -5px;
@@ -56,15 +96,46 @@ header ul li a.active::after {
   height: 2px;
   background-color: #00ff9d;
 }
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   header {
-    flex-direction: column;
     gap: 1rem;
     padding: 1rem;
   }
-  header ul {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1rem;
+  header .burger {
+    display: flex;
+  }
+  header .nav-menu {
+    flex-direction: column;
+    align-items: flex-end;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #1a1a1a;
+    width: 200px;
+    max-height: 0;
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 0 0 8px 8px;
+    gap: 0;
+    z-index: 1001;
+    transition: max-height 0.3s;
+  }
+  header .nav-menu.open {
+    max-height: 500px;
+  }
+  header .nav-menu li {
+    width: 100%;
+  }
+  header .nav-menu li a, header .nav-menu li .greeting-message {
+    display: block;
+  }
+  header .nav-menu li a.active::after {
+    display: none;
+  }
+  header .nav-menu li .greeting-message {
+    margin-top: 20px;
+  }
+  header .nav-menu li button {
+    margin-top: 2px;
   }
 }

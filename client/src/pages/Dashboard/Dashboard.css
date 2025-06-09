@@ -5,9 +5,19 @@
 .dashboard-create-event {
   padding-top: 1.5rem;
 }
+.dashboard-create-event .dashboard-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.dashboard-main {
+  flex: 1;
+  margin-left: 24px;
+}
 
 .dashboard-sidebar {
-  width: 10rem;
+  height: 10rem;
   background-color: #1a1a1a;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   padding: 1rem;
@@ -21,13 +31,18 @@
   transition: background-color 0.2s ease;
   font-size: 1rem;
 }
+.dashboard-sidebar .sidebar-list li {
+  margin-bottom: 3px;
+}
 .dashboard-sidebar .sidebar-list li .active {
   color: #00ff9d;
 }
-.dashboard-sidebar .sidebar-list li button:hover {
+.dashboard-sidebar .sidebar-list li button:hover, .dashboard-sidebar .sidebar-list li button:focus {
   color: #00ff9d;
   background-color: #252525;
-  border: none;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+  outline: none;
 }
 
 .event-form {
@@ -90,6 +105,9 @@
 .event-preview {
   min-width: 320px;
   flex: 1 1 320px;
+}
+.event-preview-container {
+  flex-grow: 1;
 }
 .event-preview h3 {
   margin-bottom: 0.7em;
@@ -202,6 +220,40 @@
   padding: 1rem;
   border-radius: 0.5rem;
   box-shadow: 0 2px 6px rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+.user-events-list .event-card .event-body {
+  flex-grow: 1; /* This allows it to take up vertical space */
+  display: flex;
+  flex-direction: column;
+}
+.user-events-list .event-card .suspended-badge {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #c00;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.3em;
+  padding: 0.3em 1.2em;
+  border-radius: 8px;
+  z-index: 10;
+  opacity: 0.85;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.user-events-list .event-card .event-description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.5rem;
+}
+.user-events-list .event-card .event-card-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: auto;
 }
 .user-events-list .event-card h4 {
   margin: 0.5rem 0 0.2rem;
@@ -209,15 +261,51 @@
 .user-events-list .event-card p {
   margin: 0.2rem 0;
 }
-.user-events-list .event-card a {
-  display: inline-block;
-  margin-top: 0.5rem;
-  text-decoration: underline;
-}
 .user-events-list .event-card .event-image {
   width: 100%;
-  height: 160px;
+  height: 200px;
   -o-object-fit: cover;
      object-fit: cover;
   border-radius: 0.5rem;
+}
+.user-events-list .event-card .event-view-btn {
+  color: #646cff;
+}
+
+@media screen and (max-width: 1200px) {
+  .user-events-list .event-grid {
+    grid-template-columns: repeat(2, 1fr); /* Two columns on medium screens */
+  }
+  .dashboard {
+    flex-direction: column; /* Stack sidebar and content on smaller screens */
+  }
+  .dashboard-create-event .dashboard-container {
+    flex-direction: column; /* Stack form and preview on smaller screens */
+    align-items: center; /* Center align items */
+  }
+  .dashboard-sidebar {
+    height: auto; /* Full width on smaller screens */
+    padding: 0;
+  }
+  .dashboard-sidebar .sidebar-list {
+    display: flex;
+    padding: 0;
+  }
+  .dashboard-sidebar .sidebar-list li {
+    margin-bottom: 0; /* Remove bottom margin for list items */
+    margin-top: 0.5rem; /* Add top margin for spacing */
+  }
+}
+@media screen and (max-width: 768px) {
+  .user-events-list .event-grid {
+    grid-template-columns: 1fr; /* Single column on smaller screens */
+  }
+  .dashboard-sidebar .sidebar-list {
+    justify-content: center;
+  }
+}
+@media screen and (max-width: 480px) {
+  .event-grid {
+    grid-template-columns: 1fr;
+  }
 }

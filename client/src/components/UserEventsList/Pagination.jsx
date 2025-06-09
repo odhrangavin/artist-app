@@ -4,7 +4,6 @@ export default function Pagination({ page, totalPages, onPageChange }) {
 
     const getPageNumbers = () => {
         const pages = [];
-        const windowSize = 3; // how many pages to show around the current
         const minEdge = 2;
         const maxEdge = totalPages - 1;
 
@@ -45,12 +44,11 @@ export default function Pagination({ page, totalPages, onPageChange }) {
     const pageNumbers = getPageNumbers();
 
     return (
-        <div className="pagination" style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 6 }}>
+        <div className="pagination">
             <button
                 onClick={() => onPageChange(page - 1)}
                 disabled={page === 1}
                 aria-label="Previous page"
-                style={{ padding: "6px 10px" }}
             >
                 &lt; Prev
             </button>
