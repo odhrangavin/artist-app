@@ -40,10 +40,11 @@ async function getEventDetailElements() {
       const genreTitle = await screen.findByText('Genre:');
       const authorTitle = await screen.findByText('Author:');
       const goBackButton = await screen.findByRole('button', {name: /Go Back/i})
+      
   
   return {
     titles: [dateTimeTitle, cityTitle, venueTitle, genreTitle, authorTitle], 
-    goBackButton
+    goBackButton,
   }
   
 }
@@ -51,11 +52,12 @@ async function getEventDetailElements() {
 async function getOptionalEventDetailElements() {
   
   const region = await screen.findByRole('region', {name: /event detail/i});
-  const img = within(region).queryByRole('img');
+  const eventImg = within(region).queryByRole('img', {name: /^event.+/i});
+  const defaultImg = within(region).queryByRole('img', {name: /event image/i});
   const descriptionTitle = screen.queryByText(/Description:/i);
+  const suspended = screen.queryByText('Suspended');
   
-  
-  return { descriptionTitle, img };
+  return { descriptionTitle, eventImg, defaultImg, suspended };
   
 }
 
@@ -76,16 +78,16 @@ describe(`Event Detail when user is not logged in`, () => {
     })
 
     const { titles, goBackButton } = await getEventDetailElements();
-    const { descriptionTitle, img } = await getOptionalEventDetailElements();
+    const { descriptionTitle, eventImg, suspended } = await getOptionalEventDetailElements();
 
     titles.forEach(title => expect(title).toBeInTheDocument());
     expect(descriptionTitle).toBeInTheDocument(); // Event 1 has a description
-    expect(img).toBeInTheDocument(); // There should be a picture
+    expect(eventImg).toBeInTheDocument(); // Event 1 has a picture
+    expect(suspended).toBeInTheDocument();
     expect(goBackButton).toBeInTheDocument();
   })
 
   it(`Event 1 detail shows content`, async () => {
-
     await waitFor(() => {
       renderWithRouter('/events/1');
     })
@@ -97,11 +99,21 @@ describe(`Event Detail when user is not logged in`, () => {
     const venue = screen.getByText('Venue1');
     const genre = screen.getByText('Football');
     const author = await screen.findByText('usertest'); // It goes through some useStates
-    const suspended = screen.getByText('Suspended');
 
-    [title, description, dateTime, city, venue, genre, author, suspended].forEach(
+    [title, description, dateTime, city, venue, genre, author].forEach(
       content => expect(content).toBeInTheDocument
     )
+  });
+
+  it(`Event 1 detail shows that no one is attending`, async () => {
+    await waitFor(() => {
+      renderWithRouter('/events/1');
+    })
+
+    const attendance = await screen.findByText(/Be the first Event App user to join this event!/i);
+    
+    expect(attendance).toBeInTheDocument();
+
   });
 
 

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"; // For navigation
 import { useAuth } from '../../context/AuthContext';
 import { HeartButton } from '../../pages/Dashboard/HeartButton';
 import { AttendingButton } from "../../pages/Dashboard/AttendingButton";
+import EventImage from "./EventImage";
 
 
 // Component to show the current user's events using /users/me/events/
@@ -29,18 +30,11 @@ function EventCards(props) {
         {events.map(ev => (
           <li key={ev.id} className="event-card">
             <div className="event-body">
-              {ev.image_url && (
-                <div style={{ position: "relative", display: "inline-block" }}>
-                  {!!ev.suspended && (
-                    <div className="suspended-badge">
-                      Suspended
-                    </div>
-                  )}
-                  <img src={ev.image_url} alt={ev.title}
-                    className="event-image"
-                  />
-                </div>
-              )}
+              <EventImage 
+                imageUrl={ev.image_url} 
+                suspended={!!ev.suspended}
+                eventTitle={ev.title}
+              />
               <h4>{ev.title}</h4>
               <p>
                 <strong>Date/Time:</strong> {ev.event_date} {ev.event_time}

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import eventImage from '../../assets/icons/event_image.png';
 
 export default function EventImage(props) {
@@ -28,6 +27,4 @@ export default function EventImage(props) {
       )}
     </>
   )
-
-
 }
