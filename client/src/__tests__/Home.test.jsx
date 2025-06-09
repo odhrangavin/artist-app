@@ -44,7 +44,7 @@ async function getHomeElements() {
   const event2 = await screen.findByText(/event2/i);
   const event3 = await screen.findByText(/event3/i);
   const allEvents = await screen.findAllByText(/^event\d+$/i);
-  const viewEventLinks = await screen.findAllByRole('link', {name: /view event/i});
+  const viewEventLinks = await screen.findAllByRole('button', {name: /view event/i});
   const allImages = await screen.findAllByRole('img', {name: /^event.*/i});
   const allImagesDefaultAlt = await screen.findAllByRole('img', {name: /event image/i});
   const suspendedMessage = await screen.findAllByText('Suspended');

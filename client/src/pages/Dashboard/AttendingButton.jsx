@@ -28,7 +28,7 @@ export function AttendingButton(props) {
     // Update in DB
     if (newAttending) {
       try {
-        const res = await API.post('users/me/attending', {
+        const res = await API.post('/users/me/attending', {
           user_id: user.id,
           event: eventId
         });
@@ -42,7 +42,7 @@ export function AttendingButton(props) {
       }
     } else {
       try {
-        await API.delete(`users/me/attending/${updatedObject.id}`);
+        await API.delete(`/users/me/attending/${updatedObject.id}`);
         setButtonText(`I'll Attend`);
       } catch(error) {
         console.log(error);

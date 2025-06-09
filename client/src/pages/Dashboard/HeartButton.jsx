@@ -25,7 +25,7 @@ export function HeartButton(props) {
     // Update in DB
     if (newLiked) {
       try {
-        const res = await API.post('users/me/faves', {
+        const res = await API.post('/users/me/faves', {
           user_id: user.id,
           event: eventId
         });
@@ -38,7 +38,7 @@ export function HeartButton(props) {
       }
     } else {
       try {
-        await API.delete(`users/me/faves/${updatedObject.id}`);
+        await API.delete(`/users/me/faves/${updatedObject.id}`);
         if (onFaveRemoved) {
           onFaveRemoved();
         }

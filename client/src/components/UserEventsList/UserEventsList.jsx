@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import API from "../../api/api";
 import UserEventSearchForm from "./UserEventSearchForm";
 import "./UserEventsList.scss";
@@ -66,6 +66,7 @@ export default function UserEventList() {
 	const [attendingList, setAttendingList] = useState([]);
 	const fullCityList = useRef([]);
 	const { isLoggedIn, user } = useAuth();
+	const navigate = useNavigate();
 
 	// Initial load: fetch all events, build dropdowns from those
 	useEffect(() => {
@@ -169,6 +170,10 @@ export default function UserEventList() {
 		// window.scrollTo({ top: 0, behavior: "smooth" });
 	}
 
+	const handleView = (id) => {
+    navigate(`/events/${id}`);
+  };
+
 	return (
 		<div>
 			<UserEventSearchForm
@@ -219,9 +224,13 @@ export default function UserEventList() {
 										</p>
 									</div>
 									<div className="event-actions">
-										<Link to={`/events/${e.id}`}>
-											View Event
-										</Link>
+										<button
+											type="button"
+											className="event-action-btn event-view-btn"
+											onClick={() => handleView(e.id)}
+										>
+                		View Event
+             			 </button>
 										{isLoggedIn && (
 											<>
 												<HeartButton
