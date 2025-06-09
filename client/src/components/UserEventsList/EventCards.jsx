@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // For navigation
 
 import { useAuth } from '../../context/AuthContext';
@@ -29,49 +28,38 @@ function EventCards(props) {
       <ul className="event-grid">
         {events.map(ev => (
           <li key={ev.id} className="event-card">
-            {ev.image_url && (
-              <div style={{ position: "relative", display: "inline-block" }}>
-                {!!ev.suspended && (
-                  <div style={{
-                    position: "absolute",
-                    top: 10,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    background: "#c00",
-                    color: "#fff",
-                    fontWeight: "bold",
-                    fontSize: "1.3em",
-                    padding: "0.3em 1.2em",
-                    borderRadius: 8,
-                    zIndex: 2,
-                    opacity: 0.92,
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.15)"
-                  }}>
-                    Suspended
-                  </div>
-                )}
-                <img src={ev.image_url} alt={ev.title}
-                  style={{ maxWidth: 220, maxHeight: 130, borderRadius: 6 }}
-                />
-              </div>
-            )}
-            <h4>{ev.title}</h4>
-            <p className="event-description">
-              {(ev.description || "No description available").length > 180
-                ? (
-                  <>
-                    {(ev.description || "No description available").slice(0, 180)}...
-                  </>
-                )
-                : (ev.description || "No description available")
-              }
-            </p>
-            <p><strong>Date:</strong> {ev.event_date}</p>
-            <p><strong>Time:</strong> {ev.event_time}</p>
-            <p><strong>Location:</strong> {ev.location}</p>
-            <p><strong>Venue:</strong> {ev.venue}</p>
-            <p><strong>Genre:</strong> {ev.genre}</p>
-            <div className="event-card-actions" style={{ marginTop: "0.7em", display: "flex", gap: "0.7em" }}>
+            <div className="event-body">
+              {ev.image_url && (
+                <div style={{ position: "relative", display: "inline-block" }}>
+                  {!!ev.suspended && (
+                    <div className="suspended-badge">
+                      Suspended
+                    </div>
+                  )}
+                  <img src={ev.image_url} alt={ev.title}
+                    className="event-image"
+                  />
+                </div>
+              )}
+              <h4>{ev.title}</h4>
+              <p>
+                <strong>Date/Time:</strong> {ev.event_date} {ev.event_time}
+              </p>
+              <p><strong>City:</strong> {ev.location}</p>
+              <p><strong>Venue:</strong> {ev.venue}</p>
+              <p><strong>Genre:</strong> {ev.genre}</p>
+              <p className="event-description">
+                {(ev.description || "No description available").length > 90
+                  ? (
+                    <>
+                      {(ev.description || "No description available").slice(0, 90)}...
+                    </>
+                  )
+                  : (ev.description || "No description available")
+                }
+              </p>
+            </div>
+            <div className="event-card-actions">
               <button
                 type="button"
                 className="event-action-btn event-view-btn"

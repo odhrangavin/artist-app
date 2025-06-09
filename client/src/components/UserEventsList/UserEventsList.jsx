@@ -82,10 +82,10 @@ export default function UserEventList() {
 				} catch (error) {
 					console.error(error);
 					setFaveList([]);
-				} 
+				}
 			};
-			fetchFaves();	
-			
+			fetchFaves();
+
 			async function fetchAttending() {
 				try {
 					const res = await API.get(`/users/me/attending`);
@@ -105,7 +105,7 @@ export default function UserEventList() {
 		setLoading(true);
 		try {
 			const res = await API.get('/events');
-	
+
 			let all = res.data.results || [];
 
 			// Only future events for dropdowns
@@ -155,59 +155,46 @@ export default function UserEventList() {
 		// options stay the same (from allEvents)
 	}
 
-    //Pagination logic
-    const totalPages = Math.ceil(events.length / EVENTS_PER_PAGE);
-    const displayedEvents = events.slice(
-			(page - 1) * EVENTS_PER_PAGE,
-			page * EVENTS_PER_PAGE
-    );
+	//Pagination logic
+	const totalPages = Math.ceil(events.length / EVENTS_PER_PAGE);
+	const displayedEvents = events.slice(
+		(page - 1) * EVENTS_PER_PAGE,
+		page * EVENTS_PER_PAGE
+	);
 
-    function handlePageChange(newPage) {
-			if (newPage < 1 || newPage > totalPages) return;
-			setPage(newPage);
-			// window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+	function handlePageChange(newPage) {
+		if (newPage < 1 || newPage > totalPages) return;
+		setPage(newPage);
+		// window.scrollTo({ top: 0, behavior: "smooth" });
+	}
 
-    return (
-			<div>
-				<UserEventSearchForm
-					onSearch={handleSearch}
-					cityOptions={fullCityList.current.length > 0 ? fullCityList.current : options.cities}
-					venueOptions={options.venuesByCity}
-					genreOptions={options.allGenres}
-					loading={loading}
-				/>
-				{loading ? (
-						<p>Loading...</p>
-				) : (
-					<>
-						<ul className="event-grid">
-							{displayedEvents.length === 0 ? (
-								<li>No events found.</li>
-							) : (
-								displayedEvents.map((e) => (
-									<li key={e.id} className="event-card">
+	return (
+		<div>
+			<UserEventSearchForm
+				onSearch={handleSearch}
+				cityOptions={fullCityList.current.length > 0 ? fullCityList.current : options.cities}
+				venueOptions={options.venuesByCity}
+				genreOptions={options.allGenres}
+				loading={loading}
+			/>
+			{loading ? (
+				<p>Loading...</p>
+			) : (
+				<>
+					<ul className="event-grid">
+						{displayedEvents.length === 0 ? (
+							<li>No events found.</li>
+						) : (
+							displayedEvents.map((e) => (
+								<li key={e.id} className="event-card">
+									<div className="event-body">
 										{e.image_url && (
 											<div style={{ position: "relative", display: "inline-block" }}>
 												{!!e.suspended && (
-													<div style={{
-														position: "absolute",
-														top: 10,
-														left: "50%",
-														transform: "translateX(-50%)",
-														background: "#c00",
-														color: "#fff",
-														fontWeight: "bold",
-														fontSize: "1.3em",
-														padding: "0.3em 1.2em",
-														borderRadius: 8,
-														zIndex: 2,
-														opacity: 0.92,
-														boxShadow: "0 2px 8px rgba(0,0,0,0.15)"
-													}}>
+													<div className="suspended-badge">
 														Suspended
 													</div>
-												)}	
+												)}
 												<img src={e.image_url} alt={e.title} className="event-image" />
 											</div>
 										)}
@@ -224,41 +211,44 @@ export default function UserEventList() {
 										<p>
 											<strong>Genre:</strong> {e.genre}
 										</p>
-										{/* <p>{e.info || e.description || "No description available"}</p> */}
 										<p className="event-description">
-											{(e.info || e.description || "No description available").length > 180
+											{(e.info || e.description || "No description available").length > 90
 												? (
 													<>
-														{(e.info || e.description || "No description available").slice(0, 180)}...
+														{(e.info || e.description || "No description available").slice(0, 90)}...
 													</>
 												)
 												: (e.info || e.description || "No description available")
 											}
 										</p>
+									</div>
+									<div className="event-actions">
 										<Link to={`/events/${e.id}`}>
 											View Event
 										</Link>
 										{isLoggedIn && (
 											<>
-												<HeartButton 	
-													eventId={e.id} 
+												<HeartButton
+													eventId={e.id}
 													faveObject={faveList.find(fave => fave.event == e.id)}
 												/>
 												{user.id !== e.user_id &&
-													<AttendingButton 
+													<AttendingButton
 														eventId={e.id}
-														attendObject={attendingList.find(attend => attend.event === e.id)}  
+														attendObject={attendingList.find(attend => attend.event === e.id)}
 													/>
 												}
 											</>
 										)}
-									</li>
-								))
-							)}
-						</ul>
-						<Pagination page={page} totalPages={totalPages} onPageChange={handlePageChange} />
-					</>
-				)}
-			</div>
-    );
+
+									</div>
+								</li>
+							))
+						)}
+					</ul>
+					<Pagination page={page} totalPages={totalPages} onPageChange={handlePageChange} />
+				</>
+			)}
+		</div>
+	);
 }

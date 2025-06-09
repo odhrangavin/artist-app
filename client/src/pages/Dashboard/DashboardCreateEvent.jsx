@@ -188,8 +188,8 @@ export default function DashboardCreateEvent() {
 
     return (
         <section className="dashboard-create-event">
-            <div className="dashboard-container" style={{ display: "flex", gap: "32px", alignItems: "flex-start" }}>
-                <form className="event-form" onSubmit={handleSubmit} autoComplete="off" style={{ flex: 1 }}>
+            <div className="dashboard-container">
+                <form className="event-form" onSubmit={handleSubmit} autoComplete="off">
                     <h3>Create Your Event</h3>
                     <label>Title
                         <input name="title" value={form.title} onChange={handleChange} required maxLength={60} />
@@ -210,7 +210,6 @@ export default function DashboardCreateEvent() {
                             type="file"
                             accept="image/*"
                             onChange={handleImageChange}
-                            style={{ marginLeft: 8, flex: 1 }}
                         />
                         {/* Show attached file name and remove button if imageFile exists */}
                         {imageFile && (
@@ -260,13 +259,13 @@ export default function DashboardCreateEvent() {
                             ))}
                         </select>
                     </label>
-                    <label>Description</label>
-                    <textarea name="description" value={form.description} onChange={handleChange} required rows="4" maxLength={400} />
+                    <label htmlFor='description'>Description</label>
+                    <textarea id="description" name="description" value={form.description} onChange={handleChange} required rows="4" maxLength={400} />
                     <button type="submit" disabled={submitting} className="event-submit-btn">Create Event</button>
                     {error && <div className="error">{error}</div>}
                     {/* {success && <div className="success">{success}</div>} */}
                 </form>
-                <div style={{ flex: 1, maxWidth: 350 }}>
+                <div className="event-preview-container">
                     <EventPreview event={form} imagePreview={imagePreview} onClearImage={handleClearImage} onImageDrop={handleImageDrop} />
                     {success && (
                         <div style={{ marginTop: "1em", color: "#2474e5", fontWeight: 600, fontSize: "1.1em" }}>

@@ -51,6 +51,7 @@ export default function UserEventSearchForm({
         <form onSubmit={handleSubmit} className="user-event-search-form">
             <input
                 type="text"
+                name="keyword"
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 placeholder="Event title"
@@ -58,6 +59,7 @@ export default function UserEventSearchForm({
             />
             <input
                 type="date"
+                name="dateFrom"
                 value={dateFrom}
                 min={today}
                 onChange={(e) => setDateFrom(e.target.value)}
@@ -65,6 +67,7 @@ export default function UserEventSearchForm({
                 aria-label="From date"
             />
             <input
+                name="dateTo"
                 type="date"
                 value={dateTo}
                 min={dateFrom}
@@ -72,8 +75,9 @@ export default function UserEventSearchForm({
                 placeholder="To date"
                 aria-label="To date"
             />
-            <select 
-                value={city} 
+            <select
+                name="city"
+                value={city}
                 onChange={handleCityChange}
                 aria-label="Select a city"
             >
@@ -82,9 +86,10 @@ export default function UserEventSearchForm({
                     <option key={c} value={c}>{c}</option>
                 ))}
             </select>
-            <select 
-                value={venue} 
-                onChange={handleVenueChange} 
+            <select
+                name="venue"
+                value={venue}
+                onChange={handleVenueChange}
                 disabled={!city}
                 aria-label="Select a venue"
             >
@@ -95,8 +100,9 @@ export default function UserEventSearchForm({
                     ))
                     : null}
             </select>
-            <select 
-                value={genre} 
+            <select
+                name="genre"
+                value={genre}
                 onChange={(e) => setGenre(e.target.value)}
                 aria-label="Select a genre"
             >
@@ -105,8 +111,10 @@ export default function UserEventSearchForm({
                     <option key={g} value={g}>{g}</option>
                 ))}
             </select>
-            <button type="submit" disabled={loading}>Search</button>
-            <button type="button" onClick={handleClear} disabled={loading}>Clear</button>
+            <div className="search-actions">
+                <button type="submit" disabled={loading}>Search</button>
+                <button type="button" onClick={handleClear} disabled={loading}>Clear</button>
+            </div>
         </form>
     );
 }
