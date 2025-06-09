@@ -45,10 +45,14 @@ async function getHomeElements() {
   const event3 = await screen.findByText(/event3/i);
   const allEvents = await screen.findAllByText(/^event\d+$/i);
   const viewEventLinks = await screen.findAllByRole('link', {name: /view event/i});
+  const allImages = await screen.findAllByRole('img', {name: /^event.*/i});
+  const allImagesDefaultAlt = await screen.findAllByRole('img', {name: /event image/i});
+  const suspendedMessage = await screen.findAllByText('Suspended');
   
   return {
     buttonSearch, buttonClear, event1, event2, event3, allEvents, viewEventLinks,
-    inputTitle, selectCity, selectGenre, loginRegisterText
+    inputTitle, selectCity, selectGenre, loginRegisterText, allImages, suspendedMessage,
+    allImagesDefaultAlt
   }
   
 }
@@ -114,6 +118,24 @@ describe('Events in Home page when user not logged in', () => {
     ) {  
       expect(button).toHaveLength(0);
     }
+
+  });
+
+  it('User not logged in should see 3 pictures (2 default) and 1 event suspended', async () => {
+    
+    // Get page elements  
+    const { allImages, suspendedMessage, allImagesDefaultAlt } = await getHomeElements();
+
+    // Do assertions
+    expect(allImages).toHaveLength(3);
+    expect(allImagesDefaultAlt).toHaveLength(1); // Original event w/o picture
+    expect(suspendedMessage).toHaveLength(1);
+
+    // Simulate picture error
+    const imgEvent3 = allImages[2]
+    imgEvent3.dispatchEvent(new Event('error'));
+    expect(imgEvent3).toHaveAttribute('alt', 'Event Image');
+
   });
 
   it('User not logged in should be able to go to event detail', async () => {
@@ -124,8 +146,6 @@ describe('Events in Home page when user not logged in', () => {
     // Event detail has a go back button
     const buttonGoBack = await screen.findByRole('button', {name: /go back/i});
     expect(buttonGoBack).toBeInTheDocument();
-  
-    
     
   });
 
@@ -200,7 +220,8 @@ describe('Events in Home page when user is an organizer', () => {
     currentMock = mockUseAuthNotLoggedIn;
     localStorage.clear();
   });
-  it('Organizer should the events, detail link, and attend and fave button', async () => {
+  
+  it('Organizer should see the events, detail link, and attend and fave button', async () => {
     
     // Get page elements
     const buttonLogout = screen.getByRole('button', {name: /logout/i}); // 
@@ -226,6 +247,23 @@ describe('Events in Home page when user is an organizer', () => {
     expect(buttonAttending).toHaveLength(2);
     expect(buttonNotAttending).toHaveLength(0);
   })
+
+  it('Organizer should see 3 pictures (2 default) and 1 event suspended', async () => {
+    
+    // Get page elements  
+    const { allImages, suspendedMessage, allImagesDefaultAlt } = await getHomeElements();
+
+    // Do assertions
+    expect(allImages).toHaveLength(3);
+    expect(allImagesDefaultAlt).toHaveLength(1); // Original event w/o picture
+    expect(suspendedMessage).toHaveLength(1);
+
+    // Simulate picture error
+    const imgEvent3 = allImages[2]
+    imgEvent3.dispatchEvent(new Event('error'));
+    expect(imgEvent3).toHaveAttribute('alt', 'Event Image');
+
+  });
   
   it('Organizer should be able to go to event detail', async () => {
 
@@ -353,6 +391,23 @@ describe('Events in Home page when user is an attendee', () => {
     expect(buttonAttending).toHaveLength(1);
     expect(buttonNotAttending).toHaveLength(2);
   })
+
+   it('Attendee should see 3 pictures (2 default) and 1 event suspended', async () => {
+    
+    // Get page elements  
+    const { allImages, suspendedMessage, allImagesDefaultAlt } = await getHomeElements();
+
+    // Do assertions
+    expect(allImages).toHaveLength(3);
+    expect(allImagesDefaultAlt).toHaveLength(1); // Original event w/o picture
+    expect(suspendedMessage).toHaveLength(1);
+
+    // Simulate picture error
+    const imgEvent3 = allImages[2]
+    imgEvent3.dispatchEvent(new Event('error'));
+    expect(imgEvent3).toHaveAttribute('alt', 'Event Image');
+
+  });
 
   it('Attendee should be able to go to event detail', async () => {
 
