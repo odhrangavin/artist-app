@@ -2,7 +2,7 @@ const db = require('../db');
 
 const getUser = (req, res) => {
 	let id = req?.user?.id ?? req.params.id;
-	db.get(`SELECT * FROM users WHERE id = ?`,
+	db.get(`SELECT id, email, username, role, created_at FROM users WHERE id = ?`,
 		[id],
 		function (err, row) {
 			res.json({user: row});
@@ -11,7 +11,7 @@ const getUser = (req, res) => {
 }
 
 const getUsers = (req, res) => {
-	db.all(`SELECT * FROM users`,
+	db.all(`SELECT id, email, username, role, created_at FROM users`,
 		function (err, rows) {
 			res.json({users: rows});
 		}

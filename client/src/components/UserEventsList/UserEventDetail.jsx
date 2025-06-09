@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, redirect } from 'react-router-dom';
 import API from '../../api/api';
 import './UserEventsList.css';
+import EventImage from "./EventImage";
+
 
 export default function UserEventDetail() {
     const { id } = useParams();
@@ -20,6 +22,7 @@ export default function UserEventDetail() {
             try {
                 const res = await API.get(`/events/${id}`);
                 setEvent(res.data.event || res.data);
+                
             } catch (e) {
                 setError('Could not load event.');
             }
@@ -54,7 +57,6 @@ export default function UserEventDetail() {
         async function fetchAttendance() {
             try {
                 const res = await API.get(`/events/${event.id}/attendance`);
-
                 setAttendanceNumber(res.data.attendance);
             } catch (e) {
                 console.error('Could not load attendance', e);
@@ -71,6 +73,7 @@ export default function UserEventDetail() {
     if (!event) return <div>Event not found.</div>;
 
     let author = event.username;
+  
     if (!author && event.user_id && userMap[event.user_id]) {
         author = userMap[event.user_id];
     }
@@ -78,35 +81,12 @@ export default function UserEventDetail() {
     return (
         <div className="event-detail" role="region" aria-label="Event detail">
             <h2>{event.title}</h2>
-
-            {event.image_url && (
-                <div style={{ position: "relative", width: "100%", maxWidth: 600, margin: "0 auto" }}>
-                    {!!event.suspended && (
-                        <div style={{
-                            position: "absolute",
-                            top: 10,
-                            left: "50%",
-                            transform: "translateX(-50%)",
-                            background: "#c00",
-                            color: "#fff",
-                            fontWeight: "bold",
-                            fontSize: "1.3em",
-                            padding: "0.3em 1.2em",
-                            borderRadius: 8,
-                            zIndex: 2,
-                            opacity: 0.92,
-                            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-                            pointerEvents: "none"
-                        }}>
-                            Suspended
-                        </div>
-                    )}
-                    <img className='event-detail-image' src={event.image_url} alt={event.title} />
-                </div>
-
-            )}
+            <EventImage imageUrl={event.image_url} suspended={event.suspended} 
+            alt={event.title} className='event-detail-image' />
             <small>{attendanceNumber} Event App users are attending.</small>
-            {event.description && <p className='event-detail-description'><strong>Description:</strong> {event.description}</p>}
+            {event.description && <p className='event-detail-description'>
+                <strong>Description:</strong> {event.description}
+            </p>}
             <p><strong>Date/Time:</strong> {event.event_date} {event.event_time}</p>
             <p><strong>City:</strong> {event.location}</p>
             <p><strong>Venue:</strong> {event.venue}</p>
