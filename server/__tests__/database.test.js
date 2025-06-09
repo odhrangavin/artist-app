@@ -445,26 +445,6 @@ describe('Events API', () => {
 		expect(res.status).toBe(401);
 	})
 
-	// it does
-	// it('should not create an event with an invalid token', async () => {
-	// 	const res = await request(app).post('/api/events')
-	// 		.set('authorization', `Bearer: ${ badToken }`)
-	// 		.send({ title: "Testing Event",
-	// 			description: "An event for testing",
-	// 			image_url: "",
-	// 			event_time: "",
-	// 			location: "Test Location",
-	// 			venue: "Test Venue",
-	// 			genre: "Other",
-	// 			user_id: 2
-	// 		});
-	// 	expect(res.status).toBe(201);
-	// 	const res2 = await request(app).get('/api/events/2')
-	// 	expect(res2.body.event.id).toBe(1);
-	// 	expect(res2.body.event.user_id).toBe(2);
-	// 	expect(res2.body.event.genre).toBe("Other")
-	// })
-
 	it('should not edit the test event without a token', async () => {
 		const res = await request(app).put('/api/events/1')
 			.send({ title: "Bad Value",
@@ -556,21 +536,6 @@ describe('Faves API', () => {
 			});
 		expect(res.status).toBe(500);
 	})
-
-	// it does
-	// it('should not create a nonsense fave', async () => {
-	// 	const res = await request(app).post('/api/users/me/faves')
-	// 		.set('authorization', `Bearer: ${ token }`)
-	// 		.send({
-	// 			event: 999,
-	// 			user_id: 2
-	// 		});
-	// 	const res2 = await request(app).get('/api/users/me/faves')
-	// 		.set('authorization', `Bearer: ${ token }`)
-	// 	expect(res2.status).toBe(200);
-	// 	console.log(res2.body)
-	// 	expect(res.status).toBe(500);
-	// })
 })
 
 describe('Attending API', () => {
