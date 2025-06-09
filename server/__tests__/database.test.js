@@ -23,7 +23,22 @@ const checkTableExists = (db, tableName) => {
 	});
 };
 
-const token = jwt.sign({ id: 2 }, process.env.JWT_SECRET, { expiresIn: '1d' });;
+const getTableColumns = (db, tableName) => {
+	return new Promise((resolve, reject) => {
+		db.all(`PRAGMA table_info(${tableName})`, (err, rows) => {
+			if (err) {
+				reject(err);
+			} else {
+				// Extract column names from the result
+				const columnNames = rows.map((row) => row.name);
+				resolve(columnNames);
+			}
+		});
+	});
+};
+
+const token = jwt.sign({ id: 2 }, process.env.JWT_SECRET, { expiresIn: '1d' });
+const badToken = jwt.sign({ id: '999' }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
 describe('Table checks', () => {
 	it('should have a users table', async () => {
@@ -46,6 +61,34 @@ describe('Table checks', () => {
 		expect(res).toBe(false);
 	});
 
+	it('should have the correct columns in the users table', async () => {
+		const expectedColumns = ['id', 'username', 'email', 'password', 'role', 'created_at'];
+		const actualColumns = await getTableColumns(db, 'users');
+		expect(actualColumns).toEqual(expect.arrayContaining(expectedColumns));
+		expect(actualColumns.length).toBe(expectedColumns.length);
+	});
+
+	it('should have the correct columns in the events table', async () => {
+		const expectedColumns = ['id', 'external_id', 'genre', 'title', 'description', 'image_url', 'event_date', 'event_time', 'location', 'venue', 'user_id', 'created_at', 'suspended'];
+		const actualColumns = await getTableColumns(db, 'events');
+		expect(actualColumns).toEqual(expect.arrayContaining(expectedColumns));
+		expect(actualColumns.length).toBe(expectedColumns.length);
+	});
+
+	it('should have the correct columns in the faves table', async () => {
+		const expectedColumns = ['id', 'event', 'user_id', 'created_at'];
+		const actualColumns = await getTableColumns(db, 'faves');
+		expect(actualColumns).toEqual(expect.arrayContaining(expectedColumns));
+		expect(actualColumns.length).toBe(expectedColumns.length);
+	});
+
+	it('should have the correct columns in the attending table', async () => {
+		const expectedColumns = ['id', 'event', 'user_id', 'created_at'];
+		const actualColumns = await getTableColumns(db, 'attending');
+		expect(actualColumns).toEqual(expect.arrayContaining(expectedColumns));
+		expect(actualColumns.length).toBe(expectedColumns.length);
+	});
+
 	it('should have a system-user user', async () => {
 		const res = await request(app).get('/api/users/1')
 		expect(res.body.user.username).toBe('system-user');
@@ -65,6 +108,21 @@ describe('Invalid route checks', () => {
 
 	it('should not access POST /events/:id', async () => {
 		const res = await request(app).post('/api/events/1')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access POST /events/:id', async () => {
+		const res = await request(app).post('/api/events/1/attendance')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access PUT /events/:id', async () => {
+		const res = await request(app).put('/api/events/1/attendance')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access DELETE /events/:id', async () => {
+		const res = await request(app).delete('/api/events/1/attendance')
 		expect(res.status).toBe(500);
 	})
 
@@ -138,6 +196,46 @@ describe('Invalid route checks', () => {
 		expect(res.status).toBe(500);
 	})
 
+	it('should not access PUT /users/me/attending', async () => {
+		const res = await request(app).put('/api/users/me/attending')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access DELETE /users/me/attending', async () => {
+		const res = await request(app).delete('/api/users/me/attending')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access PUT /users/me/attending/full', async () => {
+		const res = await request(app).put('/api/users/me/attending/full')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access POST /users/me/attending/full', async () => {
+		const res = await request(app).post('/api/users/me/attending/full')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access DELETE /users/me/attending/full', async () => {
+		const res = await request(app).delete('/api/users/me/attending/full')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access POST /users/me/attending/:id', async () => {
+		const res = await request(app).post('/api/users/me/attending/1')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access PUT /users/me/attending/:id', async () => {
+		const res = await request(app).put('/api/users/me/attending/1')
+		expect(res.status).toBe(500);
+	})
+
+	it('should not access GET /users/me/attending/:id', async () => {
+		const res = await request(app).get('/api/users/me/attending/1')
+		expect(res.status).toBe(500);
+	})
+
 	it('should not access POST /users/:id', async () => {
 		const res = await request(app).post('/api/users/2')
 		expect(res.status).toBe(500);
@@ -156,7 +254,7 @@ describe('Invalid route checks', () => {
 
 
 describe('User API', () => {
-	it('should create a new user (POST))', async () => {
+	it('should create a new user (POST)', async () => {
 		const res = await request(app).post('/api/users')
 			.send({ username: 'testuser', 
 				email: 'test@example.com', 
@@ -196,6 +294,33 @@ describe('User API', () => {
 		expect(res2.body.user.username).toBe('testuser-modified');
 		expect(res2.body.user.email).toBe('test@example.com');
 	});
+
+	it('should not create a user without full data', async () => {
+		const res = await request(app).post('/api/users')
+			.send({ username: 'testuser', 
+				password: 'test1234' ,
+				confirm: 'test1234',
+				role: 'artist'
+			});
+		expect(res.status).toBe(500);
+	});
+
+	it('should not create a user without matching passwords', async () => {
+		const res = await request(app).post('/api/users')
+			.send({ username: 'testuser', 
+				email: 'test@example.com', 
+				password: 'test1234' ,
+				confirm: 'test1235',
+				role: 'artist'
+			});
+		expect(res.status).toBe(400);
+	});
+
+	it('should not get the "me" user without authentication (GET)', async () => {
+		const res = await request(app).get('/api/users/me')
+		expect(res.status).toBe(401);
+	});
+
 });
 
 describe('Events API', () => {
@@ -228,13 +353,18 @@ describe('Events API', () => {
 		expect(res.body.results).toHaveLength(1);
 	});
 
-	it('should now have one event with Genre = "Other', async () => {
+	it('should now have one event with Genre = "Other"', async () => {
 		const res = await request(app).get('/api/events?genre=other')
 		expect(res.body.results).toHaveLength(1);
 	});
 
-	it('should now have no events with Genre = "Alternative', async () => {
+	it('should now have no events with Genre = "Alternative"', async () => {
 		const res = await request(app).get('/api/events?genre=alternative')
+		expect(res.body.results).toHaveLength(0);
+	});
+
+	it('should now have no events with Genre = "fakegenre"', async () => {
+		const res = await request(app).get('/api/events?genre=fakegenre')
 		expect(res.body.results).toHaveLength(0);
 	});
 
@@ -286,6 +416,101 @@ describe('Events API', () => {
 		expect(res.body.events[0].user_id).toBe(2);
 		expect(res.body.events[0].genre).toBe('Alternative');
 	})
+
+		it('should not create an event without a title', async () => {
+		const res = await request(app).post('/api/events')
+			.set('authorization', `Bearer: ${ token }`)
+			.send({description: "An event for testing",
+				image_url: "",
+				event_time: "",
+				location: "Test Location",
+				venue: "Test Venue",
+				genre: "Other",
+				user_id: 2
+			});
+		expect(res.status).toBe(500);
+	});
+
+	it('should not create an event without a token', async () => {
+		const res = await request(app).post('/api/events')
+			.send({ title: "Testing Event",
+				description: "An event for testing",
+				image_url: "",
+				event_time: "",
+				location: "Test Location",
+				venue: "Test Venue",
+				genre: "Other",
+				user_id: 2
+			});
+		expect(res.status).toBe(401);
+	})
+
+	// it does
+	// it('should not create an event with an invalid token', async () => {
+	// 	const res = await request(app).post('/api/events')
+	// 		.set('authorization', `Bearer: ${ badToken }`)
+	// 		.send({ title: "Testing Event",
+	// 			description: "An event for testing",
+	// 			image_url: "",
+	// 			event_time: "",
+	// 			location: "Test Location",
+	// 			venue: "Test Venue",
+	// 			genre: "Other",
+	// 			user_id: 2
+	// 		});
+	// 	expect(res.status).toBe(201);
+	// 	const res2 = await request(app).get('/api/events/2')
+	// 	expect(res2.body.event.id).toBe(1);
+	// 	expect(res2.body.event.user_id).toBe(2);
+	// 	expect(res2.body.event.genre).toBe("Other")
+	// })
+
+	it('should not edit the test event without a token', async () => {
+		const res = await request(app).put('/api/events/1')
+			.send({ title: "Bad Value",
+				description: "Bad Value",
+				image_url: "Bad Value",
+				event_time: "Bad Value",
+				location: "Bad Value",
+				venue: "Bad Value",
+				genre: "Bad Value",
+			});
+		expect(res.status).toBe(401);
+		const res2 = await request(app).get('/api/events/1')
+		expect(res2.body.event.id).toBe(1);
+		expect(res2.body.event.user_id).toBe(2);
+		expect(res2.body.event.title).toBe("Testing Event");
+		expect(res2.body.event.description).toBe("An event for testing");
+		expect(res2.body.event.image_url).toBe("");
+		expect(res2.body.event.event_time).toBe(null);
+		expect(res2.body.event.location).toBe("Test Location");
+		expect(res2.body.event.venue).toBe("Test Venue");
+		expect(res2.body.event.genre).toBe("Alternative");
+	})
+
+	it('should not edit the test event with an invalid token', async () => {
+		const res = await request(app).put('/api/events/1')
+			.set('authorization', `Bearer: ${ badToken }`)
+			.send({ title: "Bad Value",
+				description: "Bad Value",
+				image_url: "Bad Value",
+				event_time: "Bad Value",
+				location: "Bad Value",
+				venue: "Bad Value",
+				genre: "Bad Value",
+			});
+		expect(res.status).toBe(403);
+		const res2 = await request(app).get('/api/events/1')
+		expect(res2.body.event.id).toBe(1);
+		expect(res2.body.event.user_id).toBe(2);
+		expect(res2.body.event.title).toBe("Testing Event");
+		expect(res2.body.event.description).toBe("An event for testing");
+		expect(res2.body.event.image_url).toBe("");
+		expect(res2.body.event.event_time).toBe(null);
+		expect(res2.body.event.location).toBe("Test Location");
+		expect(res2.body.event.venue).toBe("Test Venue");
+		expect(res2.body.event.genre).toBe("Alternative");
+	})
 })
 
 describe('Faves API', () => {
@@ -331,6 +556,21 @@ describe('Faves API', () => {
 			});
 		expect(res.status).toBe(500);
 	})
+
+	// it does
+	// it('should not create a nonsense fave', async () => {
+	// 	const res = await request(app).post('/api/users/me/faves')
+	// 		.set('authorization', `Bearer: ${ token }`)
+	// 		.send({
+	// 			event: 999,
+	// 			user_id: 2
+	// 		});
+	// 	const res2 = await request(app).get('/api/users/me/faves')
+	// 		.set('authorization', `Bearer: ${ token }`)
+	// 	expect(res2.status).toBe(200);
+	// 	console.log(res2.body)
+	// 	expect(res.status).toBe(500);
+	// })
 })
 
 describe('Attending API', () => {

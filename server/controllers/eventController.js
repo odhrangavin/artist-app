@@ -69,7 +69,7 @@ const editEvent = (req, res) => {
 				return res.status(500).json({ error: 'Database error' });
 			}
 			if (this.changes === 0) {
-            	return res.status(404).json({ error: 'Event not found or you are not the owner' });
+            	return res.status(403).json({ error: 'Event not found or you are not the owner' });
         	}
 			res.json({ success: true, message: "Event updated." });
 		}
