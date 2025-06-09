@@ -17,7 +17,7 @@ const mockAxiosFavesFullUser2 =  [
     faves_user_id: 2,
     genre: 'Football',
     id: 1,
-    image_url: 'image_url',
+    image_url: null,
     location: 'Cork',
     suspended: null,
     title: 'Event2',
@@ -53,7 +53,7 @@ const mockAxiosFavesFullUser3 =  [{ // User 3 liked event 2
   faves_user_id: 3,
   genre: 'Football',
   id: 2,
-  image_url: 'image_url',
+  image_url: null,
   location: 'Cork',
   suspended: null,
   title: 'Event2',
@@ -90,7 +90,7 @@ export function currentUser(user) {
 // Create empty mocks for API axios
 const mockAxios = {
   get:  vi.fn((url) => {
-    if(url === '/events') {
+    if (url === '/events') {
       return Promise.resolve({
         data: {
           results: [
@@ -102,7 +102,7 @@ const mockAxios = {
               external_id: null,
               genre: 'Football',
               id: 1,
-              image_url: 'image_url',
+              image_url: 'http://localhost/test.png',
               location: 'Dublin',
               suspended: 1,
               title: 'Event1',
@@ -113,11 +113,11 @@ const mockAxios = {
               created_at: '2025-01-01T14:36:58.522Z',
               description: null,
               event_date: `${nextYear}-03-10`,
-              event_time: '30:00:00',
+              event_time: '24:00:00',
               external_id: 'a',
               genre: 'Football',
               id: 2,
-              image_url: 'image_url',
+              image_url: null,
               location: 'Cork',
               suspended: null,
               title: 'Event2',
@@ -144,7 +144,67 @@ const mockAxios = {
       });
     }
 
-    if(url === '/users/me/faves') {
+    if (url === '/events/1') {
+      return Promise.resolve({
+        data: {
+          event: { // Event 1
+              created_at: '2024-12-19T14:36:58.522Z',
+              description: 'Description 1',
+              event_date: `${nextYear}-01-01`,
+              event_time: '00:30',
+              external_id: null,
+              genre: 'Football',
+              id: 1,
+              image_url: 'http://localhost/test.png',
+              location: 'Dublin',
+              suspended: 1,
+              title: 'Event1',
+              user_id: 2,
+              venue: 'Venue1'
+          }
+        },
+      });
+    }
+
+    if (url === '/events/2') {
+      return Promise.resolve({
+        data: {
+          event: { // Event 2
+              created_at: '2025-01-01T14:36:58.522Z',
+              description: null,
+              event_date: `${nextYear}-03-10`,
+              event_time: '24:00:00',
+              external_id: 'a',
+              genre: 'Football',
+              id: 2,
+              image_url: null,
+              location: 'Cork',
+              suspended: null,
+              title: 'Event2',
+              user_id: 1,
+              venue: 'Venue2'
+            }
+        },
+      });
+    }
+
+    if (url === '/events/1/attendance') {
+      return Promise.resolve({
+        data: {
+          attendance: 0
+        },
+      });
+    }
+
+    if (url === '/events/2/attendance') {
+      return Promise.resolve({
+        data: {
+          attandance: 3
+        },
+      });
+    }
+
+    if (url === '/users/me/faves') {
       let responseData;
 
       switch (currentUser()) { 
@@ -184,7 +244,7 @@ const mockAxios = {
       }});
     }
     
-    if(url === '/users/me/faves/full') {
+    if (url === '/users/me/faves/full') {
       let responseData;
 
       switch (currentUser()) {      

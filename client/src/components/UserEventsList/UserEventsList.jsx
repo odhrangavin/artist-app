@@ -7,6 +7,7 @@ import Pagination from "./Pagination";
 import { HeartButton } from "../../pages/Dashboard/HeartButton";
 import { AttendingButton } from "../../pages/Dashboard/AttendingButton";
 import { useAuth } from '../../context/AuthContext';
+import EventImage from "./EventImage";
 
 
 // Helper to extract dropdown options from all events (not filtered!)
@@ -187,30 +188,11 @@ export default function UserEventList() {
 							) : (
 								displayedEvents.map((e) => (
 									<li key={e.id} className="event-card">
-										{e.image_url && (
-											<div style={{ position: "relative", display: "inline-block" }}>
-												{!!e.suspended && (
-													<div style={{
-														position: "absolute",
-														top: 10,
-														left: "50%",
-														transform: "translateX(-50%)",
-														background: "#c00",
-														color: "#fff",
-														fontWeight: "bold",
-														fontSize: "1.3em",
-														padding: "0.3em 1.2em",
-														borderRadius: 8,
-														zIndex: 2,
-														opacity: 0.92,
-														boxShadow: "0 2px 8px rgba(0,0,0,0.15)"
-													}}>
-														Suspended
-													</div>
-												)}	
-												<img src={e.image_url} alt={e.title} className="event-image" />
-											</div>
-										)}
+										<EventImage 
+											imageUrl={e.image_url} 
+											eventTitle={e.title} 
+											suspended={!!e.suspended}
+										/>
 										<h3>{e.title}</h3>
 										<p>
 											<strong>Date/Time:</strong> {e.event_date} {e.event_time}

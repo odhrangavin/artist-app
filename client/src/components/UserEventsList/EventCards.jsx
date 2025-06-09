@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"; // For navigation
 import { useAuth } from '../../context/AuthContext';
 import { HeartButton } from '../../pages/Dashboard/HeartButton';
 import { AttendingButton } from "../../pages/Dashboard/AttendingButton";
+import EventImage from "./EventImage";
 
 
 // Component to show the current user's events using /users/me/events/
@@ -29,32 +30,11 @@ function EventCards(props) {
       <ul className="event-grid">
         {events.map(ev => (
           <li key={ev.id} className="event-card">
-            {ev.image_url && (
-              <div style={{ position: "relative", display: "inline-block" }}>
-                {!!ev.suspended && (
-                  <div style={{
-                    position: "absolute",
-                    top: 10,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    background: "#c00",
-                    color: "#fff",
-                    fontWeight: "bold",
-                    fontSize: "1.3em",
-                    padding: "0.3em 1.2em",
-                    borderRadius: 8,
-                    zIndex: 2,
-                    opacity: 0.92,
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.15)"
-                  }}>
-                    Suspended
-                  </div>
-                )}
-                <img src={ev.image_url} alt={ev.title}
-                  style={{ maxWidth: 220, maxHeight: 130, borderRadius: 6 }}
-                />
-              </div>
-            )}
+            <EventImage 
+              imageUrl={ev.image_url} 
+              eventTitle={ev.title} 
+              suspended={!!ev.suspended}
+            />
             <h4>{ev.title}</h4>
             <p className="event-description">
               {(ev.description || "No description available").length > 180
