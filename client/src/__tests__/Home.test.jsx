@@ -81,7 +81,7 @@ describe('Events in Home page when user not logged in', () => {
     await waitFor(() => { // Required by warnings
       renderWithRouter();
     })
-  })
+  });
 
   it('User not logged in should only see the events and detail', async () => {
     // Get page elements
@@ -114,9 +114,7 @@ describe('Events in Home page when user not logged in', () => {
     ) {  
       expect(button).toHaveLength(0);
     }
-    
-
-  })
+  });
 
   it('User not logged in should be able to go to event detail', async () => {
     const { viewEventLinks } = await getHomeElements();
@@ -129,7 +127,7 @@ describe('Events in Home page when user not logged in', () => {
   
     
     
-  }) 
+  });
 
   it('User not logged in should be able to filter events', async () => {
     const { selectGenre, buttonClear, buttonSearch } = await getHomeElements();
@@ -183,7 +181,7 @@ describe('Events in Home page when user not logged in', () => {
     expect(button).toBeInTheDocument();
     }
   )
-})
+});
 
 
 describe('Events in Home page when user is an organizer', () => {
