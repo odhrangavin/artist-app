@@ -11,27 +11,27 @@ export default function Dashboard() {
 	const { user, isLoggedIn } = useAuth();
 
 	function renderMain() {
-			if (typeof currentSection === "string") {
-				if (currentSection === "create") return <DashboardCreateEvent />;
-				if (currentSection === "my-events") {
-					return <DashboardMyEvents onEditEvent={id => setCurrentSection({ type: "edit", eventId: id })} />;
-				}
-				if (currentSection === "favorites") return <DashboardFavorites />;
+		if (typeof currentSection === "string") {
+			if (currentSection === "create") return <DashboardCreateEvent />;
+			if (currentSection === "my-events") {
+				return <DashboardMyEvents onEditEvent={id => setCurrentSection({ type: "edit", eventId: id })} />;
 			}
-			if (currentSection && currentSection.type === "edit") {
-				return (
-					<DashboardEditEvent
-						eventId={currentSection.eventId}
-						onBack={() => setCurrentSection("my-events")}
-					/>
-				);
-			}
-			return null;
+			if (currentSection === "favorites") return <DashboardFavorites />;
+		}
+		if (currentSection && currentSection.type === "edit") {
+			return (
+				<DashboardEditEvent
+					eventId={currentSection.eventId}
+					onBack={() => setCurrentSection("my-events")}
+				/>
+			);
+		}
+		return null;
 	}
 
 	function MainSection() {
 		if (!isLoggedIn) return // To avoid error. Not logged users should be redirected by Protected component
-			 
+
 		if (user.role == "organizer") {
 			return (
 				<>
@@ -39,17 +39,16 @@ export default function Dashboard() {
 						currentSection={typeof currentSection === "string" ? currentSection : "my-events"}
 						onSectionChange={setCurrentSection}
 					/>
-					<main style={{ flex: 1, marginLeft: 24 }}>
+					<section className="dashboard-main">
 						{renderMain()}
-					</main>
+					</section>
 				</>
 			);
 		} else if (user.role == "attendee") {
 			return (
-			<main style={{ flex: 1, marginLeft: 24 }}>
 				<DashboardFavorites />
-			</main>
-		);} else {
+			);
+		} else {
 			return <p>Are you an organizer or an attendee?</p>;
 		}
 	}

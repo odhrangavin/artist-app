@@ -11,6 +11,11 @@
   gap: 1.5rem;
 }
 
+.dashboard-main {
+  flex: 1;
+  margin-left: 24px;
+}
+
 .dashboard-sidebar {
   height: 10rem;
   background-color: #1a1a1a;
@@ -280,10 +285,15 @@
   }
   .dashboard-sidebar {
     height: auto; /* Full width on smaller screens */
+    padding: 0;
   }
   .dashboard-sidebar .sidebar-list {
     display: flex;
     padding: 0;
+  }
+  .dashboard-sidebar .sidebar-list li {
+    margin-bottom: 0; /* Remove bottom margin for list items */
+    margin-top: 0.5rem; /* Add top margin for spacing */
   }
 }
 @media screen and (max-width: 768px) {

@@ -187,7 +187,7 @@ export default function DashboardCreateEvent() {
     };
 
     return (
-        <section className="dashboard-create-event">
+        <div className="dashboard-create-event">
             <div className="dashboard-container">
                 <form className="event-form" onSubmit={handleSubmit} autoComplete="off">
                     <h3>Create Your Event</h3>
@@ -274,6 +274,6 @@ export default function DashboardCreateEvent() {
                     )}
                 </div>
             </div>
-        </section>
+        </div>
     );
 }

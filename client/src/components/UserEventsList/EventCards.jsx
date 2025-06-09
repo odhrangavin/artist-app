@@ -23,7 +23,7 @@ function EventCards(props) {
   if (!events.length) return <div>{noEvent || 'No events posted yet.'}</div>;
 
   return (
-    <section className="user-events-list">
+    <div className="user-events-list">
       <h3>{title}</h3>
       <ul className="event-grid">
         {events.map(ev => (
@@ -89,7 +89,7 @@ function EventCards(props) {
           </li>
         ))}
       </ul>
-    </section>
+    </div>
   );
 }
 

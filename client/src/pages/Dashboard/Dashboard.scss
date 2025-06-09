@@ -15,6 +15,11 @@
   }
 }
 
+.dashboard-main {
+  flex: 1;
+  margin-left: 24px;
+}
+
 .dashboard-sidebar {
   $accent-color: #00ff9d;
   $hover-transition: all 0.3s ease;
@@ -308,10 +313,16 @@
   }
   .dashboard-sidebar {
     height: auto; /* Full width on smaller screens */
+    padding: 0;
 
     .sidebar-list{
       display: flex;
       padding: 0;
+
+      li{
+        margin-bottom: 0; /* Remove bottom margin for list items */
+        margin-top: 0.5rem; /* Add top margin for spacing */
+      }
     }
   }
 }
