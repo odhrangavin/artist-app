@@ -609,13 +609,11 @@ describe('Auth Controller Tests', () => {
 			});
 		let resetToken = res.body;
 		expect(res.body).toMatch('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
-		console.log("here")
 		const res2 = await request(app).post('/api/users/password-reset')
 			.send({
 				token: resetToken,
 				newPassword: 'new password'
 			});
-		console.log("there")
 		expect(res2.status).toBe(200)
 	})
 })
