@@ -29,9 +29,9 @@ async function getEditEventElements() {
 
   const buttonCreateEvent = await screen.findByRole('button', {name: /create event/i});
   const allMyEventsButton = await screen.findByRole('button', {name: /all my events/i});
-  const favorites = await screen.findByRole('button', {name: /favorites/i});
+  const favourites = await screen.findByRole('button', {name: /favourites/i});
   const pageHeader = await screen.findByText(/edit event/i);
-  const eventImg = await screen.findByRole('img', {name: /Event1/i});
+  const eventImg = await screen.findAllByRole('img', {name: /Event1/i}); // Edit and preview img
   const fieldTitle = await screen.findByRole('textbox', {name: /title/i});
   const fieldImgUrl = await screen.findByRole('textbox', {name: /image url/i}); // upload file?
   // const fieldImgUpload = await screen.findByLabelText(/or upload image/i);
@@ -45,7 +45,7 @@ async function getEditEventElements() {
   const buttonBackToMyEvent = await screen.findByRole('button', {name: /back to my events/i});
   
   return {
-    sideMenu: [buttonCreateEvent, allMyEventsButton, favorites],
+    sideMenu: [buttonCreateEvent, allMyEventsButton, favourites],
     pageHeader, eventImg, fieldTitle, fieldImgUrl, fieldDateTime,
     fieldLocation, fieldVenue, fieldGenre, fieldDescription, buttonUpdateEvent,
     buttonUnsuspendEvent, buttonBackToMyEvent
@@ -83,7 +83,7 @@ describe(`Create Event when user is organizer`, () => {
     // Check elements
     sideMenu.forEach(buttonMenu => expect(buttonMenu).toBeInTheDocument());
     expect(pageHeader).toBeInTheDocument();
-    expect(eventImg).toBeInTheDocument();
+    expect(eventImg).toHaveLength(2);
     [fieldTitle, fieldImgUrl, fieldDateTime, fieldLocation, fieldVenue, 
     fieldGenre, fieldDescription].forEach(field => {
       expect(field).toBeInTheDocument();

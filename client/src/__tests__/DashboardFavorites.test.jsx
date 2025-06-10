@@ -29,7 +29,7 @@ vi.mock('../context/AuthContext', async () => {
 async function getFavoriteElements() {
   const createEventButton = await screen.findByRole('button', {name: /create event/i});
   const allMyEventsButton = await screen.findByRole('button', {name: /all my events/i});
-  const favorites = await screen.findByRole('button', {name: /favorites/i});
+  const favourites = await screen.findByRole('button', {name: /favourites/i});
   const imgs = await screen.findAllByRole('img', {name: /event.*/i});
   
   const dateTimeTitles = await screen.findAllByText('Date/Time:');
@@ -39,7 +39,7 @@ async function getFavoriteElements() {
   const viewEventButtons = await screen.findAllByRole('button', {name: /view event/i});
   
   return {
-    sideMenu: [createEventButton, allMyEventsButton, favorites],
+    sideMenu: [createEventButton, allMyEventsButton, favourites],
     titles: [dateTimeTitles, cityTitles, venueTitles, genreTitles], 
     viewEventButtons, imgs
   }
@@ -73,8 +73,8 @@ describe(`Favorite Events when user is organizer`, () => {
       renderWithRouter('/dashboard');
     })
 
-    // Go to favorite events
-    const favoriteEventsButton = await screen.findByRole('button', {name: /favorites/i});
+    // Go to favourite events
+    const favoriteEventsButton = await screen.findByRole('button', {name: /favourites/i});
     await userEvent.click(favoriteEventsButton);
 
   })

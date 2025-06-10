@@ -28,7 +28,7 @@ vi.mock('../context/AuthContext', async () => {
 async function getAllMyEventsElements() {
   const createEventButton = await screen.findByRole('button', { name: /create event/i });
   const allMyEventsButton = await screen.findByRole('button', { name: /all my events/i });
-  const favorites = await screen.findByRole('button', { name: /favorites/i });
+  const favourites = await screen.findByRole('button', { name: /favourites/i });
   const img = await screen.findByRole('img', { name: /event1/i });
   const fave = await screen.findByRole('img', { name: /add to favourites/i });
   const dateTimeTitle = await screen.findByText('Date/Time:');
@@ -40,7 +40,7 @@ async function getAllMyEventsElements() {
   const suspended = await screen.findByText('Suspended');
 
   return {
-    sideMenu: [createEventButton, allMyEventsButton, favorites],
+    sideMenu: [createEventButton, allMyEventsButton, favourites],
     titles: [dateTimeTitle, cityTitle, venueTitle, genreTitle],
     viewEventButton, editEventButton, suspended, img, fave
   }

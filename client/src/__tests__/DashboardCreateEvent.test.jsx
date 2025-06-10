@@ -28,7 +28,7 @@ vi.mock('../context/AuthContext', async () => {
 async function getCreateEventElements() {
 
   const allMyEventsButton = await screen.findByRole('button', {name: /all my events/i});
-  const favorites = await screen.findByRole('button', {name: /favorites/i});
+  const favourites = await screen.findByRole('button', {name: /favourites/i});
   const pageHeader = screen.getByText(/create your event/i)
   const fieldTitle = await screen.findByRole('textbox', {name: /title/i});
   const fieldImgUrl = await screen.findByRole('textbox', {name: /image url/i});
@@ -41,7 +41,7 @@ async function getCreateEventElements() {
   const buttonsCreateEvent = await screen.findAllByRole('button', {name: /create event/i});
   
   return {
-    sideMenu: [allMyEventsButton, favorites],
+    sideMenu: [allMyEventsButton, favourites],
     pageHeader, fieldTitle, fieldImgUrl, fieldImgUpload, fieldDateTime,
     fieldLocation, fieldVenue, fieldGenre, fieldDescription, buttonsCreateEvent
   }

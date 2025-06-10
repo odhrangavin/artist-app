@@ -24,8 +24,7 @@ export default function DashboardSidebar({ currentSection, onSectionChange }) {
 							className={currentSection === "favorites" ? "active" : ""}
 							onClick={() => onSectionChange("favorites")}
 						>
-							Favorites
-							{/* TODO Favourites instead */}
+							Favourites
 						</button>
 					</li>
 				</ul>
