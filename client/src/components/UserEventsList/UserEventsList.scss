@@ -19,7 +19,6 @@
   }
 }
 
-
 .suspended-badge{
   position: absolute;
   top: 10px;
@@ -104,7 +103,7 @@
     gap: 0.5rem;
     margin-top: 1rem;
   }
-  
+
   .event-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -141,8 +140,9 @@
         justify-content: center;
         align-items: center;
         margin-top: auto;
-
+        
         a {
+          color: #646cff;
           text-decoration: none;
           border-radius: 8px;
           border: 1px solid transparent;

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import API from "../../api/api";
 import { EventPreview } from "./DashboardCreateEvent";
+import "./Dashboard.scss";
 
 export default function DashboardEditEvent({ eventId, onBack }) {
     const [form, setForm] = useState(null);
@@ -38,7 +39,7 @@ export default function DashboardEditEvent({ eventId, onBack }) {
                 const event = res.data.event;
                 event.event_time = makeDateTimeLocal(event.event_date, event.event_time);
                 setForm(event);
-                setImagePreview(""); // no preview for now
+                setImagePreview("");
                 setImageFile(null);
                 if (fileInputRef.current) fileInputRef.current.value = "";
             } catch {
@@ -118,7 +119,6 @@ export default function DashboardEditEvent({ eventId, onBack }) {
         }
     }
 
-    // --- SUSPEND/UNSUSPEND LOGIC ---
     async function handleSuspendToggle() {
         if (!form) return;
         setSuspendLoading(true);
@@ -140,121 +140,105 @@ export default function DashboardEditEvent({ eventId, onBack }) {
     if (!form) return null;
 
     return (
-        <section className="event-edit-section">
+        <div className="event-edit-section">
             <h2>Edit Event</h2>
             {!!form.suspended && (
-                <div style={{
-                    background: "#c00", color: "#fff", fontWeight: "bold",
-                    fontSize: "2em", padding: "0.3em 0.8em", borderRadius: 8,
-                    marginBottom: "1em", textAlign: "center"
-                }}>
-                    Suspended
+                <div className="event-edit-suspended">
+                    <p></p>
+                    Your Event has been Suspended !!!
                 </div>
             )}
 
-            <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 20 }}>
-                {(imagePreview || form.image_url) && (
-                    <div style={{ position: "relative", display: "inline-block" }}>
-                        {!!form.suspended && (
-                            <div style={{
-                                position: "absolute",
-                                top: 10,
-                                left: "50%",
-                                transform: "translateX(-50%)",
-                                background: "#c00",
-                                color: "#fff",
-                                fontWeight: "bold",
-                                fontSize: "1.5em",
-                                padding: "0.3em 1.2em",
-                                borderRadius: 8,
-                                zIndex: 2,
-                                opacity: 0.92,
-                                boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-                                pointerEvents: "none"
-                            }}>
-                                Suspended
-                            </div>
-                        )}
-                        <img
-                            className="event-detail-image"
-                            src={imagePreview || form.image_url}
-                            alt={form.title}
-                            style={{ maxWidth: 260, borderRadius: 8 }}
+            <div className="event-edit-flex">
+                {/* Left: Form */}
+                <form
+                    className="event-form"
+                    onSubmit={handleSubmit}
+                    onDragOver={e => { e.preventDefault(); e.stopPropagation(); }}
+                    onDrop={e => {
+                        e.preventDefault(); e.stopPropagation();
+                        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                            handleImageDrop(e.dataTransfer.files[0]);
+                        }
+                    }}
+                >
+                    <label>Title
+                        <input name="title" value={form.title || ""} onChange={handleChange} required maxLength={60} />
+                    </label>
+                    <label>Image URL
+                        <input name="image_url" value={form.image_url || ""} onChange={handleChange} />
+                    </label>
+                    <label>
+                        Or upload image:
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
                         />
-                    </div>
-                )}
-            </div>
-            <form className="event-form" onSubmit={handleSubmit}
-                onDragOver={e => { e.preventDefault(); e.stopPropagation(); }}
-                onDrop={e => {
-                    e.preventDefault(); e.stopPropagation();
-                    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-                        handleImageDrop(e.dataTransfer.files[0]);
-                    }
-                }}
-            >
-                <label>Title
-                    <input name="title" value={form.title || ""} onChange={handleChange} required maxLength={60} />
-                </label>
-                <label>Image URL
-                    <input name="image_url" value={form.image_url || ""} onChange={handleChange} />
-                </label>
-                <label>
-                    Or upload image:
-                    <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        style={{ marginTop: 8, marginBottom: 8 }}
-                    />
-                    {imageFile && (
-                        <span style={{ display: "inline-flex", alignItems: "center", marginLeft: 8 }}>
-                            <span style={{ color: "#2474e5", fontWeight: 500, marginRight: 4 }}>
-                                {imageFile.name}
+                        {imageFile && (
+                            <span className="event-edit-filename">
+                                <span>{imageFile.name}</span>
+                                <button
+                                    type="button"
+                                    aria-label="Remove attached image"
+                                    onClick={handleClearImage}
+                                    className="event-edit-remove-img-btn"
+                                >
+                                    ×
+                                </button>
                             </span>
-                            <button
-                                type="button"
-                                aria-label="Remove attached image"
-                                onClick={handleClearImage}
-                                style={{
-                                    background: "none",
-                                    border: "none",
-                                    color: "#c00",
-                                    fontWeight: "bold",
-                                    fontSize: "1.3em",
-                                    cursor: "pointer"
-                                }}
-                            >
-                                ×
-                            </button>
-                        </span>
+                        )}
+                    </label>
+                    <label>Date & Time
+                        <input
+                            name="event_time"
+                            type="datetime-local"
+                            value={form.event_time}
+                            min={getNowLocalISO()}
+                            onChange={handleChange}
+                            required
+                        />
+                    </label>
+                    <label>Location
+                        <input name="location" value={form.location || ""} onChange={handleChange} required />
+                    </label>
+                    <label>Venue
+                        <input name="venue" value={form.venue || ""} onChange={handleChange} required />
+                    </label>
+                    <label>Genre
+                        <input name="genre" value={form.genre || ""} onChange={handleChange} required />
+                    </label>
+                    <label>Description
+                        <textarea name="description" value={form.description || ""} onChange={handleChange} required rows="4" maxLength={400} />
+                    </label>
+
+                    <button type="submit" className="event-submit-btn">Update Event</button>
+                    {success && <div className="success">{success}</div>}
+                    {error && <div className="error">{error}</div>}
+                    <button
+                        className="event-action-btn"
+                        onClick={handleSuspendToggle}
+                        disabled={suspendLoading}
+                        type="button"
+                        style={{
+                            background: form.suspended ? "#999" : "#c00",
+                            color: "#fff",
+                            fontWeight: "bold"
+                        }}
+                    >
+                        {form.suspended ? "Unsuspend Event" : "Suspend Event"}
+                    </button>
+                    <button className="event-action-btn" onClick={onBack} type="button">Back to My Events</button>
+                </form>
+
+                {/* Right: Preview */}
+                <div className="event-edit-preview-panel">
+                    {!!form.suspended && (
+                        <div className="event-preview-suspended-banner">
+                            Suspended
+                        </div>
                     )}
-                </label>
-                <label>Date & Time
-                    <input
-                        name="event_time"
-                        type="datetime-local"
-                        value={form.event_time}
-                        min={getNowLocalISO()}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-                <label>Location
-                    <input name="location" value={form.location || ""} onChange={handleChange} required />
-                </label>
-                <label>Venue
-                    <input name="venue" value={form.venue || ""} onChange={handleChange} required />
-                </label>
-                <label>Genre
-                    <input name="genre" value={form.genre || ""} onChange={handleChange} required />
-                </label>
-                <label>Description
-                    <textarea name="description" value={form.description || ""} onChange={handleChange} required rows="4" maxLength={400} />
-                </label>
-                {/* Live event preview */}
-                <div style={{ margin: "1.5em 0" }}>
                     <EventPreview
                         event={{ ...form, image_url: form.image_url }}
                         imagePreview={imagePreview}
@@ -262,24 +246,7 @@ export default function DashboardEditEvent({ eventId, onBack }) {
                         onImageDrop={handleImageDrop}
                     />
                 </div>
-                <button type="submit" className="event-submit-btn">Update Event</button>
-                {success && <div className="success">{success}</div>}
-                {error && <div className="error">{error}</div>}
-            </form>
-            <button
-                className="event-action-btn"
-                onClick={handleSuspendToggle}
-                disabled={suspendLoading}
-                style={{
-                    margin: "1em 0",
-                    background: form.suspended ? "#999" : "#c00",
-                    color: "#fff",
-                    fontWeight: "bold"
-                }}
-            >
-                {form.suspended ? "Unsuspend Event" : "Suspend Event"}
-            </button>
-            <button className="event-action-btn" onClick={onBack}>Back to My Events</button>
-        </section>
+            </div>
+        </div>
     );
 }
