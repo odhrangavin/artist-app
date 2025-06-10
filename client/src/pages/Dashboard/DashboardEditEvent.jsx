@@ -2,6 +2,14 @@ import { useState, useEffect, useRef } from "react";
 import API from "../../api/api";
 import { EventPreview } from "./DashboardCreateEvent";
 
+const genres = [
+    "Alternative", "Blues", "Children's Theatre", "Circus & Specialty Acts", "Classical", "Comedy",
+    "Community/Civic", "Country", "Dance", "Dance/Electronic", "Equestrian", "Fairs & Festivals", "Family",
+    "Fitness", "Folk", "Football", "Hip-Hop/Rap", "Jazz", "Latin", "Lecture/Seminar", "Metal", "Miscellaneous",
+    "Miscellaneous Theatre", "Music", "Pop", "R&B", "Reggae", "Rock", "Rugby", "Soccer", "Theatre",
+    "Variety", "World", "Wrestling", "Other"
+];
+
 export default function DashboardEditEvent({ eventId, onBack }) {
     const [form, setForm] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -248,7 +256,11 @@ export default function DashboardEditEvent({ eventId, onBack }) {
                     <input name="venue" value={form.venue || ""} onChange={handleChange} required />
                 </label>
                 <label>Genre
-                    <input name="genre" value={form.genre || ""} onChange={handleChange} required />
+                    <select name="genre" value={form.genre || ""} onChange={handleChange} required>
+                        {genres.map((g) => (
+                            <option key={g} value={g}>{g}</option>
+                        ))}
+                    </select>
                 </label>
                 <label>Description
                     <textarea name="description" value={form.description || ""} onChange={handleChange} required rows="4" maxLength={400} />
