@@ -1,16 +1,10 @@
-import { findByRole, render, screen, waitFor, within } from '@testing-library/react';
-import { describe, it, expect, test, beforeEach, beforeAll, afterAll } from 'vitest';
-import { BrowserRouter, Link } from 'react-router-dom';
-import userEvent from '@testing-library/user-event';
+import { screen, waitFor } from '@testing-library/react';
+import { describe, it, expect, beforeEach, beforeAll, afterAll } from 'vitest';
 import { vi } from 'vitest';
-import mockAxios, { currentUser } from './__mocks__/axios.js';
-import API from '../api/api.js'
-import { AuthProvider } from '../context/AuthContext.jsx';
-import renderWithRouter from './testUtils.jsx';
-import App from '../App.jsx';
-import { mockUseAuthLoggedInO, mockUseAuthLoggedInA, 
-  mockUseAuthNotLoggedIn, mockLogout } from './__mocks__/authContext.js';
-import { act } from 'react';
+import mockAxios from './__mocks__/axios.js';
+import renderWithRouter from './testUtils.jsx';;
+import { mockUseAuthLoggedInO } from './__mocks__/authContext.js';
+
 
 /*  == SET UP MOCKS == */
 // Replaces Axios by a mock
@@ -55,8 +49,6 @@ async function getCreateEventElements() {
 
 const getToken = () => localStorage.setItem('token', 'fake-jwt-token');
 
-const testYear = new Date().getFullYear() + 1;
-
 /* == TESTS == */
 describe(`Create Event when user is organizer`, () => {
 
@@ -68,7 +60,6 @@ describe(`Create Event when user is organizer`, () => {
     })
 
   })
-
 
   it(`Create Events: Side bar, create event fields and button should appear`, async () => {
 

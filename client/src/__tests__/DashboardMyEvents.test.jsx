@@ -1,16 +1,10 @@
-import { findByRole, render, screen, waitFor, within } from '@testing-library/react';
-import { describe, it, expect, test, beforeEach, beforeAll, afterAll } from 'vitest';
-import { BrowserRouter, Link } from 'react-router-dom';
+import { screen, waitFor } from '@testing-library/react';
+import { describe, it, expect, beforeEach, beforeAll, afterAll } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
-import mockAxios, { currentUser } from './__mocks__/axios.js';
-import API from '../api/api.js'
-import { AuthProvider } from '../context/AuthContext.jsx';
+import mockAxios from './__mocks__/axios.js';
 import renderWithRouter from './testUtils.jsx';
-import App from '../App.jsx';
-import { mockUseAuthLoggedInO, mockUseAuthLoggedInA, 
-  mockUseAuthNotLoggedIn, mockLogout } from './__mocks__/authContext.js';
-import { act } from 'react';
+import { mockUseAuthLoggedInO } from './__mocks__/authContext.js';
 
 /*  == SET UP MOCKS == */
 // Replaces Axios by a mock
@@ -72,7 +66,6 @@ describe(`All My Events when user is organizer`, () => {
 
   })
 
-
   it(`All My Events: Side bar, event 1, and edition buttons should appear`, async () => {
 
     // Check elements
@@ -86,7 +79,6 @@ describe(`All My Events when user is organizer`, () => {
     })
     
   })
-
   
   it(`All My Events: Event 1 content should appear`, async () => {
 
@@ -115,7 +107,6 @@ describe(`All My Events when user is organizer`, () => {
     expect(updateEventButton).toBeInTheDocument();
 
   });
-
 
   it(`All my events: Organizer should be able to go to Event Detail`, async () => {
 
