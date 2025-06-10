@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import API from "../../api/api";
+import { EventPreview } from "./DashboardCreateEvent";
 
 export default function DashboardEditEvent({ eventId, onBack }) {
     const [form, setForm] = useState(null);
@@ -7,6 +8,9 @@ export default function DashboardEditEvent({ eventId, onBack }) {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [suspendLoading, setSuspendLoading] = useState(false);
+    const [imageFile, setImageFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState('');
+    const fileInputRef = useRef(null);
 
     function getNowLocalISO() {
         const now = new Date();
@@ -22,7 +26,6 @@ export default function DashboardEditEvent({ eventId, onBack }) {
     function makeDateTimeLocal(date, time) {
         if (!date || !time) return '';
         if (time.includes('T')) return time;
-        // Handles if time is "17:00" or "17:00:00"
         return `${date}T${time.slice(0, 5)}`;
     }
 
@@ -35,6 +38,9 @@ export default function DashboardEditEvent({ eventId, onBack }) {
                 const event = res.data.event;
                 event.event_time = makeDateTimeLocal(event.event_date, event.event_time);
                 setForm(event);
+                setImagePreview(""); // no preview for now
+                setImageFile(null);
+                if (fileInputRef.current) fileInputRef.current.value = "";
             } catch {
                 setError("Failed to load event.");
             } finally {
@@ -47,15 +53,62 @@ export default function DashboardEditEvent({ eventId, onBack }) {
     function handleChange(e) {
         const { name, value } = e.target;
         setForm(prev => ({ ...prev, [name]: value }));
+        if (name === "image_url") {
+            setImageFile(null);
+            setImagePreview("");
+            if (fileInputRef.current) fileInputRef.current.value = "";
+        }
+    }
+
+    function handleImageChange(e) {
+        const file = e.target.files[0];
+        if (file) {
+            setImageFile(file);
+            setImagePreview(URL.createObjectURL(file));
+            setForm(prev => ({ ...prev, image_url: "" }));
+        }
+    }
+
+    function handleImageDrop(file) {
+        if (file && file.type.startsWith("image/")) {
+            setImageFile(file);
+            setImagePreview(URL.createObjectURL(file));
+            setForm(prev => ({ ...prev, image_url: "" }));
+            if (fileInputRef.current) fileInputRef.current.value = "";
+        }
+    }
+
+    function handleClearImage() {
+        setImageFile(null);
+        setImagePreview('');
+        if (fileInputRef.current) fileInputRef.current.value = "";
     }
 
     async function handleSubmit(e) {
         e.preventDefault();
         setError("");
         setSuccess("");
+
+        let imageUrlToSave = form.image_url;
+        if (imageFile) {
+            try {
+                const uploadData = new FormData();
+                uploadData.append('file', imageFile);
+                const res = await API.post('/upload', uploadData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                imageUrlToSave = res.data.url;
+            } catch {
+                setError('Image upload failed.');
+                return;
+            }
+        }
         try {
-            await API.put(`/events/${eventId}`, form);
+            await API.put(`/events/${eventId}`, { ...form, image_url: imageUrlToSave });
             setSuccess("Event updated!");
+            setImageFile(null);
+            setImagePreview('');
+            if (fileInputRef.current) fileInputRef.current.value = "";
             setTimeout(() => {
                 setSuccess("");
                 onBack();
@@ -100,7 +153,7 @@ export default function DashboardEditEvent({ eventId, onBack }) {
             )}
 
             <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 20 }}>
-                {form.image_url && (
+                {(imagePreview || form.image_url) && (
                     <div style={{ position: "relative", display: "inline-block" }}>
                         {!!form.suspended && (
                             <div style={{
@@ -124,19 +177,59 @@ export default function DashboardEditEvent({ eventId, onBack }) {
                         )}
                         <img
                             className="event-detail-image"
-                            src={form.image_url}
+                            src={imagePreview || form.image_url}
                             alt={form.title}
                             style={{ maxWidth: 260, borderRadius: 8 }}
                         />
                     </div>
                 )}
             </div>
-            <form className="event-form" onSubmit={handleSubmit}>
+            <form className="event-form" onSubmit={handleSubmit}
+                onDragOver={e => { e.preventDefault(); e.stopPropagation(); }}
+                onDrop={e => {
+                    e.preventDefault(); e.stopPropagation();
+                    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                        handleImageDrop(e.dataTransfer.files[0]);
+                    }
+                }}
+            >
                 <label>Title
                     <input name="title" value={form.title || ""} onChange={handleChange} required maxLength={60} />
                 </label>
                 <label>Image URL
                     <input name="image_url" value={form.image_url || ""} onChange={handleChange} />
+                </label>
+                <label>
+                    Or upload image:
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        style={{ marginTop: 8, marginBottom: 8 }}
+                    />
+                    {imageFile && (
+                        <span style={{ display: "inline-flex", alignItems: "center", marginLeft: 8 }}>
+                            <span style={{ color: "#2474e5", fontWeight: 500, marginRight: 4 }}>
+                                {imageFile.name}
+                            </span>
+                            <button
+                                type="button"
+                                aria-label="Remove attached image"
+                                onClick={handleClearImage}
+                                style={{
+                                    background: "none",
+                                    border: "none",
+                                    color: "#c00",
+                                    fontWeight: "bold",
+                                    fontSize: "1.3em",
+                                    cursor: "pointer"
+                                }}
+                            >
+                                ×
+                            </button>
+                        </span>
+                    )}
                 </label>
                 <label>Date & Time
                     <input
@@ -160,6 +253,15 @@ export default function DashboardEditEvent({ eventId, onBack }) {
                 <label>Description
                     <textarea name="description" value={form.description || ""} onChange={handleChange} required rows="4" maxLength={400} />
                 </label>
+                {/* Live event preview */}
+                <div style={{ margin: "1.5em 0" }}>
+                    <EventPreview
+                        event={{ ...form, image_url: form.image_url }}
+                        imagePreview={imagePreview}
+                        onClearImage={handleClearImage}
+                        onImageDrop={handleImageDrop}
+                    />
+                </div>
                 <button type="submit" className="event-submit-btn">Update Event</button>
                 {success && <div className="success">{success}</div>}
                 {error && <div className="error">{error}</div>}

@@ -10,22 +10,23 @@ export default function DashboardSidebar({ currentSection, onSectionChange }) {
 						>
 							Create Event
 						</button>
-				</li>
-				<li>
-					<button
-						className={currentSection === "my-events" ? "active" : ""}
-						onClick={() => onSectionChange("my-events")}
-					>
-						All My Events
-					</button>
-				</li>
-				<li>
-					<button
-						className={currentSection === "favorites" ? "active" : ""}
-						onClick={() => onSectionChange("favorites")}
-					>
-						Favorites
-					</button>
+					</li>
+					<li>
+						<button
+							className={currentSection === "my-events" ? "active" : ""}
+							onClick={() => onSectionChange("my-events")}
+						>
+							All My Events
+						</button>
+					</li>
+					<li>
+						<button
+							className={currentSection === "favorites" ? "active" : ""}
+							onClick={() => onSectionChange("favorites")}
+						>
+							Favorites
+							{/* TODO Favourites instead */}
+						</button>
 					</li>
 				</ul>
 			</nav>

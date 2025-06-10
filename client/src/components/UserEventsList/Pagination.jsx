@@ -49,6 +49,7 @@ export default function Pagination({ page, totalPages, onPageChange }) {
                 onClick={() => onPageChange(page - 1)}
                 disabled={page === 1}
                 aria-label="Previous page"
+                className="prev-button"
             >
                 &lt; Prev
             </button>
@@ -61,12 +62,10 @@ export default function Pagination({ page, totalPages, onPageChange }) {
                         onClick={() => onPageChange(num)}
                         disabled={num === page}
                         aria-label={`Page ${num}`}
+                        className="page-button"
                         style={{
                             background: num === page ? "#1a1a1a" : "#eee",
                             color: num === page ? "#fff" : "#222",
-                            border: "none",
-                            borderRadius: "4px",
-                            padding: "6px 12px",
                             fontWeight: num === page ? "bold" : "normal",
                             cursor: num === page ? "default" : "pointer"
                         }}
@@ -79,7 +78,7 @@ export default function Pagination({ page, totalPages, onPageChange }) {
                 onClick={() => onPageChange(page + 1)}
                 disabled={page === totalPages}
                 aria-label="Next page"
-                style={{ padding: "6px 10px" }}
+                className="next-button"
             >
                 Next &gt;
             </button>

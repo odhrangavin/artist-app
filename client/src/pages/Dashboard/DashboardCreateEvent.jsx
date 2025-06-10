@@ -24,7 +24,7 @@ function getNowLocalISO() {
 }
 
 
-function EventPreview({ event, imagePreview, onClearImage, onImageDrop }) {
+export function EventPreview({ event, imagePreview, onClearImage, onImageDrop }) {
     // if (!event.title && !event.description) return null;  //appear only when type title
     return (
         <div
@@ -99,6 +99,7 @@ export default function DashboardCreateEvent() {
     const [submitting, setSubmitting] = useState(false);
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
+    const [showPreview, setShowPreview] = useState(false);
 
     const handleChange = e => {
         const { name, value } = e.target;
@@ -261,11 +262,20 @@ export default function DashboardCreateEvent() {
                     </label>
                     <label htmlFor='description'>Description</label>
                     <textarea id="description" name="description" value={form.description} onChange={handleChange} required rows="4" maxLength={400} />
+                    {/* Show Preview Button for small screens */}
+                    <button
+                        type="button"
+                        className="show-preview-btn"
+                        onClick={() => setShowPreview(v => !v)}
+                    >
+                        {showPreview ? "Hide Preview" : "Show Preview"}
+                    </button>
+
                     <button type="submit" disabled={submitting} className="event-submit-btn">Create Event</button>
                     {error && <div className="error">{error}</div>}
                     {/* {success && <div className="success">{success}</div>} */}
                 </form>
-                <div className="event-preview-container">
+                <div className={`event-preview-container${showPreview ? " show" : ""}`}>
                     <EventPreview event={form} imagePreview={imagePreview} onClearImage={handleClearImage} onImageDrop={handleImageDrop} />
                     {success && (
                         <div style={{ marginTop: "1em", color: "#2474e5", fontWeight: 600, fontSize: "1.1em" }}>

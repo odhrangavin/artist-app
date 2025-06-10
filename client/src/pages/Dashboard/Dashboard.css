@@ -272,7 +272,18 @@
   color: #646cff;
 }
 
+@media screen and (min-width: 1201px) {
+  .event-preview-container {
+    display: block !important;
+  }
+  .event-form .show-preview-btn {
+    display: none !important;
+  }
+}
 @media screen and (max-width: 1200px) {
+  .dashboard-main {
+    margin-left: 0; /* Remove left margin on smaller screens */
+  }
   .user-events-list .event-grid {
     grid-template-columns: repeat(2, 1fr); /* Two columns on medium screens */
   }
@@ -281,10 +292,10 @@
   }
   .dashboard-create-event .dashboard-container {
     flex-direction: column; /* Stack form and preview on smaller screens */
-    align-items: center; /* Center align items */
+    align-items: center;
   }
   .dashboard-sidebar {
-    height: auto; /* Full width on smaller screens */
+    height: auto;
     padding: 0;
   }
   .dashboard-sidebar .sidebar-list {
@@ -292,8 +303,35 @@
     padding: 0;
   }
   .dashboard-sidebar .sidebar-list li {
-    margin-bottom: 0; /* Remove bottom margin for list items */
-    margin-top: 0.5rem; /* Add top margin for spacing */
+    margin-bottom: 0;
+    margin-top: 0.5rem;
+  }
+  .event-form {
+    max-width: 600px;
+    min-width: 180px;
+    width: 90%;
+  }
+  .event-preview-container {
+    display: none !important;
+  }
+  .event-preview-container.show {
+    display: block !important;
+    margin-top: 1em;
+  }
+  .event-form .event-submit-btn {
+    margin-top: 0.5rem;
+  }
+  .event-form .show-preview-btn {
+    display: block;
+    margin-top: 0.5em;
+    border: none;
+    border-radius: 6px;
+    padding: 0.7em 1.6em;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s, box-shadow 0.18s;
+    box-shadow: 0 1px 3px rgba(36, 116, 229, 0.08);
   }
 }
 @media screen and (max-width: 768px) {
@@ -307,5 +345,36 @@
 @media screen and (max-width: 480px) {
   .event-grid {
     grid-template-columns: 1fr;
+  }
+  .dashboard-sidebar .sidebar-list {
+    font-size: 0.75rem;
+  }
+  .dashboard-create-event .dashboard-container {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+    margin: 0;
+  }
+  .event-form {
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+  .event-preview,
+.event-preview-container,
+.event-card-preview {
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1rem;
+  }
+  .event-form input[type=file] {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    font-size: 1em;
   }
 }
