@@ -16,7 +16,7 @@ export default function Dashboard() {
 			if (currentSection === "my-events") {
 				return <DashboardMyEvents onEditEvent={id => setCurrentSection({ type: "edit", eventId: id })} />;
 			}
-			if (currentSection === "favorites") return <DashboardFavorites />;
+			if (currentSection === "favorites") return <DashboardFavorites onEditEvent={id => setCurrentSection({ type: "edit", eventId: id })} />;
 		}
 		if (currentSection && currentSection.type === "edit") {
 			return (

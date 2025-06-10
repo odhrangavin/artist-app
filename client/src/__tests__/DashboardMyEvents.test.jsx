@@ -8,8 +8,10 @@ import API from '../api/api.js'
 import { AuthProvider } from '../context/AuthContext.jsx';
 import renderWithRouter from './testUtils.jsx';
 import App from '../App.jsx';
-import { mockUseAuthLoggedInO, mockUseAuthLoggedInA, 
-  mockUseAuthNotLoggedIn, mockLogout } from './__mocks__/authContext.js';
+import {
+  mockUseAuthLoggedInO, mockUseAuthLoggedInA,
+  mockUseAuthNotLoggedIn, mockLogout
+} from './__mocks__/authContext.js';
 import { act } from 'react';
 
 /*  == SET UP MOCKS == */
@@ -19,7 +21,7 @@ vi.mock('axios', () => ({
     create: () => mockAxios,
     ...mockAxios,
   }
-})); 
+}));
 
 // Replaces AuthProvider
 vi.mock('../context/AuthContext', async () => {
@@ -32,22 +34,22 @@ vi.mock('../context/AuthContext', async () => {
 
 /*  == DRY FUNCTIONS == */
 async function getAllMyEventsElements() {
-  const createEventButton = await screen.findByRole('button', {name: /create event/i});
-  const allMyEventsButton = await screen.findByRole('button', {name: /all my events/i});
-  const favorites = await screen.findByRole('button', {name: /favorites/i});
-  const img = await screen.findByRole('img', {name: /event1/i});
-  const fave = await screen.findByRole('img', {name: /add to favourites/i});
+  const createEventButton = await screen.findByRole('button', { name: /create event/i });
+  const allMyEventsButton = await screen.findByRole('button', { name: /all my events/i });
+  const favorites = await screen.findByRole('button', { name: /favorites/i });
+  const img = await screen.findByRole('img', { name: /event1/i });
+  const fave = await screen.findByRole('img', { name: /add to favourites/i });
   const dateTimeTitle = await screen.findByText('Date/Time:');
   const cityTitle = await screen.findByText('City:');
   const venueTitle = await screen.findByText('Venue:');
   const genreTitle = await screen.findByText('Genre:');
-  const viewEventButton = await screen.findByRole('button', {name: /view event/i});
-  const editEventButton = await screen.findByRole('button', {name: /edit event/i});
+  const viewEventButton = await screen.findByRole('button', { name: /view event/i });
+  const editEventButton = await screen.findByRole('button', { name: /edit event/i });
   const suspended = await screen.findByText('Suspended');
-  
+
   return {
     sideMenu: [createEventButton, allMyEventsButton, favorites],
-    titles: [dateTimeTitle, cityTitle, venueTitle, genreTitle], 
+    titles: [dateTimeTitle, cityTitle, venueTitle, genreTitle],
     viewEventButton, editEventButton, suspended, img, fave
   }
 }
@@ -60,14 +62,14 @@ const testYear = new Date().getFullYear() + 1;
 describe(`All My Events when user is organizer`, () => {
 
   beforeAll(() => getToken())
-  afterAll(() =>  localStorage.clear())
+  afterAll(() => localStorage.clear())
   beforeEach(async () => {
     await waitFor(() => {
       renderWithRouter('/dashboard');
     })
 
     // Go to all my events
-    const allMyEventsButton = await screen.findByRole('button', {name: /all my events/i});
+    const allMyEventsButton = await screen.findByRole('button', { name: /all my events/i });
     await userEvent.click(allMyEventsButton);
 
   })
@@ -76,7 +78,7 @@ describe(`All My Events when user is organizer`, () => {
   it(`All My Events: Side bar, event 1, and edition buttons should appear`, async () => {
 
     // Check elements
-    const { sideMenu, titles, viewEventButton, editEventButton, suspended, img, fave    
+    const { sideMenu, titles, viewEventButton, editEventButton, suspended, img, fave
     } = await getAllMyEventsElements();
 
     sideMenu.forEach(buttonMenu => expect(buttonMenu).toBeInTheDocument());
@@ -84,17 +86,17 @@ describe(`All My Events when user is organizer`, () => {
     [suspended, viewEventButton, editEventButton, img, fave].forEach(element => {
       expect(element).toBeInTheDocument();
     })
-    
+
   })
 
   it(`All my events: Organizer should be able to go to Edit Event`, async () => {
 
-    
+
     const { editEventButton } = await getAllMyEventsElements();
     await userEvent.click(editEventButton);
 
     // Should be in edit page
-    const updateEventButton = await screen.findByRole('button', {name: /update event/i});
+    const updateEventButton = await screen.findByRole('button', { name: /update event/i });
     expect(updateEventButton).toBeInTheDocument();
 
   });
@@ -106,7 +108,7 @@ describe(`All My Events when user is organizer`, () => {
     await userEvent.click(viewEventButton);
 
     // Should be in event detail page
-    const goBackButton = await screen.findByRole('button', {name: /go back/i});
+    const goBackButton = await screen.findByRole('button', { name: /go back/i });
     expect(goBackButton).toBeInTheDocument();
 
   });
@@ -116,7 +118,7 @@ describe(`All My Events when user is organizer`, () => {
     const { fave } = await getAllMyEventsElements();
     await userEvent.click(fave);
 
-    
+
     // Face now should be liked
     expect(fave).toHaveAttribute('aria-label', 'Remove from favourites');
   });

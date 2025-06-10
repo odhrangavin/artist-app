@@ -1,7 +1,7 @@
 export default function Footer() {
     return (
         <footer>
-            <p>&copy; {new Date().getFullYear()} Event App</p>
+            <p style={{ paddingTop: "2rem" }}>&copy; {new Date().getFullYear()} Event App</p>
         </footer>
     );
 }

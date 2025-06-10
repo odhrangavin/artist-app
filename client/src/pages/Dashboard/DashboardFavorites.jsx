@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import API from "../../api/api";
 import EventCards from '../../components/UserEventsList/EventCards';
 
-export default function DashboardFavorites() {
+export default function DashboardFavorites({ onEditEvent }) {
 
 	const [events, setEvents] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -12,7 +12,7 @@ export default function DashboardFavorites() {
 	const [attendingList, setAttendingList] = useState([]);
 
 	// Get list of events created by the user
-	const refreshFavorites = async () =>  {
+	const refreshFavorites = async () => {
 		setLoading(true);
 		setErr('');
 		try {
@@ -20,14 +20,14 @@ export default function DashboardFavorites() {
 
 			// Normalize data for events
 			const eventList = res.data.user.map(dataObject => {
-					const { id, event, ...data } = dataObject;
-					const modData = {
-						...data,
-						id: event,
-						event: id
-					}
-					return modData
+				const { id, event, ...data } = dataObject;
+				const modData = {
+					...data,
+					id: event,
+					event: id
 				}
+				return modData
+			}
 			)
 
 			setEvents(eventList || []);
@@ -40,7 +40,7 @@ export default function DashboardFavorites() {
 		setLoading(false);
 	}
 
-	const refreshAttending = async () =>  {
+	const refreshAttending = async () => {
 		setLoading(true);
 		setErr('');
 		try {
@@ -66,15 +66,16 @@ export default function DashboardFavorites() {
 
 	if (loading) return <div>Loading your events...</div>;
 	if (err) return <div className="error">{err}</div>;
-    
-	return( 
-		<EventCards 
-			events={events}	
+
+	return (
+		<EventCards
+			events={events}
 			faves={faveList}
-			title="My Favorite Events" 
+			title="My Favourite Events"
 			noEvent="You have no event in your faves."
 			onFaveRemoved={refreshFavorites}
 			attends={attendingList}
+			onEditEvent={onEditEvent}
 		/>
 
 	);

@@ -67,7 +67,7 @@ header {
     list-style: none;
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1rem;
     margin: 0;
     padding: 0;
     transition: max-height 0.3s;
@@ -115,6 +115,10 @@ header {
 
     .burger {
       display: flex;
+
+      &:focus {
+        outline: none;
+      }
     }
     .nav-menu {
       flex-direction: column;
