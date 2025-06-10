@@ -410,14 +410,15 @@ const mockAxios = {
       },
     })
   }),
-  post: vi.fn((url, data) => {
+  post: vi.fn((url) => {
     if (url === '/users/me/faves') {
       return Promise.resolve({
       data: {
-        lastID: data.event,
-        changes: '1'
+        lastID: 5,
+        changes: 1
       }})
     }
+    
     // Default, if url doesn't exist
     return Promise.reject(new Error(`Unhandled POST url: ${url}`));
   }),

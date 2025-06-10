@@ -251,7 +251,6 @@ describe(`Event Detail when user is attendee`, () => {
 
     // Simulte error process in image
     titles.forEach(title => expect(title).toBeInTheDocument());
-    screen.debug()
     expect(descriptionTitle).toBeInTheDocument();
     expect(defaultImg).toBeInTheDocument(); 
     expect(suspended).toBeNull(); // Event 3 is active
