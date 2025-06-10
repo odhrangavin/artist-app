@@ -19,6 +19,23 @@
   }
 }
 
+
+.suspended-badge{
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #c00;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.3em;
+  padding: 0.3em 1.2em;
+  border-radius: 8px;
+  z-index: 10;
+  opacity: 0.85;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
 //search form styles
 .user-event-search-form{
   display: flex;
@@ -107,22 +124,6 @@
         flex-grow: 1; /* This allows it to take up vertical space */
         display: flex;
         flex-direction: column;
-      }
-
-      .suspended-badge{
-        position: absolute;
-        top: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #c00;
-        color: #fff;
-        font-weight: bold;
-        font-size: 1.3em;
-        padding: 0.3em 1.2em;
-        border-radius: 8px;
-        z-index: 10;
-        opacity: 0.85;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
       }
 
       .event-description {

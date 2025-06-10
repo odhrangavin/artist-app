@@ -151,7 +151,7 @@ const mockAxios = {
               created_at: '2024-12-19T14:36:58.522Z',
               description: 'Description 1',
               event_date: `${nextYear}-01-01`,
-              event_time: '00:30',
+              event_time: '00:30:00',
               external_id: null,
               genre: 'Football',
               id: 1,
@@ -188,6 +188,28 @@ const mockAxios = {
       });
     }
 
+    if (url === '/events/3') {
+      return Promise.resolve({
+        data: {
+          event: { // Event 3
+            created_at: '2025-01-01T14:37:58.522Z',
+            description: 'Description 3',
+            event_date: `${nextYear}-02-20`,
+            event_time: '00:00:30',
+            external_id: null,
+            genre: 'Theatre',
+            id: 3,
+            image_url: 'image_url',
+            location: 'Galway',
+            suspended: 0,
+            title: 'Event3',
+            user_id: 3,
+            venue: 'Venue3'
+          }
+        },
+      });
+    }
+
     if (url === '/events/1/attendance') {
       return Promise.resolve({
         data: {
@@ -199,10 +221,121 @@ const mockAxios = {
     if (url === '/events/2/attendance') {
       return Promise.resolve({
         data: {
-          attandance: 3
+          attendance: 3
         },
       });
     }
+
+    if (url === '/events/3/attendance') {
+      return Promise.resolve({
+        data: {
+          attendance: 1
+        },
+      });
+    }
+
+    if (url === '/users') {
+      return Promise.resolve({
+        data: {
+          users: [
+            { // User 1 - admin
+              created_at: '2024-01-01',
+              email: 'adminusertest@gmail.com',
+              id: 1,
+              role: "system-user",
+              username: "adminusertest"
+            },
+            { // User 2 - organizer
+              created_at: '2024-01-01',
+              email: 'usertest@gmail.com',
+              id: 2,
+              role: "organizer",
+              username: "usertest"
+            },
+            { // User 3 - organizer
+              created_at: '2024-01-01',
+              email: 'usertest2@gmail.com',
+              id: 3,
+              role: "organizer",
+              username: "usertest2"
+            },
+            { // User 4 - attendee
+              created_at: '2024-01-01',
+              email: 'usertest3@gmail.com',
+              id: 4,
+              role: "attendee",
+              username: "usertest3"
+            },
+          ]
+        }
+      });
+    }
+
+    if (url === '/users/me/attending') {
+      let responseData;
+
+      switch (currentUser()) { 
+        case 'user2':      
+          responseData = [
+          { // User 2 will attend event 2
+            created_at: '2025-06-01',
+            event: 2,
+            id: 1,
+            user_id: 2
+          },
+          { // User 2 will attend event 3
+            created_at: '2025-06-03',
+            event: 3,
+            id: 3,
+            user_id: 2
+          }]
+          break;     
+        case 'user3':
+          responseData = [{ // User 3 will attend event 2
+            created_at: '2025-06-02',
+            event: 2,
+            id: 2,
+            user_id: 3
+          }]
+          break;
+        case 'user4':
+          responseData =  [{ // User 4 will attend event 2
+            created_at: '2025-06-06',
+            event: 2,
+            id: 4,
+            user_id: 4
+          }]
+          break;
+        }  
+      return Promise.resolve({ data: {
+        user: responseData 
+      }});
+    }
+
+    if (url === '/users/me/events') { // User 2 events
+      return Promise.resolve({
+        data: {
+          events: [
+            { // Event 1
+              created_at: '2024-12-19T14:36:58.522Z',
+              description: 'Description 1',
+              event_date: `${nextYear}-01-01`,
+              event_time: '00:30',
+              external_id: null,
+              genre: 'Football',
+              id: 1,
+              image_url: 'http://localhost/test.png',
+              location: 'Dublin',
+              suspended: 1,
+              title: 'Event1',
+              user_id: 2,
+              venue: 'Venue1'
+            }
+          ]
+        },
+      });
+    }
+
 
     if (url === '/users/me/faves') {
       let responseData;
@@ -267,84 +400,6 @@ const mockAxios = {
 
       return Promise.resolve({ data: responseData });
     }
- 
-    if (url === '/users/me/attending') {
-      let responseData;
-
-      switch (currentUser()) { 
-        case 'user2':      
-          responseData = [
-          { // User 2 will attend event 2
-            created_at: '2025-06-01',
-            event: 2,
-            id: 1,
-            user_id: 2
-          },
-          { // User 2 will attend event 3
-            created_at: '2025-06-03',
-            event: 3,
-            id: 3,
-            user_id: 2
-          }]
-          break;     
-        case 'user3':
-          responseData = [{ // User 3 will attend event 2
-            created_at: '2025-06-02',
-            event: 2,
-            id: 2,
-            user_id: 3
-          }]
-          break;
-        case 'user4':
-          responseData =  [{ // User 4 will attend event 2
-            created_at: '2025-06-06',
-            event: 2,
-            id: 4,
-            user_id: 4
-          }]
-          break;
-        }  
-      return Promise.resolve({ data: {
-        user: responseData 
-      }});
-    }
-
-    if (url === '/users') {
-      return Promise.resolve({
-        data: {
-          users: [
-            { // User 1 - admin
-              created_at: '2024-01-01',
-              email: 'adminusertest@gmail.com',
-              id: 1,
-              role: "system-user",
-              username: "adminusertest"
-            },
-            { // User 2 - organizer
-              created_at: '2024-01-01',
-              email: 'usertest@gmail.com',
-              id: 2,
-              role: "organizer",
-              username: "usertest"
-            },
-            { // User 3 - organizer
-              created_at: '2024-01-01',
-              email: 'usertest2@gmail.com',
-              id: 3,
-              role: "organizer",
-              username: "usertest2"
-            },
-            { // User 4 - attendee
-              created_at: '2024-01-01',
-              email: 'usertest3@gmail.com',
-              id: 4,
-              role: "attendee",
-              username: "usertest3"
-            },
-          ]
-        }
-      });
-    }
     
     // External api
     return Promise.resolve({
@@ -355,14 +410,15 @@ const mockAxios = {
       },
     })
   }),
-  post: vi.fn((url, data) => {
-    if (url === 'users/me/faves') {
+  post: vi.fn((url) => {
+    if (url === '/users/me/faves') {
       return Promise.resolve({
       data: {
-        lastID: data.event,
-        changes: '1'
+        lastID: 5,
+        changes: 1
       }})
     }
+    
     // Default, if url doesn't exist
     return Promise.reject(new Error(`Unhandled POST url: ${url}`));
   }),
@@ -371,6 +427,8 @@ const mockAxios = {
     response: { use: vi.fn() },
   },
 };
+
+
 
 export default mockAxios;
 

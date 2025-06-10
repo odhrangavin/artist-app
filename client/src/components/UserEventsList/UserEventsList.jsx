@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import API from "../../api/api";
 import UserEventSearchForm from "./UserEventSearchForm";
 import "./UserEventsList.scss";
@@ -7,6 +7,7 @@ import Pagination from "./Pagination";
 import { HeartButton } from "../../pages/Dashboard/HeartButton";
 import { AttendingButton } from "../../pages/Dashboard/AttendingButton";
 import { useAuth } from '../../context/AuthContext';
+import EventImage from './EventImage'
 
 
 // Helper to extract dropdown options from all events (not filtered!)
@@ -65,6 +66,7 @@ export default function UserEventList() {
 	const [attendingList, setAttendingList] = useState([]);
 	const fullCityList = useRef([]);
 	const { isLoggedIn, user } = useAuth();
+	const navigate = useNavigate();
 
 	// Initial load: fetch all events, build dropdowns from those
 	useEffect(() => {
@@ -168,6 +170,10 @@ export default function UserEventList() {
 		// window.scrollTo({ top: 0, behavior: "smooth" });
 	}
 
+	const handleView = (id) => {
+    navigate(`/events/${id}`);
+  };
+
 	return (
 		<div>
 			<UserEventSearchForm
@@ -188,16 +194,11 @@ export default function UserEventList() {
 							displayedEvents.map((e) => (
 								<li key={e.id} className="event-card">
 									<div className="event-body">
-										{e.image_url && (
-											<div style={{ position: "relative", display: "inline-block" }}>
-												{!!e.suspended && (
-													<div className="suspended-badge">
-														Suspended
-													</div>
-												)}
-												<img src={e.image_url} alt={e.title} className="event-image" />
-											</div>
-										)}
+										<EventImage 
+											imageUrl={e.image_url} 
+											suspended={!!e.suspended}
+											eventTitle={e.title}
+										/>
 										<h3>{e.title}</h3>
 										<p>
 											<strong>Date/Time:</strong> {e.event_date} {e.event_time}
@@ -223,9 +224,13 @@ export default function UserEventList() {
 										</p>
 									</div>
 									<div className="event-actions">
-										<Link to={`/events/${e.id}`}>
-											View Event
-										</Link>
+										<button
+											type="button"
+											className="event-action-btn event-view-btn"
+											onClick={() => handleView(e.id)}
+										>
+                		View Event
+             			 </button>
 										{isLoggedIn && (
 											<>
 												<HeartButton
