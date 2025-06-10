@@ -87,9 +87,26 @@ describe(`All My Events when user is organizer`, () => {
     
   })
 
+  
+  it(`All My Events: Event 1 content should appear`, async () => {
+
+    // Check elements
+    const title = screen.getByText('Event1')
+    const description = screen.getByText('Description 1');
+    const dateTime = screen.getByText(`${testYear}-01-01 00:30`);
+    const city = screen.getByText('Dublin');
+    const venue = screen.getByText('Venue1');
+    const genre = screen.getByText('Football');
+    // There is no Author here
+
+    [title, description, dateTime, city, venue, genre].forEach(
+      content => expect(content).toBeInTheDocument
+    )
+    
+  })
+
   it(`All my events: Organizer should be able to go to Edit Event`, async () => {
 
-    
     const { editEventButton } = await getAllMyEventsElements();
     await userEvent.click(editEventButton);
 

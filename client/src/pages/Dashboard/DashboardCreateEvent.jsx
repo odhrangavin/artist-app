@@ -204,7 +204,7 @@ export default function DashboardCreateEvent() {
                         />
                     </label>
                     <label>
-                        Or upload image:
+                        Or upload image
                         <input
                             id="event-image-upload"
                             type="file"
