@@ -1,11 +1,11 @@
 // Recover Password page
 import ForgotPasswordForm from '../../components/Auth/ForgotPasswordForm';
+import './Auth.scss';
 
 export default function ForgotPassword() {
   return (
-    <div>
+    <div className='auth-section'>
       <h2>Forgot Your Password?</h2>
-      <br />
       <ForgotPasswordForm />
 		</div>	
   )

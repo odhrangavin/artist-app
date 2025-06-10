@@ -48,7 +48,6 @@ export default function ResetPasswordForm() {
 					onChange={handleChange}
 					required
 				/>
-				<br />
         <input 
 					name="confirm"
 					placeholder="Confirm New Password"
@@ -57,7 +56,6 @@ export default function ResetPasswordForm() {
 					onChange={handleChange}
 					required
 				/>
-				<br />
         {/* For now the token is passed as a field. It should be removed while sending an email */}
         <input 
 					name="token"
@@ -73,7 +71,6 @@ export default function ResetPasswordForm() {
 				>
 					{!isLoading ? 'Confirm Reset' : 'Please Wait'}
 					</button>
-				<br />
 				<span className='error-message' data-testid='error-message'>{error}</span>
 		</form>
 	);

@@ -36,7 +36,6 @@ export default function ForgotPasswordForm() {
 				<button type="submit" disabled={!form.email}>
 					{!isLoading ? 'Request Reset' : 'Please Wait'}
 				</button>
-				<br />
 				<span className='error-message' data-testid='error-message'>{error}</span>
 		</form>
 	);

@@ -65,7 +65,6 @@ export default function RegisterForm() {
 				onChange={handleChange}
 				required 
 			/>
-			<br />
 			<label>Username</label>
 			<input 
 				name="username"
@@ -76,7 +75,6 @@ export default function RegisterForm() {
 				onChange={handleChange} 
 				required
 			/>
-			<br />
 			<label>Password</label>
 			<input 
 				name="password"
@@ -86,7 +84,6 @@ export default function RegisterForm() {
 				onChange={handleChange} 
 				required
 			/>
-			<br />
 			<label>Confirm Password</label>
 			<input 
 				name="confirm"
@@ -96,7 +93,6 @@ export default function RegisterForm() {
 				onChange={handleChange} 
 				required
 			/>
-			<br />
 			<h4>How would you like to use ArtistsApp?</h4>
 			<button 
 				type="button" 
@@ -122,7 +118,6 @@ export default function RegisterForm() {
 			>
 				{!isLoading ? 'Register' : 'Please Wait'}
 			</button>
-			<br />
 			<span className='error-message' data-testid='error-message'>{error}</span>
 		</form>
 	);

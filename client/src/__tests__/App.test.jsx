@@ -81,7 +81,7 @@ describe('App Routing', () => {
       expect(screen.getByText(/create your event/i)).toBeInTheDocument();
     })
   });
-  it('should render dashboard page (favorites) for attendee at /dashboard', async () => {
+  it('should render dashboard page (favourites) for attendee at /dashboard', async () => {
     currentMock = mockUseAuthLoggedInA;
     getToken(); // Set token to have access
 
@@ -89,7 +89,7 @@ describe('App Routing', () => {
 
     await waitFor(() => {
       expect(screen.queryByText(/create your event/i)).not.toBeInTheDocument();
-      // expect(screen.getByText(/my favorite events/i)).toBeInTheDocument(); TODO
+      expect(screen.getByText(/my favourite events/i)).toBeInTheDocument();
     })
   });
   it('should not render dashboard page at /register and redirect to log in instead ', () => {

@@ -43,7 +43,6 @@ export default function LoginForm() {
 					maxLength="25"
 					required
 				/>
-				<br />
 				<input 
 					name="password"
 					type="password" 
@@ -56,7 +55,6 @@ export default function LoginForm() {
 				<button type="submit" disabled={!form.username || !form.password}>
 					{!isLoading ? 'Log In' : 'Please Wait'}
 				</button>
-				<br />
 				<span className='error-message' data-testid='error-message'>{error}</span>
 		</form>
 	);

@@ -11,7 +11,7 @@ const mockAxiosFavesFullUser2 =  [
     description: null,
     event: 2,
     event_date: `${nextYear}-03-10`,
-    event_time: '00:30:00',
+    event_time: '24:00:00',
     event_user_id: 1,
     external_id: null,
     faves_user_id: 2,
@@ -421,6 +421,16 @@ const mockAxios = {
     
     // Default, if url doesn't exist
     return Promise.reject(new Error(`Unhandled POST url: ${url}`));
+  }),
+  delete: vi.fn((url) => {
+    if (url === '/users/me/faves/1') { // User 2 removed fave to event 2
+      return Promise.resolve({
+        data:{}
+      })
+    }
+    
+    // Default, if url doesn't exist
+    return Promise.reject(new Error(`Unhandled DELETE url: ${url}`));
   }),
   interceptors: {
     request: { use: vi.fn() },

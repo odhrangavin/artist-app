@@ -1,16 +1,12 @@
-import { findByRole, render, screen, waitFor, within } from '@testing-library/react';
-import { describe, it, expect, test, beforeEach, beforeAll, afterAll } from 'vitest';
-import { BrowserRouter, Link } from 'react-router-dom';
+import { screen, waitFor, within } from '@testing-library/react';
+import { describe, it, expect, beforeEach, beforeAll, afterAll } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import mockAxios, { currentUser } from './__mocks__/axios.js';
-import API from '../api/api.js'
-import { AuthProvider } from '../context/AuthContext.jsx';
 import renderWithRouter from './testUtils.jsx';
-import App from '../App.jsx';
 import { mockUseAuthLoggedInO, mockUseAuthLoggedInA, 
-  mockUseAuthNotLoggedIn, mockLogout } from './__mocks__/authContext.js';
-import { act } from 'react';
+  mockUseAuthNotLoggedIn} from './__mocks__/authContext.js';
+
 
 /*  == SET UP MOCKS == */
 // Replaces Axios by a mock
@@ -63,10 +59,8 @@ const testYear = new Date().getFullYear() + 1;
 /* == TESTS == */
 describe(`Event Detail when user is not logged in`, () => {
 
-
   it(`Event 1 detail shows description, date/time, city, venue, genre, authon, and
     go back button when user not logged in`, async () => {
-
     await waitFor(() => {
       renderWithRouter('/events/1');
     })
@@ -126,9 +120,7 @@ describe(`Event Detail when user is not logged in`, () => {
     // Check go back button works
     await userEvent.click(goBackButton);
     expect(await screen.findByText(/welcome to event app/i)).toBeInTheDocument();
-
   });
-
 });
 
 describe(`Event Detail when user is organizer`, () => {
@@ -187,7 +179,6 @@ describe(`Event Detail when user is organizer`, () => {
     const attendance = await screen.findByText(/3 Event App users are attending./i);
     
     expect(attendance).toBeInTheDocument();
-
   });
 
   it(`Event 2 detail: User should be able to go back to previous page`, async () => {
@@ -209,9 +200,7 @@ describe(`Event Detail when user is organizer`, () => {
     await userEvent.click(goBackButton);
     allMyEventsButton = await screen.findByRole('button', {name: /all my events/i});
     expect(allMyEventsButton).toBeInTheDocument();
-
   });
-  
 });
 
 // Do attendee event 3
@@ -302,7 +291,5 @@ describe(`Event Detail when user is attendee`, () => {
     // Check go back button works
     await userEvent.click(goBackButton);
     expect(await screen.findByText(/welcome to event app/i)).toBeInTheDocument();
-
-  });
-  
+  }); 
 });

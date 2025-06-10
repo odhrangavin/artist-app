@@ -1,18 +1,10 @@
-import { findByRole, render, screen, waitFor, within } from '@testing-library/react';
-import { describe, it, expect, test, beforeEach, beforeAll, afterAll } from 'vitest';
-import { BrowserRouter, Link } from 'react-router-dom';
+import { screen, waitFor } from '@testing-library/react';
+import { describe, it, expect, beforeEach, beforeAll, afterAll } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
-import mockAxios, { currentUser } from './__mocks__/axios.js';
-import API from '../api/api.js'
-import { AuthProvider } from '../context/AuthContext.jsx';
+import mockAxios from './__mocks__/axios.js';
 import renderWithRouter from './testUtils.jsx';
-import App from '../App.jsx';
-import {
-  mockUseAuthLoggedInO, mockUseAuthLoggedInA,
-  mockUseAuthNotLoggedIn, mockLogout
-} from './__mocks__/authContext.js';
-import { act } from 'react';
+import { mockUseAuthLoggedInO } from './__mocks__/authContext.js';
 
 /*  == SET UP MOCKS == */
 // Replaces Axios by a mock
@@ -36,7 +28,7 @@ vi.mock('../context/AuthContext', async () => {
 async function getAllMyEventsElements() {
   const createEventButton = await screen.findByRole('button', { name: /create event/i });
   const allMyEventsButton = await screen.findByRole('button', { name: /all my events/i });
-  const favorites = await screen.findByRole('button', { name: /favorites/i });
+  const favourites = await screen.findByRole('button', { name: /favourites/i });
   const img = await screen.findByRole('img', { name: /event1/i });
   const fave = await screen.findByRole('img', { name: /add to favourites/i });
   const dateTimeTitle = await screen.findByText('Date/Time:');
@@ -48,7 +40,7 @@ async function getAllMyEventsElements() {
   const suspended = await screen.findByText('Suspended');
 
   return {
-    sideMenu: [createEventButton, allMyEventsButton, favorites],
+    sideMenu: [createEventButton, allMyEventsButton, favourites],
     titles: [dateTimeTitle, cityTitle, venueTitle, genreTitle],
     viewEventButton, editEventButton, suspended, img, fave
   }
@@ -74,7 +66,6 @@ describe(`All My Events when user is organizer`, () => {
 
   })
 
-
   it(`All My Events: Side bar, event 1, and edition buttons should appear`, async () => {
 
     // Check elements
@@ -88,9 +79,25 @@ describe(`All My Events when user is organizer`, () => {
     })
 
   })
+  
+  it(`All My Events: Event 1 content should appear`, async () => {
+
+    // Check elements
+    const title = screen.getByText('Event1')
+    const description = screen.getByText('Description 1');
+    const dateTime = screen.getByText(`${testYear}-01-01 00:30`);
+    const city = screen.getByText('Dublin');
+    const venue = screen.getByText('Venue1');
+    const genre = screen.getByText('Football');
+    // There is no Author here
+
+    [title, description, dateTime, city, venue, genre].forEach(
+      content => expect(content).toBeInTheDocument
+    )
+    
+  })
 
   it(`All my events: Organizer should be able to go to Edit Event`, async () => {
-
 
     const { editEventButton } = await getAllMyEventsElements();
     await userEvent.click(editEventButton);
@@ -100,7 +107,6 @@ describe(`All My Events when user is organizer`, () => {
     expect(updateEventButton).toBeInTheDocument();
 
   });
-
 
   it(`All my events: Organizer should be able to go to Event Detail`, async () => {
 
