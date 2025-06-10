@@ -9,7 +9,8 @@ import db from './db.js'
 
 // Add secret key
 process.env.JWT_SECRET = 'testSecretKey123'
-const scrapeTest = true;
+const scrapeTest = false;
+let dbLength = 0;
 
 const checkTableExists = (db, tableName) => {
 	return new Promise((resolve, reject) => {
@@ -608,25 +609,52 @@ describe('Auth Controller Tests', () => {
 			});
 		let resetToken = res.body;
 		expect(res.body).toMatch('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
-		const res2 = await request(app).post('/api/users/pasword-reset')
+		console.log("here")
+		const res2 = await request(app).post('/api/users/password-reset')
 			.send({
 				token: resetToken,
 				newPassword: 'new password'
 			});
+		console.log("there")
+		expect(res2.status).toBe(200)
+	})
+})
+
+describe('Miscellaneous Tests', () => {
+	it('should get root', async () => {
+		const res = await request(app).get('/')
+		expect(res.status).toBe(200)
+	})
+
+	it('should get test', async () => {
+		const res = await request(app).get('/test')
+		expect(res.status).toBe(200)
+	})
+
+	it('should get api-tests', async () => {
+		const res = await request(app).get('/api-tests')
+		expect(res.status).toBe(200)
+	})
+
+	it('should get login-tests', async () => {
+		const res = await request(app).get('/login-tests')
 		expect(res.status).toBe(200)
 	})
 })
 
-describe('scraper tests - only run occasionally', () => {
+describe('Scraper Tests - only run occasionally', () => {
 	it('should scrape ticketmaster', async () => {
 		if(scrapeTest){
 			const res = await request(app).get('/api/scraper/ticketmaster')
+			dbLength = dbLength + res.body.data.length
 			expect(res.status).toBe(200)
 		}
 	})
+
 	it('should scrape failte', async () => {
 		if(scrapeTest){
-			const res = await request(app).get('/api/scraper/ticketmaster')
+			const res = await request(app).get('/api/scraper/failte')
+			dbLength = dbLength + res.body.data.length
 			expect(res.status).toBe(200)
 		}
 	})
@@ -648,11 +676,7 @@ describe('Deletions', () => {
 		expect(res.status).toBe(200);
 		const res2 = await request(app).get('/api/events');
 		expect(res2.status).toBe(200);
-		let dbLength = 0;
-		if(scrapeTest){
-			dbLength = 1000;
-		}
-		expect(res2.body.results).toHaveLength(1000);
+		expect(res2.body.results).toHaveLength(dbLength);
 	})
 
 	it('should delete fave (DELETE)', async () => {
