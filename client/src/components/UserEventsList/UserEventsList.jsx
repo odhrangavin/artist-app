@@ -171,8 +171,8 @@ export default function UserEventList() {
 	}
 
 	const handleView = (id) => {
-    navigate(`/events/${id}`);
-  };
+		navigate(`/events/${id}`);
+	};
 
 	return (
 		<div>
@@ -194,8 +194,8 @@ export default function UserEventList() {
 							displayedEvents.map((e) => (
 								<li key={e.id} className="event-card">
 									<div className="event-body">
-										<EventImage 
-											imageUrl={e.image_url} 
+										<EventImage
+											imageUrl={e.image_url}
 											suspended={!!e.suspended}
 											eventTitle={e.title}
 										/>
@@ -227,10 +227,11 @@ export default function UserEventList() {
 										<button
 											type="button"
 											className="event-action-btn event-view-btn"
+											style={{ color: "#646cff" }}
 											onClick={() => handleView(e.id)}
 										>
-                		View Event
-             			 </button>
+											View Event
+										</button>
 										{isLoggedIn && (
 											<>
 												<HeartButton

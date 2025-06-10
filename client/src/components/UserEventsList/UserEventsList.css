@@ -129,6 +129,7 @@
   margin-top: auto;
 }
 .event-card .event-actions a {
+  color: #646cff;
   text-decoration: none;
   border-radius: 8px;
   border: 1px solid transparent;

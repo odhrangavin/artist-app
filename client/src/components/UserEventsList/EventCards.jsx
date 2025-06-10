@@ -30,8 +30,8 @@ function EventCards(props) {
         {events.map(ev => (
           <li key={ev.id} className="event-card">
             <div className="event-body">
-              <EventImage 
-                imageUrl={ev.image_url} 
+              <EventImage
+                imageUrl={ev.image_url}
                 suspended={!!ev.suspended}
                 eventTitle={ev.title}
               />
