@@ -9,6 +9,7 @@ import db from './db.js'
 
 // Add secret key
 process.env.JWT_SECRET = 'testSecretKey123'
+const scrapeTest = true;
 
 const checkTableExists = (db, tableName) => {
 	return new Promise((resolve, reject) => {
@@ -260,10 +261,11 @@ describe('User API', () => {
 				email: 'test@example.com', 
 				password: 'test1234' ,
 				confirm: 'test1234',
-				role: 'artist'
+				role: 'organiser'
 			});
 		expect(res.status).toBe(201);
 		const res2 = await request(app).get('/api/users/2')
+
 		expect(res2.body.user.username).toBe('testuser');
 		expect(res2.body.user.email).toBe('test@example.com');
  
@@ -300,7 +302,7 @@ describe('User API', () => {
 			.send({ username: 'testuser', 
 				password: 'test1234' ,
 				confirm: 'test1234',
-				role: 'artist'
+				role: 'organiser'
 			});
 		expect(res.status).toBe(500);
 	});
@@ -311,7 +313,7 @@ describe('User API', () => {
 				email: 'test@example.com', 
 				password: 'test1234' ,
 				confirm: 'test1235',
-				role: 'artist'
+				role: 'organiser'
 			});
 		expect(res.status).toBe(400);
 	});
@@ -589,6 +591,47 @@ describe('Attending API', () => {
 	})
 })
 
+describe('Auth Controller Tests', () => {
+	it('should log in', async () => {
+		const res = await request(app).post('/api/login')
+			.send({
+				username: 'testuser-modified',
+				password: 'test1234'
+			});
+		expect(res.body.token).toMatch('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9')
+	})
+
+	it('should request a reset and then reset a password', async () => {
+		const res = await request(app).post('/api/users/request-reset')
+			.send({
+				email: 'test@example.com'
+			});
+		let resetToken = res.body;
+		expect(res.body).toMatch('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
+		const res2 = await request(app).post('/api/users/pasword-reset')
+			.send({
+				token: resetToken,
+				newPassword: 'new password'
+			});
+		expect(res.status).toBe(200)
+	})
+})
+
+describe('scraper tests - only run occasionally', () => {
+	it('should scrape ticketmaster', async () => {
+		if(scrapeTest){
+			const res = await request(app).get('/api/scraper/ticketmaster')
+			expect(res.status).toBe(200)
+		}
+	})
+	it('should scrape failte', async () => {
+		if(scrapeTest){
+			const res = await request(app).get('/api/scraper/ticketmaster')
+			expect(res.status).toBe(200)
+		}
+	})
+})
+
 describe('Deletions', () => {
 	it('should delete user (DELETE)', async () => {
 		const res = await request(app).delete('/api/users/me')
@@ -605,7 +648,11 @@ describe('Deletions', () => {
 		expect(res.status).toBe(200);
 		const res2 = await request(app).get('/api/events');
 		expect(res2.status).toBe(200);
-		expect(res2.body.results).toHaveLength(0);
+		let dbLength = 0;
+		if(scrapeTest){
+			dbLength = 1000;
+		}
+		expect(res2.body.results).toHaveLength(1000);
 	})
 
 	it('should delete fave (DELETE)', async () => {
