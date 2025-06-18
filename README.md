@@ -5,4 +5,4 @@
 4. Install dependencies: `npm install`
 5. Run app: `npm start`
 
-App will be available at localhost:5173
+App will be available at `localhost:5173`
